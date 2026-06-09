@@ -7,16 +7,16 @@ import type { LeaderboardEntry, LeaderboardPeriod } from '@/types'
 
 // Demo data – replaced by real data from Supabase once users exist
 const DEMO_USERS: LeaderboardEntry[] = [
-  { rank: 1, user_id: '1', username: 'HypeKing99',   display_name: 'HypeKing',    avatar_url: null, points: 48200 },
-  { rank: 2, user_id: '2', username: 'SlotQueen',    display_name: 'SlotQueen',   avatar_url: null, points: 39500 },
-  { rank: 3, user_id: '3', username: 'BonusHunter',  display_name: 'BonusHunter', avatar_url: null, points: 31750 },
-  { rank: 4, user_id: '4', username: 'NorseWolf',    display_name: 'NorseWolf',   avatar_url: null, points: 27100 },
-  { rank: 5, user_id: '5', username: 'ChaosGremlin', display_name: 'ChaosGremlin',avatar_url: null, points: 22400 },
-  { rank: 6, user_id: '6', username: 'LuckySevenX',  display_name: 'LuckySevenX', avatar_url: null, points: 19800 },
-  { rank: 7, user_id: '7', username: 'MegaWinner',   display_name: 'MegaWinner',  avatar_url: null, points: 17250 },
-  { rank: 8, user_id: '8', username: 'SpinCycle',    display_name: 'SpinCycle',   avatar_url: null, points: 14900 },
-  { rank: 9, user_id: '9', username: 'BetterCall',   display_name: 'BetterCall',  avatar_url: null, points: 12300 },
-  { rank: 10,user_id:'10', username: 'GoldRush',     display_name: 'GoldRush',    avatar_url: null, points: 10100 },
+  { rank: 1, user_id: '1', username: 'HypeKing99',   display_name: 'HypeKing',    avatar_url: undefined, points: 48200 },
+  { rank: 2, user_id: '2', username: 'SlotQueen',    display_name: 'SlotQueen',   avatar_url: undefined, points: 39500 },
+  { rank: 3, user_id: '3', username: 'BonusHunter',  display_name: 'BonusHunter', avatar_url: undefined, points: 31750 },
+  { rank: 4, user_id: '4', username: 'NorseWolf',    display_name: 'NorseWolf',   avatar_url: undefined, points: 27100 },
+  { rank: 5, user_id: '5', username: 'ChaosGremlin', display_name: 'ChaosGremlin',avatar_url: undefined, points: 22400 },
+  { rank: 6, user_id: '6', username: 'LuckySevenX',  display_name: 'LuckySevenX', avatar_url: undefined, points: 19800 },
+  { rank: 7, user_id: '7', username: 'MegaWinner',   display_name: 'MegaWinner',  avatar_url: undefined, points: 17250 },
+  { rank: 8, user_id: '8', username: 'SpinCycle',    display_name: 'SpinCycle',   avatar_url: undefined, points: 14900 },
+  { rank: 9, user_id: '9', username: 'BetterCall',   display_name: 'BetterCall',  avatar_url: undefined, points: 12300 },
+  { rank: 10,user_id:'10', username: 'GoldRush',     display_name: 'GoldRush',    avatar_url: undefined, points: 10100 },
 ]
 
 const PERIODS: { key: LeaderboardPeriod; label: string }[] = [
