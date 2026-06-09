@@ -27,7 +27,7 @@ const SOCIALS = [
   },
   {
     label: 'Discord',
-    href: 'https://discord.gg/luckandloadtv',
+    href: 'https://discord.gg/9dUxXK4f',
     color: 'border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/60',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
@@ -47,7 +47,7 @@ const SOCIALS = [
   },
   {
     label: 'YouTube',
-    href: 'https://youtube.com/@luckandloadtv',
+    href: 'https://youtube.com/@LuckAndLoad',
     color: 'border-red-500/30 text-red-400 hover:bg-red-500/10 hover:border-red-500/60',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">

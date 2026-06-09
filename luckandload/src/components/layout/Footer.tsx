@@ -4,9 +4,9 @@ import { Zap } from 'lucide-react'
 const SOCIAL_LINKS = [
   { label: 'Twitch', href: 'https://twitch.tv/luckandloadtv', color: 'hover:text-purple-400' },
   { label: 'Kick', href: 'https://kick.com/luckandloadtv', color: 'hover:text-green-400' },
-  { label: 'Discord', href: 'https://discord.gg/luckandloadtv', color: 'hover:text-indigo-400' },
+  { label: 'Discord', href: 'https://discord.gg/9dUxXK4f', color: 'hover:text-indigo-400' },
   { label: 'TikTok', href: 'https://tiktok.com/@luckandloadtv', color: 'hover:text-pink-400' },
-  { label: 'YouTube', href: 'https://youtube.com/@luckandloadtv', color: 'hover:text-red-400' },
+  { label: 'YouTube', href: 'https://youtube.com/@LuckAndLoad', color: 'hover:text-red-400' },
 ]
 
 export function Footer() {
@@ -43,7 +43,7 @@ export function Footer() {
           </div>
 
           <p className="text-xs text-slate-700 text-center">
-            © {new Date().getFullYear()} LuckAndLoadTV · Entertainment only · No real money · No gambling
+            © {new Date().getFullYear()} LuckAndLoadTV
           </p>
         </div>
       </div>

@@ -132,7 +132,7 @@ export function CommunitySection() {
             <p className="text-sm text-slate-400">The hub of the community. Chat, memes, giveaways, and direct access to the team.</p>
           </div>
           <a
-            href="https://discord.gg/luckandloadtv"
+            href="https://discord.gg/9dUxXK4f"
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
@@ -145,7 +145,60 @@ export function CommunitySection() {
   )
 }
 
-// ─── Announcements ────────────────────────────────────────
+// ─── Hype.bet Multiplayer Room ────────────────────────────
+export function HypeSection() {
+  return (
+    <section className="py-16 border-t border-white/5">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-2xl border border-brand-500/20 bg-gradient-to-br from-surface-800 to-surface-700/50 overflow-hidden">
+          <div className="grid lg:grid-cols-2 gap-0">
+            {/* Text side */}
+            <div className="p-8 lg:p-10 flex flex-col justify-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-medium text-brand-400 mb-5 w-fit">
+                🤝 Samarbeid
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-4">
+                🎮 Multiplayer Room — How it works
+              </h2>
+              <div className="space-y-3 text-sm text-slate-400 leading-relaxed mb-6">
+                <p>👥 Players deposit into a shared balance and play slots together as a team.</p>
+                <p>📊 Your balance represents a percentage share of the pool, so whenever we win 💰 or lose 😅, the result is split fairly based on your share.</p>
+                <p>🔄 You can deposit or withdraw anytime, and your share updates instantly.</p>
+              </div>
+              <a
+                href="https://hype.bet/LuckAndLoad"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-sm font-bold text-white hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20 w-fit"
+              >
+                👉 Join our room on Hype.bet
+              </a>
+            </div>
+
+            {/* Image/visual side */}
+            <div className="relative bg-surface-900/50 flex items-center justify-center p-8 min-h-[260px]">
+              <div className="text-center">
+                <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-brand-500/10 border border-brand-500/20 mb-4">
+                  <span className="text-4xl">🎰</span>
+                </div>
+                <p className="text-white font-bold text-lg mb-1">Hype.bet</p>
+                <p className="text-slate-400 text-sm mb-4">Multiplayer Room</p>
+                <a
+                  href="https://hype.bet/LuckAndLoad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-lg border border-brand-500/30 bg-brand-500/10 px-4 py-2 text-sm text-brand-400 hover:bg-brand-500/20 transition-colors"
+                >
+                  hype.bet/LuckAndLoad
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
 const typeIcon: Record<string, React.ReactNode> = {
   info:    <Info size={14} className="text-blue-400" />,
   success: <CheckCircle size={14} className="text-green-400" />,
