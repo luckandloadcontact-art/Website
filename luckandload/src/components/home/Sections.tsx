@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { formatRelativeTime } from '@/lib/utils'
@@ -75,16 +76,15 @@ export function AboutSection() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            {features.map(f => (
-              <Card key={f.title} glow className="p-5">
-                <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-500/10 border border-brand-500/20">
-                  <f.icon size={16} className="text-brand-500" />
-                </div>
-                <h3 className="text-sm font-semibold text-white mb-1">{f.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">{f.desc}</p>
-              </Card>
-            ))}
+          <div className="rounded-2xl overflow-hidden border border-white/8 shadow-xl">
+            <Image
+              src="/Team.jpg"
+              alt="LuckAndLoadTV — Two Degens One Mission"
+              width={700}
+              height={500}
+              className="w-full h-full object-cover"
+              priority
+            />
           </div>
         </div>
       </div>
