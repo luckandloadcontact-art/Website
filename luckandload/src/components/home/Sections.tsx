@@ -65,14 +65,20 @@ export function AboutSection() {
           <div>
             <Badge variant="brand" className="mb-4">About us</Badge>
             <h2 className="text-3xl font-bold text-white mb-4 leading-tight">
-              Two mates, one stream,<br />
-              <span className="text-gradient">zero script</span>
+              Two mates, great minds,<br />
+              <span className="text-gradient">one stream</span>
             </h2>
             <p className="text-slate-400 leading-relaxed mb-4">
-              LuckAndLoadTV started as Kristian and Simon streaming for fun — and somehow the fun never stopped. What you see is what you get: genuine reactions, honest commentary, and a community that feels like hanging out with mates.
+              LuckAndLoadTV started in September 2025 when two 24-year-old mates from Norway decided to stop talking about streaming and actually hit the "Go Live" button. We've both enjoyed gambling for years, but the stream quickly became about much more than slots and bonus hunts.
+            </p>
+            <p className="text-slate-400 leading-relaxed mb-4">
+              What started as a fun side project turned into a growing community full of laughs, banter, inside jokes, and people who genuinely enjoy hanging out together. Our goal has always been simple: build a community where people can relax, have a laugh after work, and feel like they're sitting in Discord with a couple of mates.
+            </p>
+            <p className="text-slate-400 leading-relaxed mb-4">
+              If you've ever joined one of our streams, you'll know that banter is basically our third host. We give it, we get it, and honestly, we wouldn't want it any other way.
             </p>
             <p className="text-slate-400 leading-relaxed">
-              No fake hype, no paid acts. Just two guys who love the chase and built a community around it.
+              Whether you're here for the bonus hunts, the gambling, the terrible predictions, the occasional big win, or just the vibes — you're welcome aboard. Welcome to LuckAndLoadTV ❤️
             </p>
           </div>
 
