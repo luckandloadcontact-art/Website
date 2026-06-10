@@ -103,7 +103,7 @@ export function CommunitySection() {
   const stats = [
     { label: 'Given away last 12 months', value: '$15,000+', color: 'text-green-400' },
     { label: 'Bonus Hunts last 12 months', value: '100+', color: 'text-brand-400' },
-    { label: 'Hours of Banter', value: '☕ 1,000+', color: 'text-yellow-400' },
+    { label: 'Hours of Banter', value: '☕ 500+', color: 'text-yellow-400' },
     { label: 'Bad calls from chat', value: '🎰 ∞', color: 'text-indigo-400' },
   ]
 
