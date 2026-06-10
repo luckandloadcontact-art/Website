@@ -147,10 +147,10 @@ export function CommunitySection() {
 
 // ─── Hype.bet Multiplayer Room ────────────────────────────
 const ROOM_PLAYERS = [
-  { name: 'Kristian', initial: 'K', balance: '250.00', pct: '50.00%', profit: '+$50', isHost: true },
-  { name: 'Simon',    initial: 'S', balance: '100.00', pct: '20.00%', profit: '+$20' },
-  { name: 'Alex',     initial: 'A', balance: '100.00', pct: '20.00%', profit: '+$20' },
-  { name: 'Sam',      initial: 'S', balance: '50.00',  pct: '10.00%', profit: '+$10' },
+  { name: 'LuckAndLoadTV', initial: 'L', balance: '250.00', pct: '50.00%', profit: '+$50', isHost: true },
+  { name: 'Eric_The_Small', initial: 'E', balance: '100.00', pct: '20.00%', profit: '+$20' },
+  { name: 'Albert',         initial: 'A', balance: '100.00', pct: '20.00%', profit: '+$20' },
+  { name: 'Einstein',       initial: 'E', balance: '50.00',  pct: '10.00%', profit: '+$10' },
 ]
 
 export function HypeSection() {
@@ -175,7 +175,7 @@ export function HypeSection() {
           <div className="space-y-6">
             {[
               { icon: '👥', text: <>An influencer can create a virtual room where <strong className="text-white">hundreds of players</strong> can join and play together</> },
-              { icon: '🎮', text: <>While Kristian &amp; Simon manage the game, everyone can <strong className="text-white">join in and leave at any time</strong></> },
+              { icon: '🎮', text: <>While LuckAndLoadTV manage the game, everyone can <strong className="text-white">join in and leave at any time</strong></> },
               { icon: '💰', text: <><strong className="text-white">Each player contributes</strong> to the room and deposits money into a shared pool</> },
               { icon: '📊', text: <>On every bet, each player will either lose or win depending on <strong className="text-white">their share</strong> in the room&apos;s pool</> },
             ].map((item, i) => (
@@ -234,7 +234,7 @@ export function HypeSection() {
                 <div className="flex items-center justify-center gap-1.5 mt-2">
                   <div className="h-6 w-6 rounded-full bg-brand-500/20 flex items-center justify-center text-[10px] font-bold text-brand-400">K</div>
                   <div className="text-left">
-                    <p className="text-white text-[11px] font-semibold leading-none">Kristian</p>
+                    <p className="text-white text-[11px] font-semibold leading-none">LuckAndLoadTV</p>
                     <p className="text-brand-400 text-[9px]">HOST</p>
                   </div>
                 </div>
