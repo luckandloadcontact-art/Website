@@ -146,55 +146,145 @@ export function CommunitySection() {
 }
 
 // ─── Hype.bet Multiplayer Room ────────────────────────────
+const ROOM_PLAYERS = [
+  { name: 'Kristian', initial: 'K', balance: '250.00', pct: '50.00%', profit: '+$50', isHost: true },
+  { name: 'Simon',    initial: 'S', balance: '100.00', pct: '20.00%', profit: '+$20' },
+  { name: 'Alex',     initial: 'A', balance: '100.00', pct: '20.00%', profit: '+$20' },
+  { name: 'Sam',      initial: 'S', balance: '50.00',  pct: '10.00%', profit: '+$10' },
+]
+
 export function HypeSection() {
   return (
-    <section className="py-16 border-t border-white/5">
+    <section className="py-20 border-t border-white/5 bg-surface-950">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-brand-500/20 bg-gradient-to-br from-surface-800 to-surface-700/50 overflow-hidden">
-          <div className="grid lg:grid-cols-2 gap-0">
-            {/* Text side */}
-            <div className="p-8 lg:p-10 flex flex-col justify-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-medium text-brand-400 mb-5 w-fit">
-                🤝 Samarbeid
+
+        {/* Header */}
+        <div className="text-center mb-14">
+          <h2 className="text-4xl sm:text-5xl font-black text-white mb-4 tracking-wide uppercase">
+            How Does That Work?
+          </h2>
+          <p className="text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">
+            We understand you might have questions. Hype.bet is the first casino offering this revolutionary multiplayer feature — and we use it on every stream!
+          </p>
+        </div>
+
+        {/* Two-column: text + visual */}
+        <div className="grid lg:grid-cols-2 gap-10 items-center mb-14">
+
+          {/* Left: bullet points */}
+          <div className="space-y-6">
+            {[
+              { icon: '👥', text: <>An influencer can create a virtual room where <strong className="text-white">hundreds of players</strong> can join and play together</> },
+              { icon: '🎮', text: <>While Kristian &amp; Simon manage the game, everyone can <strong className="text-white">join in and leave at any time</strong></> },
+              { icon: '💰', text: <><strong className="text-white">Each player contributes</strong> to the room and deposits money into a shared pool</> },
+              { icon: '📊', text: <>On every bet, each player will either lose or win depending on <strong className="text-white">their share</strong> in the room&apos;s pool</> },
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-4">
+                <span className="text-2xl shrink-0 mt-0.5">{item.icon}</span>
+                <p className="text-slate-300 text-base leading-relaxed">{item.text}</p>
               </div>
-              <h2 className="text-2xl font-bold text-white mb-4">
-                🎮 Multiplayer Room — How it works
-              </h2>
-              <div className="space-y-3 text-sm text-slate-400 leading-relaxed mb-6">
-                <p>👥 Players deposit into a shared balance and play slots together as a team.</p>
-                <p>📊 Your balance represents a percentage share of the pool, so whenever we win 💰 or lose 😅, the result is split fairly based on your share.</p>
-                <p>🔄 You can deposit or withdraw anytime, and your share updates instantly.</p>
+            ))}
+
+            <p className="text-slate-500 text-sm pt-2">
+              Below you can find a visual breakdown of how the Hype Multiplayer System works from start to finish.
+            </p>
+          </div>
+
+          {/* Right: diagram */}
+          <div className="rounded-2xl border border-white/8 bg-surface-800 p-5 overflow-hidden">
+            <p className="text-slate-500 text-xs text-right mb-4">All players get their % share</p>
+
+            <div className="flex items-center gap-2 flex-wrap justify-center">
+
+              {/* Players column */}
+              <div className="space-y-2 min-w-[170px]">
+                {ROOM_PLAYERS.map((p, i) => (
+                  <div
+                    key={i}
+                    className={`flex items-center gap-2 rounded-lg px-2.5 py-2 ${
+                      p.isHost
+                        ? 'border border-brand-500/40 bg-brand-500/10'
+                        : 'bg-surface-700'
+                    }`}
+                  >
+                    <div className="h-7 w-7 rounded-full bg-brand-500/20 flex items-center justify-center text-[11px] font-bold text-brand-400 shrink-0">
+                      {p.initial}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-white text-xs font-semibold">{p.name}</span>
+                        {p.isHost && (
+                          <span className="text-[9px] bg-brand-500/20 text-brand-400 px-1 py-0.5 rounded font-bold">HOST</span>
+                        )}
+                      </div>
+                      <p className="text-slate-400 text-[10px]">Balance: ${p.balance} {p.pct}</p>
+                    </div>
+                    <span className="text-green-400 text-[10px] font-semibold shrink-0">{p.profit}</span>
+                  </div>
+                ))}
               </div>
-              <a
-                href="https://hype.bet/LuckAndLoad"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-6 py-3 text-sm font-bold text-white hover:bg-brand-600 transition-colors shadow-lg shadow-brand-500/20 w-fit"
-              >
-                👉 Join our room on Hype.bet
-              </a>
+
+              {/* Arrow */}
+              <div className="text-slate-500 text-xl font-light">→</div>
+
+              {/* Room Balance */}
+              <div className="rounded-xl border border-brand-500/30 bg-brand-500/5 p-3 text-center min-w-[110px]">
+                <p className="text-slate-400 text-[10px] mb-1">Room Balance:</p>
+                <p className="text-white font-bold text-base">$500.00</p>
+                <div className="flex items-center justify-center gap-1.5 mt-2">
+                  <div className="h-6 w-6 rounded-full bg-brand-500/20 flex items-center justify-center text-[10px] font-bold text-brand-400">K</div>
+                  <div className="text-left">
+                    <p className="text-white text-[11px] font-semibold leading-none">Kristian</p>
+                    <p className="text-brand-400 text-[9px]">HOST</p>
+                  </div>
+                </div>
+                <p className="text-slate-500 text-[9px] mt-2">Managing Room Balance</p>
+              </div>
+
+              {/* Arrow + slot */}
+              <div className="flex flex-col items-center gap-1">
+                <p className="text-slate-400 text-[10px]">Single Bet $50.00</p>
+                <div className="text-slate-500 text-xl">→</div>
+                <div className="w-11 h-11 rounded-lg bg-surface-700 border border-white/8 flex items-center justify-center text-2xl">🎰</div>
+              </div>
+
+              {/* Win */}
+              <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-3 text-center">
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <span className="text-base">🏆</span>
+                  <p className="text-green-400 text-[10px] font-bold">Players Win</p>
+                </div>
+                <p className="text-white font-bold text-base">$100.00</p>
+              </div>
             </div>
 
-            {/* Image/visual side */}
-            <div className="relative bg-surface-900/50 flex items-center justify-center p-8 min-h-[260px]">
-              <div className="text-center">
-                <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-brand-500/10 border border-brand-500/20 mb-4">
-                  <span className="text-4xl">🎰</span>
-                </div>
-                <p className="text-white font-bold text-lg mb-1">Hype.bet</p>
-                <p className="text-slate-400 text-sm mb-4">Multiplayer Room</p>
-                <a
-                  href="https://hype.bet/LuckAndLoad"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-lg border border-brand-500/30 bg-brand-500/10 px-4 py-2 text-sm text-brand-400 hover:bg-brand-500/20 transition-colors"
-                >
-                  hype.bet/LuckAndLoad
-                </a>
-              </div>
-            </div>
+            <p className="text-center text-slate-500 text-xs mt-5 leading-relaxed">
+              Gather your friends and fellow players for an immersive gaming experience like never before.
+            </p>
           </div>
         </div>
+
+        {/* Divider */}
+        <div className="flex items-center gap-4 mb-10">
+          <div className="flex-1 h-px bg-white/5" />
+          <p className="text-brand-400 font-black text-sm tracking-widest uppercase flex items-center gap-2">
+            <span>🪙</span> Play Together, Win Together <span>🪙</span>
+          </p>
+          <div className="flex-1 h-px bg-white/5" />
+        </div>
+
+        {/* CTA */}
+        <div className="text-center">
+          <a
+            href="https://hype.bet/LuckAndLoad"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 rounded-xl bg-green-500 px-10 py-4 text-base font-black text-white hover:bg-green-600 transition-colors shadow-lg shadow-green-500/30 uppercase tracking-wide"
+          >
+            🎮 Play Together with Friends
+          </a>
+        </div>
+
       </div>
     </section>
   )

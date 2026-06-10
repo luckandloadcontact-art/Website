@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useState } from 'react'
-import { Menu, X, Trophy, User, LayoutDashboard, LogOut, LogIn, Zap } from 'lucide-react'
+import { Menu, X, Trophy, User, LayoutDashboard, LogOut, LogIn } from 'lucide-react'
 import { cn, formatPoints } from '@/lib/utils'
 
 const NAV_LINKS = [
@@ -24,13 +24,15 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 shadow-lg shadow-brand-500/30 group-hover:shadow-brand-500/50 transition-all">
-              <Zap size={16} className="text-white fill-white" />
-            </div>
-            <span className="hidden sm:block font-bold text-white text-sm tracking-wide">
-              LuckAndLoad<span className="text-brand-500">TV</span>
-            </span>
+          <Link href="/" className="flex items-center group">
+            <Image
+              src="/logo.png"
+              alt="LuckAndLoadTV"
+              width={160}
+              height={45}
+              className="h-10 w-auto object-contain transition-opacity group-hover:opacity-90"
+              priority
+            />
           </Link>
 
           {/* Desktop nav */}
