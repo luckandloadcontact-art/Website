@@ -26,7 +26,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <Image
-              src="/logo.png"
+              src="/Logo LuckAndLoadTV.jpg"
               alt="LuckAndLoadTV"
               width={160}
               height={45}
