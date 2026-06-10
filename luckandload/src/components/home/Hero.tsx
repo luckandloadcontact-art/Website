@@ -88,16 +88,6 @@ export function Hero() {
 
           {/* CTAs */}
           <div className="flex flex-wrap justify-center gap-3 mt-2">
-            {/* Hype.bet — main CTA */}
-            <a
-              href="https://hype.bet/LuckAndLoad"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-7 py-3 text-base font-black text-white shadow-lg shadow-green-500/40 hover:bg-green-400 transition-all hover:shadow-green-400/50 hover:scale-105"
-            >
-              🎰 Join Hype.bet
-            </a>
-
             {!session ? (
               <button
                 onClick={() => signIn('discord')}
@@ -117,6 +107,16 @@ export function Hero() {
                 View Leaderboard
               </Link>
             )}
+
+            {/* Hype.bet — main CTA i midten */}
+            <a
+              href="https://hype.bet/LuckAndLoad"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-7 py-3 text-base font-black text-white shadow-lg shadow-green-500/40 hover:bg-green-400 transition-all hover:shadow-green-400/50 hover:scale-105"
+            >
+              🎰 Join Hype.bet
+            </a>
 
             <a href="https://kick.com/luckandloadtv" target="_blank" rel="noopener noreferrer">
               <Button size="lg" variant="secondary">
