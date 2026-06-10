@@ -72,7 +72,7 @@ export function AboutSection() {
               LuckAndLoadTV started in September 2025 when two 24-year-old mates from Norway decided to stop talking about streaming and actually hit the "Go Live" button. We've both enjoyed gambling for years, but the stream quickly became about much more than slots and bonus hunts.
             </p>
             <p className="text-slate-400 leading-relaxed mb-4">
-              What started as a fun side project turned into a growing community full of laughs, banter, inside jokes, and people who genuinely enjoy hanging out together. Our goal has always been simple: build a community where people can relax, have a laugh after work, and feel like they're sitting in Discord with a couple of mates.
+              Our goal has always been simple: build a community where people can relax, have a laugh after work, and feel like they're sitting in Discord with a couple of mates.
             </p>
             <p className="text-slate-400 leading-relaxed mb-4">
               If you've ever joined one of our streams, you'll know that banter is basically our third host. We give it, we get it, and honestly, we wouldn't want it any other way.
