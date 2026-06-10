@@ -161,7 +161,7 @@ export function HypeSection() {
         {/* Header */}
         <div className="text-center mb-14">
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-4 tracking-wide uppercase">
-            How Does That Work?
+            How does Hype.bet work?
           </h2>
           <p className="text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">
             We understand you might have questions. Hype.bet is the first casino offering this revolutionary multiplayer feature — and we use it on every stream!
@@ -186,8 +186,26 @@ export function HypeSection() {
             ))}
 
             <p className="text-slate-500 text-sm pt-2">
-              Below you can find a visual breakdown of how the Hype Multiplayer System works from start to finish.
+              To the right you can find a visual breakdown of how the Hype Multiplayer System works from start to finish.
             </p>
+
+            {/* Affiliate callout */}
+            <div className="rounded-xl border border-gold-500/30 bg-gold-500/5 p-4 mt-2">
+              <p className="text-gold-400 font-bold text-sm mb-1">❤️ Support us — and get rewarded</p>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Sign up at Hype.bet using{' '}
+                <a
+                  href="https://hype.bet/LuckAndLoad"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold"
+                >
+                  our link
+                </a>
+                {' '}and play solo under our code. You generate a % for us —{' '}
+                <strong className="text-white">and we give 100% of it back to you</strong> through monthly payouts.
+              </p>
+            </div>
           </div>
 
           {/* Right: diagram */}
