@@ -101,10 +101,10 @@ export function AboutSection() {
 // ─── Community stats ──────────────────────────────────────
 export function CommunitySection() {
   const stats = [
-    { label: 'Discord Members', value: '500+', color: 'text-indigo-400' },
-    { label: 'Community Points Given', value: '1.2M+', color: 'text-brand-400' },
-    { label: 'Streams Completed', value: '200+', color: 'text-green-400' },
-    { label: 'Bonus Hunts Live', value: '80+', color: 'text-yellow-400' },
+    { label: 'Given away last 12 months', value: '$15,000+', color: 'text-green-400' },
+    { label: 'Bonus Hunts last 12 months', value: '100+', color: 'text-brand-400' },
+    { label: 'Hours of Banter', value: '☕ 1,000+', color: 'text-yellow-400' },
+    { label: 'Bad calls from chat', value: '🎰 ∞', color: 'text-indigo-400' },
   ]
 
   return (
