@@ -191,71 +191,85 @@ export function HypeSection() {
           </div>
 
           {/* Right: diagram */}
-          <div className="rounded-2xl border border-white/8 bg-surface-800 p-5 overflow-hidden">
-            <p className="text-slate-500 text-xs text-right mb-4">All players get their % share</p>
+          <div className="rounded-2xl border border-white/8 bg-surface-800 p-6 overflow-hidden">
+            <p className="text-slate-500 text-xs text-right mb-5">All players get their % share</p>
 
-            <div className="flex items-center gap-2 flex-wrap justify-center">
+            <div className="flex items-start gap-2 justify-center flex-wrap">
 
-              {/* Players column */}
-              <div className="space-y-2 min-w-[170px]">
-                {ROOM_PLAYERS.map((p, i) => (
-                  <div
-                    key={i}
-                    className={`flex items-center gap-2 rounded-lg px-2.5 py-2 ${
-                      p.isHost
-                        ? 'border border-brand-500/40 bg-brand-500/10'
-                        : 'bg-surface-700'
-                    }`}
-                  >
-                    <div className="h-7 w-7 rounded-full bg-brand-500/20 flex items-center justify-center text-[11px] font-bold text-brand-400 shrink-0">
-                      {p.initial}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-white text-xs font-semibold">{p.name}</span>
-                        {p.isHost && (
-                          <span className="text-[9px] bg-brand-500/20 text-brand-400 px-1 py-0.5 rounded font-bold">HOST</span>
-                        )}
+              {/* Step 1: Players deposit */}
+              <div>
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="w-5 h-5 rounded-full bg-brand-500 text-white text-[10px] font-black flex items-center justify-center shrink-0">1</div>
+                  <span className="text-brand-400 text-[11px] font-bold uppercase tracking-wide">Each player deposits</span>
+                </div>
+                <div className="space-y-1.5">
+                  {ROOM_PLAYERS.map((p, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-center gap-2 rounded-lg px-2.5 py-2 min-w-[160px] ${
+                        p.isHost ? 'border border-brand-500/40 bg-brand-500/10' : 'bg-surface-700'
+                      }`}
+                    >
+                      <div className="h-7 w-7 rounded-full bg-brand-500/20 flex items-center justify-center text-[11px] font-bold text-brand-400 shrink-0">
+                        {p.initial}
                       </div>
-                      <p className="text-slate-400 text-[10px]">Balance: ${p.balance} {p.pct}</p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-white text-xs font-semibold">{p.name}</span>
+                          {p.isHost && (
+                            <span className="text-[9px] bg-brand-500/20 text-brand-400 px-1 py-0.5 rounded font-bold">HOST</span>
+                          )}
+                        </div>
+                        <p className="text-slate-400 text-[10px]">${p.balance} · {p.pct}</p>
+                      </div>
+                      <span className="text-green-400 text-[10px] font-semibold shrink-0">{p.profit}</span>
                     </div>
-                    <span className="text-green-400 text-[10px] font-semibold shrink-0">{p.profit}</span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
               {/* Arrow */}
-              <div className="text-slate-500 text-xl font-light">→</div>
+              <div className="flex items-center self-center pt-5 text-slate-500 text-2xl px-1">→</div>
 
-              {/* Room Balance */}
-              <div className="rounded-xl border border-brand-500/30 bg-brand-500/5 p-3 text-center min-w-[110px]">
-                <p className="text-slate-400 text-[10px] mb-1">Room Balance:</p>
-                <p className="text-white font-bold text-base">$500.00</p>
-                <div className="flex items-center justify-center gap-1.5 mt-2">
-                  <div className="h-6 w-6 rounded-full bg-brand-500/20 flex items-center justify-center text-[10px] font-bold text-brand-400">K</div>
-                  <div className="text-left">
-                    <p className="text-white text-[11px] font-semibold leading-none">LuckAndLoadTV</p>
-                    <p className="text-brand-400 text-[9px]">HOST</p>
+              {/* Step 2: Shared Pool */}
+              <div>
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="w-5 h-5 rounded-full bg-brand-500 text-white text-[10px] font-black flex items-center justify-center shrink-0">2</div>
+                  <span className="text-brand-400 text-[11px] font-bold uppercase tracking-wide">Shared pool</span>
+                </div>
+                <div className="rounded-xl border border-brand-500/30 bg-brand-500/5 p-4 text-center min-w-[120px]">
+                  <p className="text-slate-400 text-[10px] mb-1">Room Balance</p>
+                  <p className="text-white font-bold text-xl">$500.00</p>
+                  <div className="flex items-center justify-center gap-1.5 mt-3">
+                    <div className="h-6 w-6 rounded-full bg-brand-500/30 flex items-center justify-center text-[10px] font-bold text-brand-400">L</div>
+                    <div className="text-left">
+                      <p className="text-white text-[11px] font-semibold leading-none">LuckAndLoadTV</p>
+                      <p className="text-brand-400 text-[9px]">HOST — plays the slots</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-white/5">
+                    <p className="text-slate-500 text-[9px]">Bets $50 per round</p>
                   </div>
                 </div>
-                <p className="text-slate-500 text-[9px] mt-2">Managing Room Balance</p>
               </div>
 
-              {/* Arrow + slot */}
-              <div className="flex flex-col items-center gap-1">
-                <p className="text-slate-400 text-[10px]">Single Bet $50.00</p>
-                <div className="text-slate-500 text-xl">→</div>
-                <div className="w-11 h-11 rounded-lg bg-surface-700 border border-white/8 flex items-center justify-center text-2xl">🎰</div>
-              </div>
+              {/* Arrow */}
+              <div className="flex items-center self-center pt-5 text-slate-500 text-2xl px-1">→</div>
 
-              {/* Win */}
-              <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-3 text-center">
-                <div className="flex items-center justify-center gap-1 mb-1">
-                  <span className="text-base">🏆</span>
-                  <p className="text-green-400 text-[10px] font-bold">Players Win</p>
+              {/* Step 3: Result */}
+              <div>
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className="w-5 h-5 rounded-full bg-green-500 text-white text-[10px] font-black flex items-center justify-center shrink-0">3</div>
+                  <span className="text-green-400 text-[11px] font-bold uppercase tracking-wide">Win together</span>
                 </div>
-                <p className="text-white font-bold text-base">$100.00</p>
+                <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-4 text-center min-w-[100px]">
+                  <span className="text-2xl">🏆</span>
+                  <p className="text-green-400 text-xs font-bold mt-1 mb-2">Players Win</p>
+                  <p className="text-white font-bold text-xl">$100.00</p>
+                  <p className="text-slate-500 text-[9px] mt-2">Split by % share</p>
+                </div>
               </div>
+
             </div>
 
             <p className="text-center text-slate-500 text-xs mt-5 leading-relaxed">
