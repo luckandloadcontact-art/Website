@@ -78,7 +78,7 @@ export function AboutSection() {
 
           <div className="rounded-2xl overflow-hidden border border-white/8 shadow-xl">
             <Image
-              src="/Team.jpg"
+              src="/Team.jpg.png"
               alt="LuckAndLoadTV — Two Degens One Mission"
               width={700}
               height={500}
