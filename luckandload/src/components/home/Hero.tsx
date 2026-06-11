@@ -134,10 +134,9 @@ export function Hero() {
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-all ${s.color}`}
+                className={`flex items-center justify-center rounded-lg border p-2.5 transition-all ${s.color}`}
               >
                 {s.icon}
-                {s.label}
               </a>
             ))}
           </div>
