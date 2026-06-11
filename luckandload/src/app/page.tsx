@@ -26,9 +26,9 @@ export default async function HomePage() {
     <div>
       <Hero />
       <HypeSection />
+      <CommunitySection />
       <LiveSection />
       <AboutSection />
-      <CommunitySection />
       {announcements.length > 0 && <AnnouncementsSection announcements={announcements} />}
     </div>
   )
