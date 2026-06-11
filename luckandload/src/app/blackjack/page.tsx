@@ -366,7 +366,7 @@ export default function BlackjackPage() {
 
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-4xl font-black text-white">🃏 Daily Blackjack</h1>
+          <h1 className="text-4xl font-black text-white">Daily Blackjack</h1>
           <p className="text-surface-400 text-sm mt-1">3 free hands per day · Earn points · Climb the tiers</p>
         </div>
 
