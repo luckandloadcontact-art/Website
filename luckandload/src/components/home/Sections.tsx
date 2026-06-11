@@ -101,8 +101,8 @@ export function AboutSection() {
 // ─── Community stats ──────────────────────────────────────
 export function CommunitySection() {
   const stats = [
-    { label: 'Given away last 12 months', value: '$15,000+', color: 'text-green-400' },
-    { label: 'Bonus Hunts last 12 months', value: '100+', color: 'text-brand-400' },
+    { label: 'Given away last 12 months', value: '💸 $15,000+', color: 'text-green-400' },
+    { label: 'Bonus Hunts last 12 months', value: '🎯 100+', color: 'text-brand-400' },
     { label: 'Hours of Banter', value: '☕ 500+', color: 'text-yellow-400' },
     { label: 'Bad calls from chat', value: '🎰 ∞', color: 'text-indigo-400' },
   ]
@@ -180,10 +180,10 @@ export function HypeSection() {
           {/* Left: bullet points */}
           <div className="space-y-6">
             {[
-              { icon: '👥', text: <>An influencer can create a virtual room where <strong className="text-white">hundreds of players</strong> can join and play together</> },
-              { icon: '🎮', text: <>While LuckAndLoadTV manage the game, everyone can <strong className="text-white">join in and leave at any time</strong></> },
-              { icon: '💰', text: <><strong className="text-white">Each player contributes</strong> to the room and deposits money into a shared pool</> },
-              { icon: '📊', text: <>On every bet, each player will either lose or win depending on <strong className="text-white">their share</strong> in the room&apos;s pool</> },
+              { icon: '👥', text: <>A host can create a virtual room where <strong className="text-white">hundreds of players</strong> can join and play together</> },
+              { icon: '🎮', text: <>While LuckAndLoadTV manages the game, anyone can <strong className="text-white">join in and leave at any time</strong></> },
+              { icon: '💰', text: <><strong className="text-white">Each player contributes</strong> to the room by depositing money into a shared pool</> },
+              { icon: '📊', text: <>With every bet, players in the room will either win or lose based on <strong className="text-white">their share</strong> of the pool</> },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-4">
                 <span className="text-2xl shrink-0 mt-0.5">{item.icon}</span>
