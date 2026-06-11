@@ -6,9 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPoints(points: number): string {
-  if (points >= 1_000_000) return `${(points / 1_000_000).toFixed(1)}M`
-  if (points >= 1_000) return `${(points / 1_000).toFixed(1)}K`
-  return points.toLocaleString()
+  return points.toLocaleString('en-US')
 }
 
 export function formatDate(date: string | Date): string {

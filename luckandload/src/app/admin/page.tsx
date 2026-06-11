@@ -31,6 +31,9 @@ export default function AdminPage() {
   const [pointDelta, setPointDelta] = useState('')
   const [pointReason, setPointReason] = useState('')
 
+  // Blackjack hand grant
+  const [bjTarget, setBjTarget] = useState('')
+
   useEffect(() => {
     if (status === 'loading') return
     const role = session?.user?.role
@@ -88,6 +91,22 @@ export default function AdminPage() {
       fetchData()
     } else {
       toast.error('Failed to create announcement')
+    }
+  }
+
+  async function handleGrantHands(e: React.FormEvent) {
+    e.preventDefault()
+    if (!bjTarget) return
+    const res = await fetch('/api/admin/blackjack/grant-hands', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: bjTarget }),
+    })
+    if (res.ok) {
+      toast.success('3 fresh hands granted for today')
+      setBjTarget('')
+    } else {
+      toast.error('Failed to grant hands')
     }
   }
 
@@ -199,6 +218,33 @@ export default function AdminPage() {
                   <Button type="submit" disabled={!pointTarget || !pointDelta}>
                     <Save size={13} />
                     Apply
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <h2 className="font-semibold text-white flex items-center gap-2">
+                  <TrendingUp size={15} className="text-brand-500" />
+                  Grant Blackjack Hands
+                </h2>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleGrantHands} className="grid sm:grid-cols-3 gap-3">
+                  <select
+                    value={bjTarget}
+                    onChange={e => setBjTarget(e.target.value)}
+                    className="rounded-lg border border-white/10 bg-surface-700 px-3 py-2 text-sm text-white focus:border-brand-500 focus:outline-none"
+                  >
+                    <option value="">Select user…</option>
+                    {users.map(u => (
+                      <option key={u.id} value={u.id}>{u.display_name || u.username}</option>
+                    ))}
+                  </select>
+                  <p className="text-sm text-slate-400 flex items-center">Resets today&apos;s hands to 0 → gives 3 fresh hands</p>
+                  <Button type="submit" disabled={!bjTarget}>
+                    <Save size={13} />
+                    Grant Hands
                   </Button>
                 </form>
               </CardContent>
