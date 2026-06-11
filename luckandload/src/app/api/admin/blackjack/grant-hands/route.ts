@@ -16,22 +16,11 @@ export async function POST(req: NextRequest) {
   const supabase = createAdminClient()
   const today = new Date().toISOString().split('T')[0]
 
-  // Reset hands_played to 0 for today — gives the user 3 fresh hands
-  const { data: existing } = await supabase
-    .from('blackjack_sessions')
-    .select('id')
-    .eq('user_id', userId)
-    .eq('play_date', today)
-    .maybeSingle()
-
-  if (existing) {
-    await supabase
-      .from('blackjack_sessions')
-      .update({ hands_played: 0 })
-      .eq('user_id', userId)
-      .eq('play_date', today)
-  }
-  // If no session exists yet, nothing to reset — they already have 3 hands available
+  // Delete all hands and session for today — gives a completely clean slate
+  await Promise.all([
+    supabase.from('blackjack_hands').delete().eq('user_id', userId).eq('play_date', today),
+    supabase.from('blackjack_sessions').delete().eq('user_id', userId).eq('play_date', today),
+  ])
 
   return NextResponse.json({ success: true })
 }
