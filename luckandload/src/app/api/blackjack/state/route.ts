@@ -1,0 +1,44 @@
+import { NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { createAdminClient } from '@/lib/supabase'
+import { maskDealerCards } from '@/lib/blackjack'
+
+export async function GET() {
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.dbId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const supabase = createAdminClient()
+  const today = new Date().toISOString().split('T')[0]
+  const userId = session.user.dbId
+
+  const [{ data: bjSession }, { data: activeHand }, { data: user }] = await Promise.all([
+    supabase.from('blackjack_sessions').select('*').eq('user_id', userId).eq('play_date', today).maybeSingle(),
+    supabase.from('blackjack_hands').select('*').eq('user_id', userId).eq('play_date', today).eq('status', 'active').maybeSingle(),
+    supabase.from('users').select('points').eq('id', userId).single(),
+  ])
+
+  const handsPlayed = bjSession?.hands_played ?? 0
+
+  let clientHand = null
+  if (activeHand) {
+    clientHand = {
+      id: activeHand.id,
+      handNumber: activeHand.hand_number,
+      playerCards: activeHand.player_cards,
+      dealerCards: maskDealerCards(activeHand.dealer_cards),
+      doubled: activeHand.doubled,
+    }
+  }
+
+  return NextResponse.json({
+    handsPlayed,
+    handsRemaining: 3 - handsPlayed,
+    pointsEarnedToday: bjSession?.points_earned ?? 0,
+    streakDays: bjSession?.streak_days ?? 0,
+    totalPoints: user?.points ?? 0,
+    activeHand: clientHand,
+  })
+}
