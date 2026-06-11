@@ -21,7 +21,7 @@ const SOCIALS = [
     color: 'border-green-500/30 text-green-400 hover:bg-green-500/10 hover:border-green-500/60',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
-        <path d="M0 0H24V8H16V11H9V13H16V16H24V24H0Z"/>
+        <path d="M12 0C5.374 0 0 5.374 0 12s5.374 12 12 12 12-5.374 12-12S18.626 0 12 0zm-2 16.5v-9l7 4.5-7 4.5z"/>
       </svg>
     ),
   },
