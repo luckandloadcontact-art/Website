@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
@@ -32,10 +33,6 @@ export async function POST(req: NextRequest) {
   let dealerCards: Card[] = hand.dealer_cards
   let deck: Card[] = hand.deck_state
   let doubled = hand.doubled
-
-  if (action === 'double' && hand.hand_number > 1) {
-    // only allowed on first two cards
-  }
 
   if (action === 'hit' || action === 'double') {
     const newCard = deck[deck.length - 1]

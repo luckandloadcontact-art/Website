@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession, signIn } from 'next-auth/react'
 import { Card, POINTS, REDEMPTION_TIERS, suitSymbol, isRedSuit, calculateHandValue } from '@/lib/blackjack'
 
 interface GameState {
@@ -62,6 +62,18 @@ function statusLabel(status: string): { text: string; color: string } {
     case 'dealer_won': return { text: '😤 Dealer wins +' + POINTS.lose + ' pts', color: 'text-red-400' }
     default:           return { text: '', color: '' }
   }
+}
+
+function ResultLabel({ result }: { result: HandResult }) {
+  const { text, color } = statusLabel(result.status)
+  return (
+    <div className="text-center py-2 space-y-1">
+      <div className={`text-2xl font-bold ${color}`}>{text}</div>
+      {result.doubled && <div className="text-sm text-yellow-300">Double down: pts ×2</div>}
+      {result.streakBonus > 0 && <div className="text-sm text-orange-300">🔥 Streak bonus: +{result.streakBonus} pts</div>}
+      {result.allHandsBonus > 0 && <div className="text-sm text-brand-300">✅ All hands bonus: +{result.allHandsBonus} pts</div>}
+    </div>
+  )
 }
 
 export default function BlackjackPage() {
@@ -141,7 +153,7 @@ export default function BlackjackPage() {
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-white">Daily Blackjack</h1>
         <p className="text-surface-300">Sign in with Discord to play</p>
-        <a href="/api/auth/signin" className="btn-primary inline-block">Sign in with Discord</a>
+        <button onClick={() => signIn('discord')} className="px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold transition-colors">Sign in with Discord</button>
       </div>
     </main>
   )
@@ -234,17 +246,7 @@ export default function BlackjackPage() {
             </div>
 
             {/* Result label */}
-            {result && (() => {
-              const { text, color } = statusLabel(result.status)
-              return (
-                <div className="text-center py-2 space-y-1">
-                  <div className={`text-2xl font-bold ${color}`}>{text}</div>
-                  {result.doubled && <div className="text-sm text-yellow-300">Double down: pts ×2</div>}
-                  {result.streakBonus > 0 && <div className="text-sm text-orange-300">🔥 Streak bonus: +{result.streakBonus} pts</div>}
-                  {result.allHandsBonus > 0 && <div className="text-sm text-brand-300">✅ All hands bonus: +{result.allHandsBonus} pts</div>}
-                </div>
-              )
-            })()}
+            {result && <ResultLabel result={result} />}
 
             {/* Player */}
             <div className="space-y-2">
