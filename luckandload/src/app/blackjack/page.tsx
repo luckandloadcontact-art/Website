@@ -501,8 +501,9 @@ export default function BlackjackPage() {
                 <button
                   onClick={() => sendAction('double')}
                   disabled={busy || (live.playingSplit ? display.split.length > 2 : display.player.length > 2)}
-                  className="py-3 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-black transition-all disabled:opacity-30 disabled:cursor-not-allowed">
-                  Double
+                  className="py-3 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-black transition-all disabled:opacity-30 disabled:cursor-not-allowed flex flex-col items-center leading-none gap-0.5">
+                  <span>Double</span>
+                  <span className="text-[10px] font-normal opacity-75">win ×2 / lose −20</span>
                 </button>
                 {showSplitBtn && (
                   <button onClick={() => sendAction('split')} disabled={busy}
@@ -523,6 +524,8 @@ export default function BlackjackPage() {
             <div className="flex justify-between text-green-400"><span>🏆 Win</span><span>{pts(POINTS.win)}</span></div>
             <div className="flex justify-between text-brand-400"><span>🤝 Push</span><span>{pts(POINTS.push)}</span></div>
             <div className="flex justify-between text-surface-400"><span>💥 Bust / Lose</span><span>{pts(POINTS.lose)}</span></div>
+            <div className="flex justify-between text-yellow-500"><span>✌️ Double win</span><span>+{POINTS.win * 2} pts</span></div>
+            <div className="flex justify-between text-red-400"><span>💀 Double lose</span><span>{POINTS.doubleLose} pts</span></div>
             <div className="flex justify-between text-orange-400"><span>🔥 7-day streak</span><span>+50/day</span></div>
             <div className="flex justify-between text-orange-400"><span>🔥 14-day streak</span><span>+150/day</span></div>
             <div className="flex justify-between text-brand-400 col-span-2"><span>✅ All 3 hands played</span><span>{pts(POINTS.allHandsBonus)}</span></div>

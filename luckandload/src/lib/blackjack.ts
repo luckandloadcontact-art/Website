@@ -16,6 +16,7 @@ export const POINTS = {
   win:            50,
   push:           15,
   lose:            5,
+  doubleLose:    -20,
   allHandsBonus:  25,
 } as const
 
@@ -94,11 +95,10 @@ export function resolveHand(
   else if (pv < dv)      status = 'dealer_won'
   else                   status = 'push'
 
-  const mult = doubled ? 2 : 1
-  const pointsAwarded =
-    status === 'player_won' ? POINTS.win * mult :
-    status === 'push'       ? POINTS.push * mult :
-    POINTS.lose
+  let pointsAwarded: number
+  if (status === 'player_won') pointsAwarded = doubled ? POINTS.win * 2 : POINTS.win
+  else if (status === 'push')  pointsAwarded = POINTS.push
+  else                         pointsAwarded = doubled ? POINTS.doubleLose : POINTS.lose
 
   return { status, pointsAwarded }
 }

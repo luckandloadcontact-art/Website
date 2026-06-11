@@ -18,10 +18,11 @@ async function awardPoints(
   points: number,
   reason: string,
 ) {
-  if (points <= 0) return
+  if (points === 0) return
   const { data: user } = await supabase.from('users').select('points').eq('id', userId).single()
+  const newTotal = Math.max(0, (user?.points ?? 0) + points)
   await Promise.all([
-    supabase.from('users').update({ points: (user?.points ?? 0) + points }).eq('id', userId),
+    supabase.from('users').update({ points: newTotal }).eq('id', userId),
     supabase.from('point_transactions').insert({ user_id: userId, delta: points, reason }),
   ])
 }
