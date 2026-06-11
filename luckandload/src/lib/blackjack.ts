@@ -108,5 +108,5 @@ export function maskDealerCards(cards: Card[]): Card[] {
 }
 
 export function canSplit(cards: Card[]): boolean {
-  return cards.length === 2 && cards[0].rank === cards[1].rank
+  return cards.length === 2 && cardValue(cards[0]) === cardValue(cards[1])
 }
