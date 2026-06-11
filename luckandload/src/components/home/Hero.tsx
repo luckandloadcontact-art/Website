@@ -113,7 +113,7 @@ export function Hero() {
               href="https://hype.bet/LuckAndLoad"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-hype px-7 py-3 text-base font-black text-white shadow-lg shadow-hype/40 hover:bg-hype/90 transition-all hover:shadow-hype/50 hover:scale-105"
+              className="inline-flex items-center gap-2 rounded-xl bg-hype px-7 py-3 text-base font-black text-black shadow-lg shadow-hype/40 hover:bg-hype/90 transition-all hover:shadow-hype/50 hover:scale-105"
             >
               🎰 Join Hype.bet
             </a>

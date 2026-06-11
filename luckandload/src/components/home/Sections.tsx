@@ -334,7 +334,7 @@ export function HypeSection() {
             href="https://hype.bet/LuckAndLoad"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 rounded-xl bg-hype px-10 py-4 text-base font-black text-white hover:bg-hype/90 transition-colors shadow-lg shadow-hype/30 uppercase tracking-wide"
+            className="inline-flex items-center gap-3 rounded-xl bg-hype px-10 py-4 text-base font-black text-black hover:bg-hype/90 transition-colors shadow-lg shadow-hype/30 uppercase tracking-wide"
           >
             🎮 Play Together with Friends
           </a>
