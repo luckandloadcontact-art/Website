@@ -215,67 +215,102 @@ export function HypeSection() {
           </div>
 
           {/* Right: diagram — 2×2 grid flow */}
-          <div className="rounded-2xl border border-white/8 bg-surface-800 p-5">
-            <p className="text-slate-500 text-xs text-right mb-4">All players get their % share</p>
+          <div className="rounded-2xl border border-white/8 bg-surface-800 p-6">
+            <p className="text-slate-500 text-xs text-right mb-5">All players get their % share</p>
 
-            <div className="grid grid-cols-[1fr_32px_1fr] gap-y-0">
+            <div className="grid grid-cols-[1fr_48px_1fr] gap-y-0">
 
               {/* TOP-LEFT: Players deposit */}
-              <div className="rounded-xl border border-brand-500/25 bg-surface-700 p-4">
-                <p className="text-brand-400 text-[10px] font-bold uppercase tracking-widest mb-3">Players deposit</p>
-                <div className="space-y-2">
+              <div className="rounded-2xl border border-brand-500/30 bg-surface-700 p-5">
+                <p className="text-brand-400 text-[11px] font-bold uppercase tracking-widest mb-4">Players deposit</p>
+                <div className="space-y-3">
                   {ROOM_PLAYERS.map((p, i) => (
-                    <div key={i} className="flex items-center justify-between text-xs gap-2">
-                      <span className={`font-semibold truncate ${p.isHost ? 'text-brand-400' : 'text-slate-300'}`}>{p.name}</span>
-                      <span className="text-slate-500 shrink-0">{p.pct}</span>
-                      <span className="text-white font-bold shrink-0">${p.balance}</span>
+                    <div key={i} className="flex items-center gap-3">
+                      <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${p.isHost ? 'bg-brand-500/30 text-brand-300' : 'bg-surface-600 text-slate-400'}`}>
+                        {p.initial}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`text-xs font-semibold truncate ${p.isHost ? 'text-brand-300' : 'text-slate-200'}`}>{p.name}</span>
+                          {p.isHost && <span className="text-[9px] bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded-full font-bold shrink-0">HOST</span>}
+                        </div>
+                        <p className="text-slate-500 text-[11px]">{p.pct}</p>
+                      </div>
+                      <span className="text-white text-sm font-bold shrink-0">${p.balance}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Arrow → */}
-              <div className="flex items-center justify-center text-slate-400 text-xl font-bold">→</div>
-
-              {/* TOP-RIGHT: Total balance */}
-              <div className="rounded-xl border border-brand-500/25 bg-surface-700 p-4 flex flex-col items-center justify-center text-center">
-                <p className="text-slate-400 text-[10px] uppercase tracking-widest mb-2">Total Balance</p>
-                <p className="text-white font-black text-3xl">$500</p>
-                <p className="text-brand-400 text-[10px] mt-2">LuckAndLoadTV plays the slots</p>
+              <div className="flex items-center justify-center">
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-8 h-0.5 bg-slate-600 rounded" />
+                  <div className="text-slate-500 text-lg">›</div>
+                </div>
               </div>
 
-              {/* ROW 2: spacer + spacer + arrow ↓ */}
-              <div className="py-2" />
+              {/* TOP-RIGHT: Total balance */}
+              <div className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-surface-700 p-5 flex flex-col items-center justify-center text-center gap-2">
+                <p className="text-slate-400 text-[11px] uppercase tracking-widest">Shared Pool</p>
+                <p className="text-white font-black text-4xl">$500</p>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="h-7 w-7 rounded-full bg-brand-500/30 flex items-center justify-center text-xs font-black text-brand-300">L</div>
+                  <div className="text-left">
+                    <p className="text-white text-xs font-semibold leading-none">LuckAndLoadTV</p>
+                    <p className="text-brand-400 text-[10px]">plays the slots</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* ROW 2: spacer / spacer / arrow ↓ */}
+              <div className="py-3" />
               <div />
-              <div className="flex items-center justify-center text-slate-400 text-xl font-bold py-2">↓</div>
+              <div className="flex items-center justify-center py-3">
+                <div className="flex flex-col items-center gap-1">
+                  <div className="h-8 w-0.5 bg-slate-600 rounded" />
+                  <div className="text-slate-500 text-lg rotate-90">›</div>
+                </div>
+              </div>
 
               {/* BOTTOM-LEFT: Payouts */}
-              <div className="rounded-xl border border-green-500/20 bg-green-500/5 p-4">
-                <p className="text-green-400 text-[10px] font-bold uppercase tracking-widest mb-3">Your payout</p>
-                <div className="space-y-2">
+              <div className="rounded-2xl border border-green-500/25 bg-gradient-to-br from-green-500/10 to-surface-700 p-5">
+                <p className="text-green-400 text-[11px] font-bold uppercase tracking-widest mb-4">Your payout</p>
+                <div className="space-y-3">
                   {[
-                    { name: 'LuckAndLoadTV', pct: '50%', win: '$50' },
-                    { name: 'Eric_The_Small', pct: '20%', win: '$20' },
-                    { name: 'Albert',         pct: '20%', win: '$20' },
-                    { name: 'Einstein',       pct: '10%', win: '$10' },
+                    { name: 'LuckAndLoadTV', initial: 'L', pct: '50%', win: '$50', host: true },
+                    { name: 'Eric_The_Small', initial: 'E', pct: '20%', win: '$20', host: false },
+                    { name: 'Albert',         initial: 'A', pct: '20%', win: '$20', host: false },
+                    { name: 'Einstein',       initial: 'E', pct: '10%', win: '$10', host: false },
                   ].map((p, i) => (
-                    <div key={i} className="flex items-center justify-between text-xs gap-2">
-                      <span className="text-slate-300 truncate">{p.name}</span>
-                      <span className="text-slate-500 shrink-0">{p.pct}</span>
-                      <span className="text-green-400 font-bold shrink-0">{p.win} win</span>
+                    <div key={i} className="flex items-center gap-3">
+                      <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-black shrink-0 ${p.host ? 'bg-green-500/20 text-green-300' : 'bg-surface-600 text-slate-400'}`}>
+                        {p.initial}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-slate-200 text-xs font-semibold truncate">{p.name}</p>
+                        <p className="text-slate-500 text-[11px]">{p.pct} share</p>
+                      </div>
+                      <span className="text-green-400 text-sm font-bold shrink-0">{p.win}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Arrow ← */}
-              <div className="flex items-center justify-center text-slate-400 text-xl font-bold">←</div>
+              <div className="flex items-center justify-center">
+                <div className="flex flex-col items-center gap-1">
+                  <div className="text-slate-500 text-lg">‹</div>
+                  <div className="w-8 h-0.5 bg-slate-600 rounded" />
+                </div>
+              </div>
 
               {/* BOTTOM-RIGHT: Win */}
-              <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-4 flex flex-col items-center justify-center text-center">
-                <span className="text-3xl mb-2">🏆</span>
-                <p className="text-green-400 text-[10px] uppercase tracking-widest mb-1">Round win</p>
-                <p className="text-white font-black text-3xl">$100</p>
+              <div className="rounded-2xl border border-green-500/35 bg-gradient-to-br from-green-500/15 to-surface-700 p-5 flex flex-col items-center justify-center text-center gap-2">
+                <span className="text-4xl">🏆</span>
+                <p className="text-green-400 text-[11px] uppercase tracking-widest">Round win</p>
+                <p className="text-white font-black text-4xl">$100</p>
+                <p className="text-slate-500 text-[10px]">Split by % share</p>
               </div>
 
             </div>
