@@ -192,7 +192,9 @@ export function HypeSection() {
             ))}
 
             <p className="text-slate-500 text-sm pt-2">
-              To the right you can find a visual breakdown of how the Hype Multiplayer System works from start to finish.
+              <span className="hidden lg:inline">To the right</span>
+              <span className="lg:hidden">Below</span>
+              {' '}you can find a visual breakdown of how the Hype Multiplayer System works from start to finish.
             </p>
 
             {/* Affiliate callout */}
@@ -274,7 +276,7 @@ export function HypeSection() {
               </div>
 
               {/* BOTTOM-LEFT: Payouts */}
-              <div className="rounded-2xl border border-green-500/25 bg-gradient-to-br from-green-500/10 to-surface-700 p-5">
+              <div className="order-4 sm:order-none rounded-2xl border border-green-500/25 bg-gradient-to-br from-green-500/10 to-surface-700 p-5">
                 <p className="text-green-400 text-[11px] font-bold uppercase tracking-widest mb-4">Your payout</p>
                 <div className="space-y-3">
                   {[
@@ -306,7 +308,7 @@ export function HypeSection() {
               </div>
 
               {/* BOTTOM-RIGHT: Win */}
-              <div className="rounded-2xl border border-green-500/35 bg-gradient-to-br from-green-500/15 to-surface-700 p-5 flex flex-col items-center justify-center text-center gap-2">
+              <div className="order-3 sm:order-none rounded-2xl border border-green-500/35 bg-gradient-to-br from-green-500/15 to-surface-700 p-5 flex flex-col items-center justify-center text-center gap-2">
                 <span className="text-4xl">🏆</span>
                 <p className="text-green-400 text-[11px] uppercase tracking-widest">Round win</p>
                 <p className="text-white font-black text-4xl">$100</p>
