@@ -71,7 +71,7 @@ export function dealerPlay(
   dealerCards: Card[],
   deck: Card[]
 ): { dealerCards: Card[]; deck: Card[] } {
-  let d = dealerCards.map(c => ({ ...c, hidden: false }))
+  let d: Card[] = dealerCards.map(c => ({ ...c, hidden: false }))
   let remaining = [...deck]
   while (calculateHandValue(d) < 17 && remaining.length > 0) {
     d = [...d, remaining[remaining.length - 1]]
