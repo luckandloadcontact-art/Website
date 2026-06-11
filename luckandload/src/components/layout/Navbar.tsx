@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/blackjack', label: 'Daily Blackjack' },
   { href: '/leaderboard', label: 'Leaderboard' },
+  { href: '/contact', label: 'Contact' },
 ]
 
 export function Navbar() {
