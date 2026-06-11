@@ -20,8 +20,8 @@ const SOCIALS = [
     href: 'https://kick.com/luckandloadtv',
     color: 'border-green-500/30 text-green-400 hover:bg-green-500/10 hover:border-green-500/60',
     icon: (
-      <svg viewBox="0 0 24 24" fill="currentColor" fillRule="evenodd" className="h-4 w-4">
-        <path d="M0 0H24V24H0ZM16 8H24V10H16ZM8 10H24V14H8ZM16 14H24V16H16Z"/>
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+        <path d="M0 0H24V8H16V11H9V13H16V16H24V24H0Z"/>
       </svg>
     ),
   },
