@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
-import { maskDealerCards } from '@/lib/blackjack'
+import { maskDealerCards, calculateHandValue } from '@/lib/blackjack'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -29,6 +29,11 @@ export async function GET() {
       handNumber: activeHand.hand_number,
       playerCards: activeHand.player_cards,
       dealerCards: maskDealerCards(activeHand.dealer_cards),
+      playerValue: calculateHandValue(activeHand.player_cards),
+      splitCards: activeHand.split_cards ?? null,
+      splitValue: activeHand.split_cards ? calculateHandValue(activeHand.split_cards) : null,
+      splitStatus: activeHand.split_status ?? null,
+      playingSplit: activeHand.playing_split ?? false,
       doubled: activeHand.doubled,
     }
   }

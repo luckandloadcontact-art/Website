@@ -106,3 +106,7 @@ export function resolveHand(
 export function maskDealerCards(cards: Card[]): Card[] {
   return cards.map((c, i) => (i === 1 ? { ...c, hidden: true } : c))
 }
+
+export function canSplit(cards: Card[]): boolean {
+  return cards.length === 2 && cards[0].rank === cards[1].rank
+}
