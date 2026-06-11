@@ -161,7 +161,7 @@ const ROOM_PLAYERS = [
 
 export function HypeSection() {
   return (
-    <section className="py-20 border-t border-white/5 bg-surface-950">
+    <section className="py-20 border-t border-white/5 bg-surface-950 overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
@@ -218,7 +218,7 @@ export function HypeSection() {
           <div className="rounded-2xl border border-white/8 bg-surface-800 p-6">
             <p className="text-slate-500 text-xs text-right mb-5">All players get their % share</p>
 
-            <div className="grid grid-cols-[1fr_48px_1fr] gap-y-0">
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_48px_1fr] gap-4 sm:gap-x-0 sm:gap-y-0">
 
               {/* TOP-LEFT: Players deposit */}
               <div className="rounded-2xl border border-brand-500/30 bg-surface-700 p-5">
@@ -243,7 +243,7 @@ export function HypeSection() {
               </div>
 
               {/* Arrow → */}
-              <div className="flex items-center justify-center">
+              <div className="hidden sm:flex items-center justify-center">
                 <div className="flex flex-col items-center gap-1">
                   <div className="w-8 h-0.5 bg-slate-600 rounded" />
                   <div className="text-slate-500 text-lg">›</div>
@@ -264,9 +264,9 @@ export function HypeSection() {
               </div>
 
               {/* ROW 2: spacer / spacer / arrow ↓ */}
-              <div className="py-3" />
-              <div />
-              <div className="flex items-center justify-center py-3">
+              <div className="hidden sm:block py-3" />
+              <div className="hidden sm:block" />
+              <div className="hidden sm:flex items-center justify-center py-3">
                 <div className="flex flex-col items-center gap-1">
                   <div className="h-8 w-0.5 bg-slate-600 rounded" />
                   <div className="text-slate-500 text-lg rotate-90">›</div>
@@ -298,7 +298,7 @@ export function HypeSection() {
               </div>
 
               {/* Arrow ← */}
-              <div className="flex items-center justify-center">
+              <div className="hidden sm:flex items-center justify-center">
                 <div className="flex flex-col items-center gap-1">
                   <div className="text-slate-500 text-lg">‹</div>
                   <div className="w-8 h-0.5 bg-slate-600 rounded" />
