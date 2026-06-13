@@ -72,20 +72,20 @@ function mkSound(type: 'deal' | 'win' | 'lose' | 'push') {
 function PlayingCard({ card, animClass = 'animate-deal' }: { card: Card; animClass?: string }) {
   if (card.hidden) {
     return (
-      <div className={`w-14 h-20 rounded-lg flex items-center justify-center shadow-xl select-none ${animClass}`}
+      <div className={`w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-36 rounded-xl flex items-center justify-center shadow-2xl select-none ${animClass}`}
         style={{ background: 'repeating-linear-gradient(45deg,#0d6e6e,#0d6e6e 4px,#0a5555 4px,#0a5555 8px)', border: '2px solid rgba(20,184,184,0.5)' }}>
-        <span className="text-2xl opacity-60">🂠</span>
+        <span className="text-3xl lg:text-4xl opacity-60">🂠</span>
       </div>
     )
   }
   const red = isRedSuit(card.suit)
   const color = red ? 'text-red-500' : 'text-gray-900'
   return (
-    <div className={`w-14 h-20 rounded-lg bg-white shadow-xl flex flex-col justify-between p-1 select-none ${animClass}`}
+    <div className={`w-16 h-24 sm:w-20 sm:h-28 lg:w-24 lg:h-36 rounded-xl bg-white shadow-2xl flex flex-col justify-between p-1 sm:p-1.5 lg:p-2 select-none ${animClass}`}
       style={{ border: '1.5px solid #ddd' }}>
-      <div className={`text-xs font-black leading-none ${color}`}>{card.rank}<br />{suitSymbol(card.suit)}</div>
-      <div className={`text-2xl text-center leading-none ${color}`}>{suitSymbol(card.suit)}</div>
-      <div className={`text-xs font-black leading-none self-end rotate-180 ${color}`}>{card.rank}<br />{suitSymbol(card.suit)}</div>
+      <div className={`text-xs sm:text-sm lg:text-base font-black leading-none ${color}`}>{card.rank}<br />{suitSymbol(card.suit)}</div>
+      <div className={`text-2xl sm:text-3xl lg:text-4xl text-center leading-none ${color}`}>{suitSymbol(card.suit)}</div>
+      <div className={`text-xs sm:text-sm lg:text-base font-black leading-none self-end rotate-180 ${color}`}>{card.rank}<br />{suitSymbol(card.suit)}</div>
     </div>
   )
 }
@@ -100,7 +100,7 @@ function HandArea({
   return (
     <div className={`relative rounded-xl p-3 transition-all duration-300 ${active ? 'ring-2 ring-brand-400 ring-offset-2 ring-offset-green-900' : ''}`}>
       <p className="text-green-200 text-xs font-semibold uppercase tracking-widest mb-2">{label}</p>
-      <div className="flex gap-2 min-h-[80px] items-center">
+      <div className="flex gap-2 sm:gap-3 min-h-24 lg:min-h-36 items-center">
         {cards.length === 0 && <span className="text-green-600 text-xs italic">Waiting…</span>}
         {cards.map((card, i) => (
           <PlayingCard
@@ -110,7 +110,7 @@ function HandArea({
           />
         ))}
         {!isDealer && cards.length > 0 && (
-          <div className="ml-auto text-3xl font-black text-white self-end pb-1">{value}</div>
+          <div className="ml-auto text-3xl lg:text-5xl font-black text-white self-end pb-1">{value}</div>
         )}
       </div>
       {done && doneLabel && (
@@ -387,7 +387,7 @@ export default function BlackjackPage() {
 
   return (
     <main className="min-h-screen py-24 px-4">
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-3xl lg:max-w-4xl mx-auto space-y-6">
 
         {/* Header */}
         <div className="text-center">
@@ -429,15 +429,15 @@ export default function BlackjackPage() {
 
         {/* Game table */}
         <div className="rounded-2xl overflow-hidden shadow-2xl">
-          <div className="bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-5 space-y-4 min-h-[340px]"
-            style={{ backgroundImage: 'radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.08) 0%, transparent 70%)' }}>
+          <div className="bg-gradient-to-br from-green-900 via-green-800 to-green-900 p-5 lg:p-10 space-y-4 lg:space-y-8 min-h-[400px] lg:min-h-[560px]"
+            style={{ backgroundImage: 'radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.12) 0%, transparent 70%)' }}>
 
             {/* Dealer */}
             <div>
               <p className="text-green-300 text-xs font-semibold uppercase tracking-widest mb-1">
                 Dealer {dealerVal > 0 && <span className="text-white ml-1">{dealerVal}</span>}
               </p>
-              <div className="flex gap-2 min-h-[80px] items-center">
+              <div className="flex gap-2 sm:gap-3 min-h-24 lg:min-h-36 items-center">
                 {display.dealer.length === 0 && <span className="text-green-700 text-sm italic">Waiting…</span>}
                 {display.dealer.map((card, i) => (
                   <PlayingCard
@@ -507,32 +507,32 @@ export default function BlackjackPage() {
           </div>
 
           {/* Buttons */}
-          <div className="bg-surface-900 p-4">
+          <div className="bg-surface-900 p-4 lg:p-6">
             {!isActiveHand ? (
               <button onClick={dealHand} disabled={busy || gs?.handsRemaining === 0}
-                className="w-full py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-black text-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-brand-500/20">
+                className="w-full py-3 lg:py-5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-black text-lg lg:text-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-brand-500/20">
                 {dealing ? '🃏 Dealing…' : gs?.handsRemaining === 0 ? '⏰ Come back tomorrow' : '🃏 Deal Hand'}
               </button>
             ) : (
               <div className={`grid gap-3 ${showSplitBtn ? 'grid-cols-4' : 'grid-cols-3'}`}>
                 <button onClick={() => sendAction('hit')} disabled={!canPlayerHit || busy}
-                  className="py-3 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+                  className="py-3 lg:py-4 rounded-xl bg-green-600 hover:bg-green-700 text-white font-black lg:text-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed">
                   Hit
                 </button>
                 <button onClick={() => sendAction('stand')} disabled={busy}
-                  className="py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black transition-all disabled:opacity-30">
+                  className="py-3 lg:py-4 rounded-xl bg-red-600 hover:bg-red-700 text-white font-black lg:text-lg transition-all disabled:opacity-30">
                   Stand
                 </button>
                 <button
                   onClick={() => sendAction('double')}
                   disabled={busy || (live.playingSplit ? display.split.length > 2 : display.player.length > 2)}
-                  className="py-3 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-black transition-all disabled:opacity-30 disabled:cursor-not-allowed flex flex-col items-center leading-none gap-0.5">
+                  className="py-3 lg:py-4 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-black lg:text-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed flex flex-col items-center leading-none gap-0.5">
                   <span>Double</span>
                   <span className="text-[10px] font-normal opacity-75">win ×2 / lose −20</span>
                 </button>
                 {showSplitBtn && (
                   <button onClick={() => sendAction('split')} disabled={busy}
-                    className="py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black transition-all disabled:opacity-30">
+                    className="py-3 lg:py-4 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black lg:text-lg transition-all disabled:opacity-30">
                     Split
                   </button>
                 )}
