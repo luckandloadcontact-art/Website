@@ -58,10 +58,10 @@ const SOCIALS = [
 ]
 
 const CLIPS = [
-  { id: 'ycvJWKaXTAY', thumb: '/3000x%20Forbidden%20Fury.png' },
+  { id: '1-mF8YGdn1A', thumb: '/Bloody%20dawn%20max%20win.png' },
   { id: 'HoP3z6fPP1Y', thumb: '/7k%20X%20Shogun%20Jade.png' },
   { id: '3lPSNpdKZfc', thumb: '/5%20VS%20Phoenix%20Duelreels.png' },
-  { id: '1-mF8YGdn1A', thumb: '/Bloody%20dawn%20max%20win.png' },
+  { id: 'ycvJWKaXTAY', thumb: '/3000x%20Forbidden%20Fury.png' },
 ]
 
 function ShortClip({ videoId, thumb }: { videoId: string; thumb: string }) {
