@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: '/blackjack', label: 'Daily Blackjack' },
   { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/contact', label: 'Contact' },
+  { href: null, label: 'Forum', comingSoon: true },
 ]
 
 export function Navbar() {
@@ -39,15 +40,27 @@ export function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-4 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map(link =>
+              link.comingSoon ? (
+                <span
+                  key={link.label}
+                  className="px-4 py-2 rounded-lg text-sm text-slate-600 cursor-default flex items-center gap-2"
+                >
+                  {link.label}
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-brand-400 border border-brand-500/30 rounded-full px-1.5 py-0.5 leading-none">
+                    Soon
+                  </span>
+                </span>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href!}
+                  className="px-4 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
             {isAdmin && (
               <Link
                 href="/admin"
@@ -156,16 +169,28 @@ export function Navbar() {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden border-t border-white/5 py-3 space-y-1 animate-fade-in">
-            {NAV_LINKS.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block px-4 py-2.5 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5"
-                onClick={() => setMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map(link =>
+              link.comingSoon ? (
+                <span
+                  key={link.label}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-slate-600"
+                >
+                  {link.label}
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-brand-400 border border-brand-500/30 rounded-full px-1.5 py-0.5 leading-none">
+                    Soon
+                  </span>
+                </span>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href!}
+                  className="block px-4 py-2.5 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
             {isAdmin && (
               <Link href="/admin" className="block px-4 py-2.5 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5" onClick={() => setMenuOpen(false)}>
                 Admin
