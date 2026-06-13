@@ -134,7 +134,7 @@ function resultLabel(status: string) {
   }
 }
 
-function pts(n: number) { return `+${n} pts` }
+function pts(n: number) { return `+${n} loads` }
 
 // ── Types ─────────────────────────────────────────────────────────────────
 interface GameState {
@@ -392,7 +392,7 @@ export default function BlackjackPage() {
         {/* Header */}
         <div className="text-center">
           <h1 className="text-4xl font-black text-white">Daily Blackjack</h1>
-          <p className="text-surface-400 text-sm mt-1">3 free hands per day · Earn points · Climb the tiers</p>
+          <p className="text-surface-400 text-sm mt-1">3 free hands per day · Earn loads · Climb the tiers</p>
         </div>
 
         {/* Stats */}
@@ -404,7 +404,7 @@ export default function BlackjackPage() {
             </div>
             <div className="bg-surface-800 rounded-xl p-3 text-center">
               <div className="text-2xl font-black text-yellow-400">{gs.totalPoints.toLocaleString('en-US')}</div>
-              <div className="text-xs text-surface-400">Total points</div>
+              <div className="text-xs text-surface-400">Total loads</div>
             </div>
             <div className="bg-surface-800 rounded-xl p-3 text-center">
               <div className="text-2xl font-black text-orange-400">🔥 {gs.streakDays}</div>
@@ -418,7 +418,7 @@ export default function BlackjackPage() {
           <div className="bg-surface-800 rounded-xl p-3 space-y-1.5">
             <div className="flex justify-between text-xs">
               <span className="text-surface-300">Progress to {nextTier.emoji} {nextTier.name}</span>
-              <span className="text-white font-medium">{gs.totalPoints.toLocaleString('en-US')} / {nextTier.points.toLocaleString('en-US')}</span>
+              <span className="text-white font-medium">{gs.totalPoints.toLocaleString('en-US')} / {nextTier.points.toLocaleString('en-US')} loads</span>
             </div>
             <div className="h-2 bg-surface-700 rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-brand-600 to-brand-400 rounded-full transition-all duration-700"
@@ -556,7 +556,7 @@ export default function BlackjackPage() {
 
           <div className="bg-surface-800/60 p-5 space-y-5">
             <p className="text-slate-400 text-sm leading-relaxed">
-              Collect points every day and redeem them for real prizes — merch, bonus codes, and exclusive rewards. The more you play, the bigger the prizes.
+              Collect loads every day and redeem them for real prizes — merch, bonus codes, and exclusive rewards. The more you play, the bigger the prizes.
             </p>
 
             {/* Hype.bet requirement */}
@@ -582,7 +582,7 @@ export default function BlackjackPage() {
                   </div>
                   <div className="text-2xl mb-1">{tier.emoji}</div>
                   <div className="text-white font-bold text-sm">{tier.name}</div>
-                  <div className="text-slate-500 text-xs mt-0.5">{tier.points.toLocaleString('en-US')} pts</div>
+                  <div className="text-slate-500 text-xs mt-0.5">{tier.points.toLocaleString('en-US')} loads</div>
                 </div>
               ))}
             </div>
@@ -593,16 +593,16 @@ export default function BlackjackPage() {
 
         {/* Points guide */}
         <div className="bg-surface-800 rounded-xl p-5 space-y-3">
-          <h3 className="text-white font-bold text-sm">Points per hand</h3>
+          <h3 className="text-white font-bold text-sm">Loads per hand</h3>
           <div className="grid grid-cols-2 gap-y-1.5 gap-x-4 text-sm">
             <div className="flex justify-between text-yellow-400"><span>🃏 Blackjack</span><span>{pts(POINTS.blackjack)}</span></div>
             <div className="flex justify-between text-green-400"><span>🏆 Win</span><span>{pts(POINTS.win)}</span></div>
             <div className="flex justify-between text-brand-400"><span>🤝 Push</span><span>{pts(POINTS.push)}</span></div>
             <div className="flex justify-between text-surface-400"><span>💥 Bust / Lose</span><span>{pts(POINTS.lose)}</span></div>
-            <div className="flex justify-between text-yellow-500"><span>✌️ Double win</span><span>+{POINTS.win * 2} pts</span></div>
-            <div className="flex justify-between text-red-400"><span>💀 Double lose</span><span>{POINTS.doubleLose} pts</span></div>
-            <div className="flex justify-between text-orange-400"><span>🔥 7-day streak</span><span>+50/day</span></div>
-            <div className="flex justify-between text-orange-400"><span>🔥 14-day streak</span><span>+150/day</span></div>
+            <div className="flex justify-between text-yellow-500"><span>✌️ Double win</span><span>+{POINTS.win * 2} loads</span></div>
+            <div className="flex justify-between text-red-400"><span>💀 Double lose</span><span>{POINTS.doubleLose} loads</span></div>
+            <div className="flex justify-between text-orange-400"><span>🔥 7-day streak</span><span>+50 loads/day</span></div>
+            <div className="flex justify-between text-orange-400"><span>🔥 14-day streak</span><span>+150 loads/day</span></div>
             <div className="flex justify-between text-brand-400 col-span-2"><span>✅ All 3 hands played</span><span>{pts(POINTS.allHandsBonus)}</span></div>
           </div>
           <div className="border-t border-surface-700 pt-3 space-y-1">
@@ -610,7 +610,7 @@ export default function BlackjackPage() {
             {REDEMPTION_TIERS.map(t => (
               <div key={t.name} className="flex justify-between text-sm">
                 <span className="text-white">{t.emoji} {t.name}</span>
-                <span className="text-surface-400">{t.points.toLocaleString('en-US')} pts</span>
+                <span className="text-surface-400">{t.points.toLocaleString('en-US')} loads</span>
               </div>
             ))}
           </div>

@@ -76,7 +76,7 @@ export default function ProfilePage() {
               <p className="text-3xl font-bold text-gradient">{formatPoints(user.points || 0)}</p>
               <p className="text-xs text-slate-500 mt-0.5 flex items-center justify-center gap-1">
                 <Trophy size={10} />
-                Community Points
+                Community Loads
               </p>
             </div>
           </div>
@@ -86,7 +86,7 @@ export default function ProfilePage() {
       {/* Stats */}
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <StatCard label="Points" value={formatPoints(user.points || 0)} />
+          <StatCard label="Loads" value={formatPoints(user.points || 0)} />
           <StatCard label="Rank" value="#—" sub="Not yet ranked" />
           <StatCard label="Streak" value="—" sub="Days active" />
           <StatCard label="Member" value={user.joinedAt ? `${Math.floor((Date.now() - new Date(user.joinedAt).getTime()) / 86400000)}d` : '—'} sub="Days in community" />
@@ -123,7 +123,7 @@ export default function ProfilePage() {
             <div className="text-center py-8 text-slate-600">
               <TrendingUp size={32} className="mx-auto mb-3 opacity-30" />
               <p className="text-sm">Your activity history will appear here</p>
-              <p className="text-xs mt-1 text-slate-700">Participate in streams and events to start earning points</p>
+              <p className="text-xs mt-1 text-slate-700">Participate in streams and events to start earning loads</p>
             </div>
           </CardContent>
         </Card>

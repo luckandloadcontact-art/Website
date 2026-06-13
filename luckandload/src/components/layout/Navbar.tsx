@@ -86,7 +86,7 @@ export function Navbar() {
                     </p>
                     <p className="text-[10px] text-brand-400 mt-0.5 flex items-center gap-1">
                       <Trophy size={9} />
-                      {formatPoints(session.user.points || 0)} pts
+                      {formatPoints(session.user.points || 0)} loads
                     </p>
                   </div>
                 </button>
