@@ -57,9 +57,14 @@ const SOCIALS = [
   },
 ]
 
-const CLIP_IDS = ['ycvJWKaXTAY', 'HoP3z6fPP1Y', '3lPSNpdKZfc', '1-mF8YGdn1A']
+const CLIPS = [
+  { id: 'ycvJWKaXTAY', thumb: '/clips/thumb1.jpg' },
+  { id: 'HoP3z6fPP1Y', thumb: '/clips/thumb2.jpg' },
+  { id: '3lPSNpdKZfc', thumb: '/clips/thumb3.jpg' },
+  { id: '1-mF8YGdn1A', thumb: '/clips/thumb4.jpg' },
+]
 
-function ShortClip({ videoId }: { videoId: string }) {
+function ShortClip({ videoId, thumb }: { videoId: string; thumb: string }) {
   return (
     <a
       href={`https://www.youtube.com/shorts/${videoId}`}
@@ -69,7 +74,7 @@ function ShortClip({ videoId }: { videoId: string }) {
       style={{ aspectRatio: '9/16' }}
     >
       <img
-        src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+        src={thumb}
         alt="LuckAndLoadTV clip"
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
@@ -108,8 +113,8 @@ export function Hero() {
 
           {/* Left clips */}
           <div className="hidden lg:flex flex-col gap-3 w-44 xl:w-52 flex-shrink-0">
-            <ShortClip videoId={CLIP_IDS[0]} />
-            <ShortClip videoId={CLIP_IDS[1]} />
+            <ShortClip videoId={CLIPS[0].id} thumb={CLIPS[0].thumb} />
+            <ShortClip videoId={CLIPS[1].id} thumb={CLIPS[1].thumb} />
           </div>
 
           {/* Hero content */}
@@ -184,15 +189,15 @@ export function Hero() {
 
           {/* Right clips */}
           <div className="hidden lg:flex flex-col gap-3 w-44 xl:w-52 flex-shrink-0">
-            <ShortClip videoId={CLIP_IDS[2]} />
-            <ShortClip videoId={CLIP_IDS[3]} />
+            <ShortClip videoId={CLIPS[2].id} thumb={CLIPS[2].thumb} />
+            <ShortClip videoId={CLIPS[3].id} thumb={CLIPS[3].thumb} />
           </div>
         </div>
 
         {/* Mobile: 2×2 grid below hero */}
         <div className="lg:hidden grid grid-cols-2 gap-3 mt-10 max-w-xs mx-auto">
-          {CLIP_IDS.map(id => (
-            <ShortClip key={id} videoId={id} />
+          {CLIPS.map(c => (
+            <ShortClip key={c.id} videoId={c.id} thumb={c.thumb} />
           ))}
         </div>
 
