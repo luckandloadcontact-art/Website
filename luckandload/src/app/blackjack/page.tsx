@@ -541,6 +541,56 @@ export default function BlackjackPage() {
           </div>
         </div>
 
+        {/* Rewards */}
+        <div className="rounded-xl overflow-hidden border border-white/8">
+          <div className="bg-surface-800 px-5 py-4 flex items-center justify-between border-b border-white/5">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl">🎁</span>
+              <h3 className="text-white font-bold">Rewards</h3>
+            </div>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-500/15 border border-brand-500/30 px-3 py-1 text-xs font-semibold text-brand-300 uppercase tracking-wider">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse" />
+              Coming Soon
+            </span>
+          </div>
+
+          <div className="bg-surface-800/60 p-5 space-y-5">
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Collect points every day and redeem them for real prizes — merch, bonus codes, and exclusive rewards. The more you play, the bigger the prizes.
+            </p>
+
+            {/* Hype.bet requirement */}
+            <div className="rounded-xl border border-yellow-500/25 bg-yellow-500/5 p-4 flex gap-3">
+              <span className="text-yellow-400 text-lg flex-shrink-0 mt-px">⚠️</span>
+              <div>
+                <p className="text-sm font-semibold text-white mb-1">Hype.bet referral required</p>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  To be eligible for any reward, you must be registered on{' '}
+                  <a href="https://hype.bet/LuckAndLoad" target="_blank" rel="noopener noreferrer"
+                    className="text-hype hover:underline font-medium">Hype.bet</a>{' '}
+                  under the <span className="text-white font-semibold">LuckAndLoadTV</span> referral code.
+                </p>
+              </div>
+            </div>
+
+            {/* Locked tier cards */}
+            <div className="grid grid-cols-3 gap-3">
+              {REDEMPTION_TIERS.map(tier => (
+                <div key={tier.name} className="relative rounded-xl border border-white/8 bg-surface-700/50 p-4 text-center overflow-hidden select-none">
+                  <div className="absolute inset-0 bg-surface-900/50 backdrop-blur-[2px] flex items-center justify-center z-10">
+                    <span className="text-2xl">🔒</span>
+                  </div>
+                  <div className="text-2xl mb-1">{tier.emoji}</div>
+                  <div className="text-white font-bold text-sm">{tier.name}</div>
+                  <div className="text-slate-500 text-xs mt-0.5">{tier.points.toLocaleString('en-US')} pts</div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-slate-600 text-xs text-center">Reward details will be announced when the system launches.</p>
+          </div>
+        </div>
+
         {/* Points guide */}
         <div className="bg-surface-800 rounded-xl p-5 space-y-3">
           <h3 className="text-white font-bold text-sm">Points per hand</h3>
