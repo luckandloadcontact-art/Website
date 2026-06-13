@@ -8,37 +8,62 @@ import type { Card } from '@/lib/blackjack'
 function mkSound(type: 'deal' | 'win' | 'lose' | 'push') {
   try {
     const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
-    const g = ctx.createGain()
-    g.connect(ctx.destination)
+    const t = ctx.currentTime
+
     if (type === 'deal') {
-      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.06, ctx.sampleRate)
+      // Crisp card-on-felt: bandpass noise click + low thump
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate)
       const d = buf.getChannelData(0)
-      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.018))
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.006))
       const src = ctx.createBufferSource(); src.buffer = buf
-      const f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 2000
-      src.connect(f); f.connect(g); g.gain.value = 0.25; src.start()
-    } else {
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3500; bp.Q.value = 1
+      const cg = ctx.createGain(); cg.gain.value = 0.35
+      src.connect(bp); bp.connect(cg); cg.connect(ctx.destination); src.start(t)
+      // Low thump (card landing on felt)
+      const thump = ctx.createOscillator()
+      const tg = ctx.createGain()
+      thump.type = 'sine'
+      thump.frequency.setValueAtTime(110, t); thump.frequency.exponentialRampToValueAtTime(55, t + 0.05)
+      tg.gain.setValueAtTime(0.22, t); tg.gain.exponentialRampToValueAtTime(0.001, t + 0.07)
+      thump.connect(tg); tg.connect(ctx.destination); thump.start(t); thump.stop(t + 0.07)
+
+    } else if (type === 'win') {
+      // Casino ascending chime — C major arpeggio C5→E5→G5→C6
+      ;([523, 659, 784, 1047] as const).forEach((freq, i) => {
+        const osc = ctx.createOscillator()
+        const g = ctx.createGain()
+        osc.type = 'sine'; osc.frequency.value = freq
+        const d = t + i * 0.09
+        g.gain.setValueAtTime(0, d)
+        g.gain.linearRampToValueAtTime(0.18, d + 0.012)
+        g.gain.exponentialRampToValueAtTime(0.001, d + 0.38)
+        osc.connect(g); g.connect(ctx.destination)
+        osc.start(d); osc.stop(d + 0.38)
+      })
+
+    } else if (type === 'lose') {
+      // Soft descending tone — subtle loss feedback
       const osc = ctx.createOscillator()
-      osc.connect(g)
-      if (type === 'win') {
-        osc.frequency.setValueAtTime(440, ctx.currentTime)
-        osc.frequency.setValueAtTime(550, ctx.currentTime + 0.1)
-        osc.frequency.setValueAtTime(660, ctx.currentTime + 0.2)
-        g.gain.setValueAtTime(0.15, ctx.currentTime)
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45)
-        osc.start(); osc.stop(ctx.currentTime + 0.45)
-      } else if (type === 'lose') {
-        osc.frequency.setValueAtTime(350, ctx.currentTime)
-        osc.frequency.setValueAtTime(280, ctx.currentTime + 0.15)
-        g.gain.setValueAtTime(0.12, ctx.currentTime)
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35)
-        osc.start(); osc.stop(ctx.currentTime + 0.35)
-      } else {
-        osc.frequency.value = 400
-        g.gain.setValueAtTime(0.1, ctx.currentTime)
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2)
-        osc.start(); osc.stop(ctx.currentTime + 0.2)
-      }
+      const g = ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(330, t)
+      osc.frequency.exponentialRampToValueAtTime(185, t + 0.3)
+      g.gain.setValueAtTime(0.11, t)
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.35)
+      osc.connect(g); g.connect(ctx.destination)
+      osc.start(t); osc.stop(t + 0.35)
+
+    } else {
+      // Push: two short neutral ticks
+      ;[0, 0.13].forEach(delay => {
+        const osc = ctx.createOscillator()
+        const g = ctx.createGain()
+        osc.type = 'sine'; osc.frequency.value = 440
+        g.gain.setValueAtTime(0.07, t + delay)
+        g.gain.exponentialRampToValueAtTime(0.001, t + delay + 0.1)
+        osc.connect(g); g.connect(ctx.destination)
+        osc.start(t + delay); osc.stop(t + delay + 0.1)
+      })
     }
   } catch { /* ignore */ }
 }
