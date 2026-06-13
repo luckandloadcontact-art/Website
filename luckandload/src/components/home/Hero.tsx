@@ -1,4 +1,5 @@
 'use client'
+import { useRef, useState } from 'react'
 import { useSession, signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { ExternalLink, Trophy } from 'lucide-react'
@@ -57,90 +58,154 @@ const SOCIALS = [
   },
 ]
 
+const CLIP_IDS = ['ycvJWKaXTAY', 'HoP3z6fPP1Y', '3lPSNpdKZfc', '1-mF8YGdn1A']
+
+function ShortClip({ videoId }: { videoId: string }) {
+  const ref = useRef<HTMLIFrameElement>(null)
+  const [playing, setPlaying] = useState(false)
+
+  const send = (func: string) =>
+    ref.current?.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func, args: '' }), '*'
+    )
+
+  const play  = () => { send('playVideo');  setPlaying(true)  }
+  const pause = () => { send('pauseVideo'); setPlaying(false) }
+
+  return (
+    <div
+      className="relative w-full rounded-2xl overflow-hidden shadow-2xl cursor-pointer group border border-white/10 bg-surface-800"
+      style={{ aspectRatio: '9/16' }}
+      onMouseEnter={play}
+      onMouseLeave={pause}
+      onClick={() => playing ? pause() : play()}
+    >
+      <iframe
+        ref={ref}
+        src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1&controls=0&playsinline=1&rel=0&modestbranding=1&fs=0`}
+        className="absolute inset-0 w-full h-full pointer-events-none"
+        allow="autoplay; encrypted-media"
+        title="LuckAndLoadTV clip"
+      />
+      {/* Dark overlay that clears on hover/play */}
+      <div className={`absolute inset-0 transition-colors duration-300 pointer-events-none ${playing ? 'bg-transparent' : 'bg-black/35'}`} />
+      {/* Play icon hint */}
+      {!playing && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-11 h-11 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/35 transition-colors duration-200">
+            <svg viewBox="0 0 24 24" fill="white" className="w-5 h-5 ml-0.5">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function Hero() {
   const { data: session } = useSession()
 
   return (
     <section className="relative overflow-hidden">
-      {/* Background glow */}
       <div className="pointer-events-none absolute inset-0 bg-hero-glow" />
       <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-brand-500/5 blur-3xl" />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-24">
-        <div className="flex flex-col items-center text-center gap-6 max-w-3xl mx-auto">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-16">
 
-          {/* Live badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface-700/60 px-4 py-1.5 text-sm">
-            <span className="live-dot" />
-            <span className="text-slate-400">Stream goes live on Kick & Twitch</span>
+        {/* Desktop: clips flanking hero content */}
+        <div className="flex items-center justify-center gap-6 xl:gap-10">
+
+          {/* Left clips */}
+          <div className="hidden lg:flex flex-col gap-4 w-32 xl:w-36 flex-shrink-0">
+            <ShortClip videoId={CLIP_IDS[0]} />
+            <ShortClip videoId={CLIP_IDS[1]} />
           </div>
 
-          {/* Headline */}
-          <h1 className="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-white">
-            Welcome to{' '}
-            <span className="text-gradient">LuckAndLoad</span>
-            <span className="text-white">TV</span>
-          </h1>
+          {/* Hero content */}
+          <div className="flex flex-col items-center text-center gap-6 flex-1 max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface-700/60 px-4 py-1.5 text-sm">
+              <span className="live-dot" />
+              <span className="text-slate-400">Stream goes live on Kick & Twitch</span>
+            </div>
 
-          <p className="text-lg text-slate-400 max-w-xl leading-relaxed">
-            Two friends, zero filters, and a whole lot of spins. Join the community for live streams, bonus hunts, and vibes you won't find anywhere else.
-          </p>
+            <h1 className="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-white">
+              Welcome to{' '}
+              <span className="text-gradient">LuckAndLoad</span>
+              <span className="text-white">TV</span>
+            </h1>
 
-          {/* CTAs */}
-          <div className="flex flex-wrap justify-center gap-3 mt-2">
-            {!session ? (
-              <button
-                onClick={() => signIn('discord')}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-surface-700 px-6 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:border-white/20 transition-colors"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-indigo-400">
-                  <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.056a19.906 19.906 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-                </svg>
-                Join with Discord
-              </button>
-            ) : (
-              <Link
-                href="/leaderboard"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-surface-700 px-6 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:border-white/20 transition-colors"
-              >
-                <Trophy size={15} />
-                View Leaderboard
-              </Link>
-            )}
+            <p className="text-lg text-slate-400 max-w-xl leading-relaxed">
+              Two friends, zero filters, and a whole lot of spins. Join the community for live streams, bonus hunts, and vibes you won't find anywhere else.
+            </p>
 
-            {/* Hype.bet — main CTA i midten */}
-            <a
-              href="https://hype.bet/LuckAndLoad"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl bg-hype px-7 py-3 text-base font-black text-black hover:bg-hype/90 transition-all hover:scale-105"
-            >
-              🎰 Join Hype.bet
-            </a>
+            <div className="flex flex-wrap justify-center gap-3 mt-2">
+              {!session ? (
+                <button
+                  onClick={() => signIn('discord')}
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-surface-700 px-6 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:border-white/20 transition-colors"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 text-indigo-400">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.056a19.906 19.906 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                  </svg>
+                  Join with Discord
+                </button>
+              ) : (
+                <Link
+                  href="/leaderboard"
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-surface-700 px-6 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:border-white/20 transition-colors"
+                >
+                  <Trophy size={15} />
+                  View Leaderboard
+                </Link>
+              )}
 
-            <a href="https://kick.com/luckandloadtv" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="secondary">
-                Watch Live
-                <ExternalLink size={14} />
-              </Button>
-            </a>
-          </div>
-
-          {/* Social links */}
-          <div className="flex flex-wrap justify-center gap-2 mt-2">
-            {SOCIALS.map(s => (
               <a
-                key={s.label}
-                href={s.href}
+                href="https://hype.bet/LuckAndLoad"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex items-center justify-center rounded-lg border p-2.5 transition-all ${s.color}`}
+                className="inline-flex items-center gap-2 rounded-xl bg-hype px-7 py-3 text-base font-black text-black hover:bg-hype/90 transition-all hover:scale-105"
               >
-                {s.icon}
+                🎰 Join Hype.bet
               </a>
-            ))}
+
+              <a href="https://kick.com/luckandloadtv" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="secondary">
+                  Watch Live
+                  <ExternalLink size={14} />
+                </Button>
+              </a>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-2 mt-2">
+              {SOCIALS.map(s => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center justify-center rounded-lg border p-2.5 transition-all ${s.color}`}
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Right clips */}
+          <div className="hidden lg:flex flex-col gap-4 w-32 xl:w-36 flex-shrink-0">
+            <ShortClip videoId={CLIP_IDS[2]} />
+            <ShortClip videoId={CLIP_IDS[3]} />
           </div>
         </div>
+
+        {/* Mobile: 2×2 grid below hero */}
+        <div className="lg:hidden grid grid-cols-2 gap-3 mt-10 max-w-xs mx-auto">
+          {CLIP_IDS.map(id => (
+            <ShortClip key={id} videoId={id} />
+          ))}
+        </div>
+
       </div>
     </section>
   )
