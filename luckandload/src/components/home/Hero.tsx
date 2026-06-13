@@ -117,7 +117,7 @@ export function Hero() {
         <div className="flex items-center justify-center gap-6 xl:gap-10">
 
           {/* Left clips */}
-          <div className="hidden lg:flex flex-col gap-4 w-32 xl:w-36 flex-shrink-0">
+          <div className="hidden lg:flex flex-col gap-3 w-44 xl:w-52 flex-shrink-0">
             <ShortClip videoId={CLIP_IDS[0]} />
             <ShortClip videoId={CLIP_IDS[1]} />
           </div>
@@ -193,7 +193,7 @@ export function Hero() {
           </div>
 
           {/* Right clips */}
-          <div className="hidden lg:flex flex-col gap-4 w-32 xl:w-36 flex-shrink-0">
+          <div className="hidden lg:flex flex-col gap-3 w-44 xl:w-52 flex-shrink-0">
             <ShortClip videoId={CLIP_IDS[2]} />
             <ShortClip videoId={CLIP_IDS[3]} />
           </div>
