@@ -1,5 +1,4 @@
 'use client'
-import { useRef, useState } from 'react'
 import { useSession, signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { ExternalLink, Trophy } from 'lucide-react'
@@ -61,45 +60,36 @@ const SOCIALS = [
 const CLIP_IDS = ['ycvJWKaXTAY', 'HoP3z6fPP1Y', '3lPSNpdKZfc', '1-mF8YGdn1A']
 
 function ShortClip({ videoId }: { videoId: string }) {
-  const ref = useRef<HTMLIFrameElement>(null)
-  const [playing, setPlaying] = useState(false)
-
-  const send = (func: string) =>
-    ref.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: 'command', func, args: '' }), '*'
-    )
-
-  const play  = () => { send('playVideo');  setPlaying(true)  }
-  const pause = () => { send('pauseVideo'); setPlaying(false) }
-
   return (
-    <div
-      className="relative w-full rounded-2xl overflow-hidden shadow-2xl cursor-pointer group border border-white/10 bg-surface-800"
+    <a
+      href={`https://www.youtube.com/shorts/${videoId}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-surface-800 group block"
       style={{ aspectRatio: '9/16' }}
-      onMouseEnter={play}
-      onMouseLeave={pause}
-      onClick={() => playing ? pause() : play()}
     >
-      <iframe
-        ref={ref}
-        src={`https://www.youtube.com/embed/${videoId}?enablejsapi=1&controls=0&playsinline=1&rel=0&modestbranding=1&fs=0`}
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        allow="autoplay; encrypted-media"
-        title="LuckAndLoadTV clip"
+      <img
+        src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+        alt="LuckAndLoadTV clip"
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
-      {/* Dark overlay that clears on hover/play */}
-      <div className={`absolute inset-0 transition-colors duration-300 pointer-events-none ${playing ? 'bg-transparent' : 'bg-black/35'}`} />
-      {/* Play icon hint */}
-      {!playing && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-11 h-11 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/35 transition-colors duration-200">
-            <svg viewBox="0 0 24 24" fill="white" className="w-5 h-5 ml-0.5">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
-          </div>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/35 group-hover:bg-black/10 transition-colors duration-300" />
+      {/* Play button */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm border border-white/30 flex items-center justify-center group-hover:scale-110 group-hover:bg-black/20 group-hover:border-white/60 transition-all duration-300">
+          <svg viewBox="0 0 24 24" fill="white" className="w-6 h-6 ml-1">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
         </div>
-      )}
-    </div>
+      </div>
+      {/* YouTube logo badge */}
+      <div className="absolute bottom-2.5 right-2.5 opacity-50 group-hover:opacity-90 transition-opacity duration-300">
+        <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </div>
+    </a>
   )
 }
 
