@@ -16,7 +16,8 @@ export const POINTS = {
   win:            50,
   push:           15,
   lose:            5,
-  doubleLose:    -20,
+  doubleLose:   -100,
+  splitLose:     -50,
   allHandsBonus:  25,
 } as const
 
@@ -84,21 +85,24 @@ export function dealerPlay(
 export function resolveHand(
   playerCards: Card[],
   dealerCards: Card[],
-  doubled: boolean
+  doubled: boolean,
+  isSplit = false,
 ): { status: HandStatus; pointsAwarded: number } {
   const pv = calculateHandValue(playerCards)
   const dv = calculateHandValue(dealerCards)
 
   let status: HandStatus
-  if (pv > 21)           status = 'bust'
-  else if (dv > 21 || pv > dv) status = 'player_won'
-  else if (pv < dv)      status = 'dealer_won'
-  else                   status = 'push'
+  if (pv > 21)                  status = 'bust'
+  else if (dv > 21 || pv > dv)  status = 'player_won'
+  else if (pv < dv)             status = 'dealer_won'
+  else                          status = 'push'
 
   let pointsAwarded: number
-  if (status === 'player_won') pointsAwarded = doubled ? POINTS.win * 2 : POINTS.win
-  else if (status === 'push')  pointsAwarded = POINTS.push
-  else                         pointsAwarded = doubled ? POINTS.doubleLose : POINTS.lose
+  if (status === 'player_won')  pointsAwarded = doubled ? POINTS.win * 2 : POINTS.win
+  else if (status === 'push')   pointsAwarded = POINTS.push
+  else if (doubled)             pointsAwarded = POINTS.doubleLose
+  else if (isSplit)             pointsAwarded = POINTS.splitLose
+  else                          pointsAwarded = POINTS.lose
 
   return { status, pointsAwarded }
 }

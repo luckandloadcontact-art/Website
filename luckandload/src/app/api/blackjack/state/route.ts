@@ -34,6 +34,10 @@ export async function GET() {
       splitValue: activeHand.split_cards ? calculateHandValue(activeHand.split_cards) : null,
       splitStatus: activeHand.split_status ?? null,
       playingSplit: activeHand.playing_split ?? false,
+      split2Cards: activeHand.split2_cards ?? null,
+      split2Value: activeHand.split2_cards ? calculateHandValue(activeHand.split2_cards) : null,
+      split2Status: activeHand.split2_status ?? null,
+      playingSplit2: activeHand.playing_split2 ?? false,
       doubled: activeHand.doubled,
     }
   }

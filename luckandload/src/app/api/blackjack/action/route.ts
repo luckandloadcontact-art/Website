@@ -84,44 +84,140 @@ export async function POST(req: NextRequest) {
 
   let playerCards: Card[] = hand.player_cards
   let splitCards: Card[] | null = hand.split_cards ?? null
+  let split2Cards: Card[] | null = hand.split2_cards ?? null
   let deck: Card[] = hand.deck_state
   const dealerCards: Card[] = hand.dealer_cards
   let doubled = hand.doubled as boolean
+  let splitDoubled = (hand.split_doubled ?? false) as boolean
+  let split2Doubled = (hand.split2_doubled ?? false) as boolean
   const splitStatus: string | null = hand.split_status ?? null
+  const split2Status: string | null = hand.split2_status ?? null
   const playingSplit = hand.playing_split as boolean
+  const playingSplit2 = (hand.playing_split2 ?? false) as boolean
 
-  // ── SPLIT ──────────────────────────────────────────────────
+  // ── SPLIT ──────────────────────────────────────────────────────────────────
   if (action === 'split') {
-    if (!canSplit(playerCards) || splitCards) {
-      return NextResponse.json({ error: 'Cannot split this hand' }, { status: 400 })
+    // Re-split: split the current split1 hand into split1 + split2
+    if (playingSplit && !playingSplit2 && splitCards && canSplit(splitCards) && !split2Cards) {
+      const newCard1 = deck[deck.length - 1]
+      const newCard2 = deck[deck.length - 2]
+      deck = deck.slice(0, -2)
+      const newSplit: Card[] = [splitCards[0], newCard1]
+      const newSplit2: Card[] = [splitCards[1], newCard2]
+
+      await supabase.from('blackjack_hands').update({
+        split_cards: newSplit, split2_cards: newSplit2,
+        split2_status: 'active', deck_state: deck,
+      }).eq('id', hand.id)
+
+      return NextResponse.json({
+        playerCards, splitCards: newSplit, split2Cards: newSplit2,
+        dealerCards: maskDealerCards(dealerCards),
+        playerValue: calculateHandValue(playerCards),
+        splitValue: calculateHandValue(newSplit),
+        split2Value: calculateHandValue(newSplit2),
+        status: 'active', splitStatus: 'active', split2Status: 'active',
+        playingSplit: true, playingSplit2: false,
+        doubled, splitDoubled, split2Doubled,
+      })
     }
-    const newCard1 = deck[deck.length - 1]
-    const newCard2 = deck[deck.length - 2]
-    deck = deck.slice(0, -2)
-    const newPlayer: Card[] = [playerCards[0], newCard1]
-    const newSplit: Card[] = [playerCards[1], newCard2]
+
+    // Original split: split hand1 into hand1 + split1
+    if (!playingSplit && canSplit(playerCards) && !splitCards) {
+      const newCard1 = deck[deck.length - 1]
+      const newCard2 = deck[deck.length - 2]
+      deck = deck.slice(0, -2)
+      const newPlayer: Card[] = [playerCards[0], newCard1]
+      const newSplit: Card[] = [playerCards[1], newCard2]
+
+      await supabase.from('blackjack_hands').update({
+        player_cards: newPlayer, split_cards: newSplit,
+        split_status: 'active', deck_state: deck, playing_split: false,
+      }).eq('id', hand.id)
+
+      return NextResponse.json({
+        playerCards: newPlayer, splitCards: newSplit,
+        dealerCards: maskDealerCards(dealerCards),
+        playerValue: calculateHandValue(newPlayer),
+        splitValue: calculateHandValue(newSplit),
+        status: 'active', splitStatus: 'active', playingSplit: false,
+      })
+    }
+
+    return NextResponse.json({ error: 'Cannot split this hand' }, { status: 400 })
+  }
+
+  // ── ACTING ON SPLIT2 ───────────────────────────────────────────────────────
+  if (playingSplit && playingSplit2) {
+    let s2 = split2Cards!
+
+    if (action === 'hit' || action === 'double') {
+      s2 = [...s2, deck[deck.length - 1]]
+      deck = deck.slice(0, -1)
+      if (action === 'double') split2Doubled = true
+    }
+
+    const s2Value = calculateHandValue(s2)
+    const s2Bust = s2Value > 21
+    const s2Done = s2Bust || action === 'stand' || action === 'double' || s2Value === 21
+
+    if (!s2Done) {
+      await supabase.from('blackjack_hands').update({
+        split2_cards: s2, deck_state: deck, split2_doubled: split2Doubled,
+      }).eq('id', hand.id)
+      return NextResponse.json({
+        playerCards, splitCards, split2Cards: s2,
+        dealerCards: maskDealerCards(dealerCards),
+        playerValue: calculateHandValue(playerCards),
+        splitValue: calculateHandValue(splitCards!),
+        split2Value: s2Value,
+        status: 'active', splitStatus, split2Status: 'active',
+        playingSplit: true, playingSplit2: true,
+        doubled, splitDoubled, split2Doubled,
+      })
+    }
+
+    // All done — dealer plays, resolve all 3 hands
+    const { dealerCards: finalDealer } = dealerPlay(dealerCards, deck)
+    const h1 = resolveHand(playerCards, finalDealer, doubled)
+    const h2 = resolveHand(splitCards!, finalDealer, splitDoubled, true)
+    const h3 = resolveHand(s2, finalDealer, split2Doubled, true)
+    const finalSplitStatus = h2.status
+    const finalSplit2Status = s2Bust ? 'bust' : h3.status
+    const combined = h1.pointsAwarded + h2.pointsAwarded + h3.pointsAwarded
+
+    const { streakBonus, allHandsBonus } = await updateSession(supabase, userId, today, combined)
+    const total = combined + streakBonus + allHandsBonus
 
     await supabase.from('blackjack_hands').update({
-      player_cards: newPlayer, split_cards: newSplit,
-      split_status: 'active', deck_state: deck, playing_split: false,
+      split2_cards: s2, deck_state: deck, split2_doubled: split2Doubled,
+      status: h1.status, split_status: finalSplitStatus,
+      split2_status: finalSplit2Status, points_awarded: total,
     }).eq('id', hand.id)
 
+    await awardPoints(supabase, userId, today, total,
+      `Daily Blackjack (h1:${h1.status} s1:${finalSplitStatus} s2:${finalSplit2Status})`)
+
     return NextResponse.json({
-      playerCards: newPlayer, splitCards: newSplit,
-      dealerCards: maskDealerCards(dealerCards),
-      playerValue: calculateHandValue(newPlayer),
-      splitValue: calculateHandValue(newSplit),
-      status: 'active', splitStatus: 'active', playingSplit: false,
+      playerCards, splitCards, split2Cards: s2,
+      dealerCards: finalDealer,
+      playerValue: calculateHandValue(playerCards),
+      splitValue: calculateHandValue(splitCards!),
+      split2Value: calculateHandValue(s2),
+      dealerValue: calculateHandValue(finalDealer),
+      status: h1.status, splitStatus: finalSplitStatus, split2Status: finalSplit2Status,
+      pointsAwarded: total, streakBonus, allHandsBonus,
     })
   }
 
-  // ── ACTING ON SPLIT HAND ───────────────────────────────────
-  if (playingSplit) {
+  // ── ACTING ON SPLIT1 ───────────────────────────────────────────────────────
+  if (playingSplit && !playingSplit2) {
     let sc = splitCards!
 
     if (action === 'hit' || action === 'double') {
       sc = [...sc, deck[deck.length - 1]]
       deck = deck.slice(0, -1)
+      if (action === 'double') splitDoubled = true
     }
 
     const splitValue = calculateHandValue(sc)
@@ -129,18 +225,40 @@ export async function POST(req: NextRequest) {
     const splitDone = splitBust || action === 'stand' || action === 'double' || splitValue === 21
 
     if (!splitDone) {
-      await supabase.from('blackjack_hands').update({ split_cards: sc, deck_state: deck }).eq('id', hand.id)
+      await supabase.from('blackjack_hands').update({
+        split_cards: sc, deck_state: deck, split_doubled: splitDoubled,
+      }).eq('id', hand.id)
       return NextResponse.json({
-        playerCards, splitCards: sc, dealerCards: maskDealerCards(dealerCards),
-        playerValue: calculateHandValue(playerCards), splitValue,
-        status: 'active', splitStatus: 'active', playingSplit: true,
+        playerCards, splitCards: sc, split2Cards,
+        dealerCards: maskDealerCards(dealerCards),
+        playerValue: calculateHandValue(playerCards),
+        splitValue, split2Value: split2Cards ? calculateHandValue(split2Cards) : null,
+        status: 'active', splitStatus: 'active', split2Status,
+        playingSplit: true, playingSplit2: false,
+        doubled, splitDoubled, split2Doubled,
       })
     }
 
-    // Both hands done — dealer plays
+    // Split1 done — switch to split2 if present
+    if (split2Cards && split2Status === 'active') {
+      await supabase.from('blackjack_hands').update({
+        split_cards: sc, deck_state: deck, split_doubled: splitDoubled, playing_split2: true,
+      }).eq('id', hand.id)
+      return NextResponse.json({
+        playerCards, splitCards: sc, split2Cards,
+        dealerCards: maskDealerCards(dealerCards),
+        playerValue: calculateHandValue(playerCards),
+        splitValue, split2Value: calculateHandValue(split2Cards),
+        status: 'active', splitStatus: splitBust ? 'bust' : 'active', split2Status: 'active',
+        playingSplit: true, playingSplit2: true,
+        doubled, splitDoubled, split2Doubled,
+      })
+    }
+
+    // No split2 — dealer plays, resolve hand1 + split1
     const { dealerCards: finalDealer } = dealerPlay(dealerCards, deck)
     const h1 = resolveHand(playerCards, finalDealer, doubled)
-    const h2 = resolveHand(sc, finalDealer, false)
+    const h2 = resolveHand(sc, finalDealer, splitDoubled, true)
     const finalSplitStatus = splitBust ? 'bust' : h2.status
     const combined = h1.pointsAwarded + h2.pointsAwarded
 
@@ -148,12 +266,12 @@ export async function POST(req: NextRequest) {
     const total = combined + streakBonus + allHandsBonus
 
     await supabase.from('blackjack_hands').update({
-      split_cards: sc, deck_state: deck,
+      split_cards: sc, deck_state: deck, split_doubled: splitDoubled,
       status: h1.status, split_status: finalSplitStatus, points_awarded: total,
     }).eq('id', hand.id)
 
     await awardPoints(supabase, userId, today, total,
-      `Daily Blackjack (hand: ${h1.status}, split: ${finalSplitStatus})`)
+      `Daily Blackjack (hand:${h1.status} split:${finalSplitStatus})`)
 
     return NextResponse.json({
       playerCards, splitCards: sc, dealerCards: finalDealer,
@@ -165,7 +283,7 @@ export async function POST(req: NextRequest) {
     })
   }
 
-  // ── ACTING ON HAND 1 ───────────────────────────────────────
+  // ── ACTING ON HAND 1 ───────────────────────────────────────────────────────
   if (action === 'hit' || action === 'double') {
     playerCards = [...playerCards, deck[deck.length - 1]]
     deck = deck.slice(0, -1)
@@ -177,14 +295,16 @@ export async function POST(req: NextRequest) {
   const hand1Done = isBust || action === 'stand' || action === 'double' || playerValue === 21
 
   if (!hand1Done) {
-    await supabase.from('blackjack_hands').update({ player_cards: playerCards, deck_state: deck, doubled }).eq('id', hand.id)
+    await supabase.from('blackjack_hands').update({
+      player_cards: playerCards, deck_state: deck, doubled,
+    }).eq('id', hand.id)
     return NextResponse.json({
       playerCards, dealerCards: maskDealerCards(dealerCards),
       playerValue, status: 'active', doubled,
     })
   }
 
-  // Hand 1 done — switch to split if active
+  // Hand 1 done — switch to split1 if active
   if (splitCards && splitStatus === 'active') {
     await supabase.from('blackjack_hands').update({
       player_cards: playerCards, deck_state: deck, doubled, playing_split: true,
@@ -192,8 +312,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       playerCards, splitCards, dealerCards: maskDealerCards(dealerCards),
       playerValue, splitValue: calculateHandValue(splitCards),
-      status: 'active', splitStatus: 'active', playingSplit: true,
-      hand1Bust: isBust,
+      status: 'active', splitStatus: 'active', playingSplit: true, playingSplit2: false,
+      hand1Bust: isBust, doubled,
     })
   }
 

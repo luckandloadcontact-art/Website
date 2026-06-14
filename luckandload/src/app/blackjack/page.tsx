@@ -11,7 +11,6 @@ function mkSound(type: 'deal' | 'win' | 'lose' | 'push') {
     const t = ctx.currentTime
 
     if (type === 'deal') {
-      // Crisp card-on-felt: bandpass noise click + low thump
       const buf = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate)
       const d = buf.getChannelData(0)
       for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.006))
@@ -19,7 +18,6 @@ function mkSound(type: 'deal' | 'win' | 'lose' | 'push') {
       const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3500; bp.Q.value = 1
       const cg = ctx.createGain(); cg.gain.value = 0.35
       src.connect(bp); bp.connect(cg); cg.connect(ctx.destination); src.start(t)
-      // Low thump (card landing on felt)
       const thump = ctx.createOscillator()
       const tg = ctx.createGain()
       thump.type = 'sine'
@@ -28,7 +26,6 @@ function mkSound(type: 'deal' | 'win' | 'lose' | 'push') {
       thump.connect(tg); tg.connect(ctx.destination); thump.start(t); thump.stop(t + 0.07)
 
     } else if (type === 'win') {
-      // Casino ascending chime — C major arpeggio C5→E5→G5→C6
       ;([523, 659, 784, 1047] as const).forEach((freq, i) => {
         const osc = ctx.createOscillator()
         const g = ctx.createGain()
@@ -42,7 +39,6 @@ function mkSound(type: 'deal' | 'win' | 'lose' | 'push') {
       })
 
     } else if (type === 'lose') {
-      // Soft descending tone — subtle loss feedback
       const osc = ctx.createOscillator()
       const g = ctx.createGain()
       osc.type = 'sine'
@@ -54,7 +50,6 @@ function mkSound(type: 'deal' | 'win' | 'lose' | 'push') {
       osc.start(t); osc.stop(t + 0.35)
 
     } else {
-      // Push: two short neutral ticks
       ;[0, 0.13].forEach(delay => {
         const osc = ctx.createOscillator()
         const g = ctx.createGain()
@@ -100,7 +95,7 @@ function HandArea({
   return (
     <div className={`relative rounded-xl p-3 transition-all duration-300 ${active ? 'ring-2 ring-brand-400 ring-offset-2 ring-offset-green-900' : ''}`}>
       <p className="text-green-200 text-xs font-semibold uppercase tracking-widest mb-2">{label}</p>
-      <div className="flex gap-2 sm:gap-3 min-h-24 lg:min-h-36 items-center">
+      <div className="flex gap-2 sm:gap-3 min-h-24 lg:min-h-36 items-center flex-wrap">
         {cards.length === 0 && <span className="text-green-600 text-xs italic">Waiting…</span>}
         {cards.map((card, i) => (
           <PlayingCard
@@ -114,7 +109,7 @@ function HandArea({
         )}
       </div>
       {done && doneLabel && (
-        <div className={`absolute inset-0 rounded-xl flex items-center justify-center bg-black/50 backdrop-blur-sm`}>
+        <div className="absolute inset-0 rounded-xl flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <span className={`text-lg font-black ${doneColor}`}>{doneLabel}</span>
         </div>
       )}
@@ -140,24 +135,30 @@ function pts(n: number) { return `+${n} loads` }
 interface GameState {
   handsPlayed: number; handsRemaining: number; pointsEarnedToday: number
   streakDays: number; totalPoints: number
-  activeHand: { id: string; handNumber: number; playerCards: Card[]; dealerCards: Card[]
+  activeHand: {
+    id: string; handNumber: number; playerCards: Card[]; dealerCards: Card[]
     playerValue: number; splitCards: Card[] | null; splitValue: number | null
-    splitStatus: string | null; playingSplit: boolean; doubled: boolean } | null
+    splitStatus: string | null; playingSplit: boolean
+    split2Cards?: Card[] | null; split2Value?: number | null
+    split2Status?: string | null; playingSplit2?: boolean
+    doubled: boolean
+  } | null
 }
 
-interface Display { player: Card[]; dealer: Card[]; split: Card[] }
+interface Display { player: Card[]; dealer: Card[]; split: Card[]; split2: Card[] }
 
 interface LiveHand {
-  playerCards: Card[]; dealerCards: Card[]; splitCards: Card[] | null
-  playerValue: number; splitValue: number; dealerValue: number
-  status: string; splitStatus: string | null; playingSplit: boolean
+  playerCards: Card[]; dealerCards: Card[]; splitCards?: Card[] | null; split2Cards?: Card[] | null
+  playerValue: number; splitValue?: number; split2Value?: number; dealerValue: number
+  status: string; splitStatus?: string | null; split2Status?: string | null
+  playingSplit: boolean; playingSplit2?: boolean
   doubled: boolean; hand1Bust?: boolean
 }
 
 interface Result {
-  playerCards: Card[]; splitCards?: Card[] | null; dealerCards: Card[]
-  playerValue: number; splitValue?: number; dealerValue: number
-  status: string; splitStatus?: string | null
+  playerCards: Card[]; splitCards?: Card[] | null; split2Cards?: Card[] | null; dealerCards: Card[]
+  playerValue: number; splitValue?: number; split2Value?: number; dealerValue: number
+  status: string; splitStatus?: string | null; split2Status?: string | null
   pointsAwarded: number; streakBonus: number; allHandsBonus: number
 }
 
@@ -165,7 +166,7 @@ interface Result {
 export default function BlackjackPage() {
   const { data: session, status } = useSession()
   const [gs, setGs] = useState<GameState | null>(null)
-  const [display, setDisplay] = useState<Display>({ player: [], dealer: [], split: [] })
+  const [display, setDisplay] = useState<Display>({ player: [], dealer: [], split: [], split2: [] })
   const [live, setLive] = useState<LiveHand | null>(null)
   const [result, setResult] = useState<Result | null>(null)
   const [dealing, setDealing] = useState(false)
@@ -184,13 +185,18 @@ export default function BlackjackPage() {
         player: ah.playerCards,
         dealer: ah.dealerCards,
         split: ah.splitCards ?? [],
+        split2: ah.split2Cards ?? [],
       })
       setLive({
         playerCards: ah.playerCards, dealerCards: ah.dealerCards,
-        splitCards: ah.splitCards, playerValue: ah.playerValue,
-        splitValue: ah.splitValue ?? 0, dealerValue: 0,
-        status: 'active', splitStatus: ah.splitStatus,
-        playingSplit: ah.playingSplit, doubled: ah.doubled,
+        splitCards: ah.splitCards, split2Cards: ah.split2Cards ?? null,
+        playerValue: ah.playerValue,
+        splitValue: ah.splitValue ?? 0,
+        split2Value: ah.split2Value ?? 0,
+        dealerValue: 0, status: 'active',
+        splitStatus: ah.splitStatus, split2Status: ah.split2Status ?? null,
+        playingSplit: ah.playingSplit, playingSplit2: ah.playingSplit2 ?? false,
+        doubled: ah.doubled,
       })
     }
   }, [])
@@ -199,7 +205,7 @@ export default function BlackjackPage() {
 
   async function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)) }
 
-  async function revealCard(target: 'player' | 'dealer' | 'split', card: Card) {
+  async function revealCard(target: 'player' | 'dealer' | 'split' | 'split2', card: Card) {
     mkSound('deal')
     setDisplay(p => ({ ...p, [target]: [...p[target], card] }))
     await sleep(280)
@@ -210,7 +216,7 @@ export default function BlackjackPage() {
     if (busyRef.current) return
     busyRef.current = true
     setDealing(true); setResult(null); setLive(null)
-    setDisplay({ player: [], dealer: [], split: [] })
+    setDisplay({ player: [], dealer: [], split: [], split2: [] })
 
     const res = await fetch('/api/blackjack/deal', { method: 'POST' })
     const data = await res.json()
@@ -226,18 +232,18 @@ export default function BlackjackPage() {
     setAnimating(false)
 
     if (data.status !== 'active') {
-      // Immediate result (blackjack etc.) — flip dealer card
-      setDisplay({ player: data.playerCards, dealer: data.dealerCards, split: [] })
+      setDisplay({ player: data.playerCards, dealer: data.dealerCards, split: [], split2: [] })
       if (data.status === 'blackjack' || data.status === 'player_won') mkSound('win')
       else if (data.status === 'bust' || data.status === 'dealer_won') mkSound('lose')
       else mkSound('push')
-      setResult({ ...data, splitCards: null, splitValue: undefined, dealerValue: 0 })
+      setResult({ ...data, splitCards: null, split2Cards: null, splitValue: undefined, split2Value: undefined, dealerValue: 0 })
     } else {
       setLive({
         playerCards: data.playerCards, dealerCards: data.dealerCards,
-        splitCards: null, playerValue: data.playerValue, splitValue: 0,
-        dealerValue: 0, status: 'active', splitStatus: null,
-        playingSplit: false, doubled: false,
+        splitCards: null, split2Cards: null,
+        playerValue: data.playerValue, splitValue: 0, split2Value: 0,
+        dealerValue: 0, status: 'active', splitStatus: null, split2Status: null,
+        playingSplit: false, playingSplit2: false, doubled: false,
       })
     }
 
@@ -251,6 +257,9 @@ export default function BlackjackPage() {
     busyRef.current = true
     setActing(true)
 
+    // Remember which hand we were acting on before the API call
+    const actionTarget = live.playingSplit2 ? 'split2' : live.playingSplit ? 'split' : 'player'
+
     const res = await fetch('/api/blackjack/action', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -261,56 +270,99 @@ export default function BlackjackPage() {
 
     if (!res.ok) { alert(data.error); busyRef.current = false; return }
 
-    const isComplete = data.status !== 'active' || (data.splitStatus && data.splitStatus !== 'active')
-    const bothDone = data.status !== 'active' && (!data.splitStatus || data.splitStatus !== 'active')
+    const bothDone =
+      data.status !== 'active' &&
+      (!data.splitStatus || data.splitStatus !== 'active') &&
+      (!data.split2Status || data.split2Status !== 'active')
 
+    // ── Split animation ──
     if (action === 'split') {
-      // Redistribute cards with animation
-      setAnimating(true)
-      setDisplay({ player: [], dealer: display.dealer, split: [] })
-      await revealCard('player', data.playerCards[0])
-      await revealCard('split',  data.splitCards[0])
-      await revealCard('player', data.playerCards[1])
-      await revealCard('split',  data.splitCards[1])
-      setAnimating(false)
-      setLive({ ...data, splitValue: calculateHandValue(data.splitCards), dealerValue: 0 })
+      if (data.split2Cards) {
+        // Re-split: animate new split1 and split2 cards
+        setAnimating(true)
+        setDisplay(p => ({ ...p, split: [], split2: [] }))
+        await revealCard('split',  data.splitCards[0])
+        await revealCard('split2', data.split2Cards[0])
+        await revealCard('split',  data.splitCards[1])
+        await revealCard('split2', data.split2Cards[1])
+        setAnimating(false)
+        setLive({
+          ...data,
+          splitValue: calculateHandValue(data.splitCards),
+          split2Value: calculateHandValue(data.split2Cards),
+          dealerValue: 0,
+        })
+      } else {
+        // Original split: animate new hand1 and split1 cards
+        setAnimating(true)
+        setDisplay(p => ({ ...p, player: [], split: [] }))
+        await revealCard('player', data.playerCards[0])
+        await revealCard('split',  data.splitCards[0])
+        await revealCard('player', data.playerCards[1])
+        await revealCard('split',  data.splitCards[1])
+        setAnimating(false)
+        setLive({
+          ...data,
+          splitValue: calculateHandValue(data.splitCards),
+          split2Value: 0,
+          dealerValue: 0,
+        })
+      }
       busyRef.current = false; return
     }
 
+    // ── Reveal new card on the hand that was acted on ──
     if (action === 'hit' || action === 'double') {
-      const target = data.playingSplit ? 'split' : 'player'
-      const prevCount = target === 'split' ? display.split.length : display.player.length
-      const newCard = target === 'split'
-        ? data.splitCards?.[prevCount]
+      const prevCount = actionTarget === 'split2' ? display.split2.length
+        : actionTarget === 'split' ? display.split.length
+        : display.player.length
+      const newCard = actionTarget === 'split2' ? data.split2Cards?.[prevCount]
+        : actionTarget === 'split' ? data.splitCards?.[prevCount]
         : data.playerCards[prevCount]
       if (newCard) {
         setAnimating(true)
-        await revealCard(target, newCard)
+        await revealCard(actionTarget, newCard)
         setAnimating(false)
       }
     }
 
-    // Switching from hand 1 to split
-    if (data.playingSplit && data.splitStatus === 'active' && !bothDone) {
+    // ── Transition: hand1 done → playing split1 ──
+    if (data.playingSplit && !data.playingSplit2 && data.splitStatus === 'active' && !bothDone) {
       setDisplay(p => ({ ...p, player: data.playerCards }))
-      setLive({ ...data, splitValue: calculateHandValue(data.splitCards ?? []), dealerValue: 0 })
+      setLive({
+        ...data,
+        splitValue: calculateHandValue(data.splitCards ?? []),
+        split2Value: 0,
+        dealerValue: 0,
+      })
       busyRef.current = false; fetchState(); return
     }
 
-    // Hand complete — reveal dealer cards
+    // ── Transition: split1 done → playing split2 ──
+    if (data.playingSplit && data.playingSplit2 && data.split2Status === 'active' && !bothDone) {
+      setDisplay(p => ({ ...p, split: data.splitCards ?? [] }))
+      setLive({
+        ...data,
+        splitValue: calculateHandValue(data.splitCards ?? []),
+        split2Value: calculateHandValue(data.split2Cards ?? []),
+        dealerValue: 0,
+      })
+      busyRef.current = false; fetchState(); return
+    }
+
+    // ── All done — reveal dealer cards ──
     if (bothDone && data.dealerCards) {
       setAnimating(true)
-      // Flip hidden card
       const dealer = data.dealerCards
       setDisplay(p => ({
         ...p,
         dealer: [dealer[0], { ...dealer[1], hidden: false }],
         player: data.playerCards,
         split: data.splitCards ?? [],
+        split2: data.split2Cards ?? [],
       }))
       mkSound('deal')
       await sleep(400)
-      // Animate additional dealer cards
       for (let i = 2; i < dealer.length; i++) {
         mkSound('deal')
         setDisplay(p => ({ ...p, dealer: dealer.slice(0, i + 1) }))
@@ -318,11 +370,12 @@ export default function BlackjackPage() {
       }
       setAnimating(false)
 
-      // Result sound
-      const mainWon = data.status === 'player_won' || data.status === 'blackjack'
-      const splitWon = data.splitStatus === 'player_won' || data.splitStatus === 'blackjack'
-      if (mainWon || splitWon) mkSound('win')
-      else if (data.status === 'push' || data.splitStatus === 'push') mkSound('push')
+      const anyWon = data.status === 'player_won' || data.status === 'blackjack'
+        || data.splitStatus === 'player_won' || data.splitStatus === 'blackjack'
+        || data.split2Status === 'player_won' || data.split2Status === 'blackjack'
+      const anyPush = data.status === 'push' || data.splitStatus === 'push' || data.split2Status === 'push'
+      if (anyWon) mkSound('win')
+      else if (anyPush) mkSound('push')
       else mkSound('lose')
 
       setResult(data)
@@ -338,14 +391,16 @@ export default function BlackjackPage() {
   // Auto-stand at 21
   useEffect(() => {
     if (!live || acting || animating || busyRef.current) return
-    const val = live.playingSplit
+    const val = live.playingSplit2
+      ? calculateHandValue(live.split2Cards ?? [])
+      : live.playingSplit
       ? calculateHandValue(live.splitCards ?? [])
       : live.playerValue
     if (val === 21 && live.status === 'active') {
       sendAction('stand')
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [live?.playerValue, live?.splitValue, live?.playingSplit])
+  }, [live?.playerValue, live?.splitValue, live?.split2Value, live?.playingSplit, live?.playingSplit2])
 
   // ── Loading / unauth ──
   if (status === 'loading') return (
@@ -368,22 +423,39 @@ export default function BlackjackPage() {
   )
 
   const isSplit = !!(live?.splitCards?.length || display.split.length > 0 || result?.splitCards?.length)
+  const isSplit2 = !!(live?.split2Cards?.length || display.split2.length > 0 || result?.split2Cards?.length)
   const isActiveHand = !!live && live.status === 'active'
   const busy = dealing || acting || animating
 
-  const canPlayerHit = isActiveHand && !busy && (live.playingSplit
-    ? calculateHandValue(live.splitCards ?? []) < 21
-    : live.playerValue < 21)
-  const showSplitBtn = isActiveHand && !busy && !live.playingSplit && !isSplit
-    && canSplit(live.playerCards)
+  // Active hand value for hit/stand logic
+  const activeHandValue = live?.playingSplit2
+    ? calculateHandValue(live.split2Cards ?? [])
+    : live?.playingSplit
+    ? calculateHandValue(live.splitCards ?? [])
+    : live?.playerValue ?? 0
+
+  const canPlayerHit = isActiveHand && !busy && activeHandValue < 21
+
+  // Current hand's card count for double eligibility
+  const currentHandCards = live?.playingSplit2 ? display.split2 : live?.playingSplit ? display.split : display.player
+  const doubleDisabled = busy || currentHandCards.length > 2
+
+  // Show split button: original split (on hand1) or re-split (on split1)
+  const showSplitBtn = isActiveHand && !busy && (
+    (!live.playingSplit && !live.playingSplit2 && !isSplit && canSplit(live.playerCards ?? [])) ||
+    (live.playingSplit && !live.playingSplit2 && !isSplit2 && canSplit(live.splitCards ?? []))
+  )
 
   const nextTier = REDEMPTION_TIERS.find(t => (gs?.totalPoints ?? 0) < t.points)
   const progressPct = nextTier ? Math.min(100, ((gs?.totalPoints ?? 0) / nextTier.points) * 100) : 100
 
-  // Dealer value display
   const dealerVal = display.dealer.filter(c => !c.hidden).length > 0
     ? calculateHandValue(display.dealer.filter(c => !c.hidden))
     : 0
+
+  // Done overlay labels for each hand
+  const split1Bust = isSplit && !result && live?.playingSplit2 && calculateHandValue(display.split) > 21
+  const split1DoneLabel = split1Bust ? '💥 Bust' : result?.splitStatus ? resultLabel(result.splitStatus).text : undefined
 
   return (
     <main className="min-h-screen py-24 px-4">
@@ -453,16 +525,23 @@ export default function BlackjackPage() {
             {result && (
               <div className="text-center space-y-1 animate-up py-1">
                 {isSplit ? (
-                  <div className="flex justify-center gap-8">
+                  <div className="flex justify-center gap-6 flex-wrap">
                     <div>
-                      <div className={`text-lg font-black ${resultLabel(result.status).color}`}>
+                      <div className={`text-base font-black ${resultLabel(result.status).color}`}>
                         Hand 1: {resultLabel(result.status).text}
                       </div>
                     </div>
                     {result.splitStatus && (
                       <div>
-                        <div className={`text-lg font-black ${resultLabel(result.splitStatus).color}`}>
-                          Split: {resultLabel(result.splitStatus).text}
+                        <div className={`text-base font-black ${resultLabel(result.splitStatus).color}`}>
+                          {isSplit2 ? 'Split 1' : 'Split'}: {resultLabel(result.splitStatus).text}
+                        </div>
+                      </div>
+                    )}
+                    {isSplit2 && result.split2Status && (
+                      <div>
+                        <div className={`text-base font-black ${resultLabel(result.split2Status).color}`}>
+                          Split 2: {resultLabel(result.split2Status).text}
                         </div>
                       </div>
                     )}
@@ -479,28 +558,41 @@ export default function BlackjackPage() {
             )}
 
             {/* Player hands */}
-            <div className={isSplit ? 'grid grid-cols-2 gap-3' : ''}>
+            <div className={isSplit2 ? 'grid grid-cols-3 gap-2' : isSplit ? 'grid grid-cols-2 gap-3' : ''}>
               {/* Hand 1 */}
               <HandArea
                 cards={display.player}
                 value={live?.playerValue ?? calculateHandValue(display.player)}
                 label={isSplit ? 'Hand 1' : `You${live ? ` — Hand ${gs?.handsPlayed ?? 0}+1/3` : ''}`}
-                active={isActiveHand && !live?.playingSplit}
-                done={isSplit && !!(live?.playingSplit || result)}
+                active={isActiveHand && !live?.playingSplit && !live?.playingSplit2}
+                done={isSplit && !!(live?.playingSplit || live?.playingSplit2 || result)}
                 doneLabel={live?.hand1Bust ? '💥 Bust' : result ? resultLabel(result.status).text : undefined}
                 doneColor={resultLabel(result?.status ?? '').color}
               />
 
-              {/* Split hand */}
+              {/* Split 1 */}
               {isSplit && (
                 <HandArea
                   cards={display.split}
                   value={live?.splitValue ?? calculateHandValue(display.split)}
-                  label="Split"
-                  active={isActiveHand && !!live?.playingSplit}
-                  done={!!(result?.splitStatus)}
-                  doneLabel={result?.splitStatus ? resultLabel(result.splitStatus).text : undefined}
+                  label={isSplit2 ? 'Split 1' : 'Split'}
+                  active={isActiveHand && !!live?.playingSplit && !live?.playingSplit2}
+                  done={!!(live?.playingSplit2 || result?.splitStatus)}
+                  doneLabel={split1DoneLabel}
                   doneColor={resultLabel(result?.splitStatus ?? '').color}
+                />
+              )}
+
+              {/* Split 2 */}
+              {isSplit2 && (
+                <HandArea
+                  cards={display.split2}
+                  value={live?.split2Value ?? calculateHandValue(display.split2)}
+                  label="Split 2"
+                  active={isActiveHand && !!live?.playingSplit2}
+                  done={!!(result?.split2Status)}
+                  doneLabel={result?.split2Status ? resultLabel(result.split2Status).text : undefined}
+                  doneColor={resultLabel(result?.split2Status ?? '').color}
                 />
               )}
             </div>
@@ -525,10 +617,10 @@ export default function BlackjackPage() {
                 </button>
                 <button
                   onClick={() => sendAction('double')}
-                  disabled={busy || (live.playingSplit ? display.split.length > 2 : display.player.length > 2)}
+                  disabled={doubleDisabled}
                   className="py-3 lg:py-4 rounded-xl bg-yellow-600 hover:bg-yellow-700 text-white font-black lg:text-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed flex flex-col items-center leading-none gap-0.5">
                   <span>Double</span>
-                  <span className="text-[10px] font-normal opacity-75">win ×2 / lose −20</span>
+                  <span className="text-[10px] font-normal opacity-75">win ×2 / lose ×2</span>
                 </button>
                 {showSplitBtn && (
                   <button onClick={() => sendAction('split')} disabled={busy}
@@ -559,7 +651,6 @@ export default function BlackjackPage() {
               Collect loads every day and redeem them for real prizes — merch, bonus codes, and exclusive rewards. The more you play, the bigger the prizes.
             </p>
 
-            {/* Hype.bet requirement */}
             <div className="rounded-xl border border-yellow-500/25 bg-yellow-500/5 p-4 flex gap-3">
               <span className="text-yellow-400 text-lg flex-shrink-0 mt-px">⚠️</span>
               <div>
@@ -573,7 +664,6 @@ export default function BlackjackPage() {
               </div>
             </div>
 
-            {/* Locked tier cards */}
             <div className="grid grid-cols-3 gap-3">
               {REDEMPTION_TIERS.map(tier => (
                 <div key={tier.name} className="relative rounded-xl border border-white/8 bg-surface-700/50 p-4 text-center overflow-hidden select-none">
@@ -601,6 +691,8 @@ export default function BlackjackPage() {
             <div className="flex justify-between text-surface-400"><span>💥 Bust / Lose</span><span>{pts(POINTS.lose)}</span></div>
             <div className="flex justify-between text-yellow-500"><span>✌️ Double win</span><span>+{POINTS.win * 2} loads</span></div>
             <div className="flex justify-between text-red-400"><span>💀 Double lose</span><span>{POINTS.doubleLose} loads</span></div>
+            <div className="flex justify-between text-purple-400"><span>🃏 Split win</span><span>+{POINTS.win} loads</span></div>
+            <div className="flex justify-between text-red-400"><span>🃏 Split lose</span><span>{POINTS.splitLose} loads</span></div>
             <div className="flex justify-between text-orange-400"><span>🔥 7-day streak</span><span>+50 loads/day</span></div>
             <div className="flex justify-between text-orange-400"><span>🔥 14-day streak</span><span>+150 loads/day</span></div>
             <div className="flex justify-between text-brand-400 col-span-2"><span>✅ All 3 hands played</span><span>{pts(POINTS.allHandsBonus)}</span></div>
