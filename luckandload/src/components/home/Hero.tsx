@@ -119,28 +119,19 @@ export function Hero() {
 
           {/* Hero content */}
           <div className="flex flex-col items-center text-center gap-6 flex-1 max-w-2xl">
-
-            {/* Platform badges */}
-            <div className="flex items-center gap-2">
-              <a href="https://kick.com/luckandloadtv" target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1.5 rounded-full bg-green-500/10 border border-green-500/25 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-green-400 hover:bg-green-500/20 transition-colors">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
-                Live on Kick
-              </a>
-              <span className="text-white/15">·</span>
-              <a href="https://twitch.tv/luckandloadtv" target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-1.5 rounded-full bg-purple-500/10 border border-purple-500/25 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-purple-400 hover:bg-purple-500/20 transition-colors">
-                <span className="h-1.5 w-1.5 rounded-full bg-purple-400 animate-pulse" />
-                Twitch
-              </a>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface-700/60 px-4 py-1.5 text-sm">
+              <span className="live-dot" />
+              <span className="text-slate-400">Stream goes live on Kick & Twitch</span>
             </div>
 
-            <h1 className="text-6xl sm:text-7xl font-black leading-none tracking-tight">
-              <span className="text-white">LuckAndLoad</span><span className="text-gradient">TV</span>
+            <h1 className="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-white">
+              Welcome to{' '}
+              <span className="text-gradient">LuckAndLoad</span>
+              <span className="text-white">TV</span>
             </h1>
 
-            <p className="text-lg text-slate-400 max-w-sm leading-relaxed">
-              Casino streams, bonus hunts, and a community that actually wins.
+            <p className="text-lg text-slate-400 max-w-xl leading-relaxed">
+              Two friends, zero filters, and a whole lot of spins. Join the community for live streams, bonus hunts, and vibes you won't find anywhere else.
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mt-2">
