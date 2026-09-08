@@ -1,4 +1,4 @@
-import { Trophy, Shuffle, Clock, Gift, Zap, Target, CalendarDays } from 'lucide-react'
+import { Trophy, Shuffle, Clock, Gift, Zap, CalendarDays } from 'lucide-react'
 import {
   getLeaderboardData,
   formatXP,
@@ -189,15 +189,15 @@ export default async function LeaderboardPage() {
 
         {/* Info strip */}
         <div className="rounded-2xl border border-white/8 bg-surface-800 p-5 sm:p-6">
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+          <div className="grid grid-cols-3 gap-4 sm:gap-6">
             <InfoItem icon={<Zap size={15} />} label="Play under" value="Code LuckAndLoad" />
-            <InfoItem icon={<Target size={15} />} label="Minimum" value="$5 generated/mo" />
             <InfoItem icon={<CalendarDays size={15} />} label="Paid out" value="1st of month" />
             <InfoItem icon={<Gift size={15} />} label="Bonus draw" value={`+$${RANDOM_GIVEAWAY_PRIZE} random`} />
           </div>
           <p className="mt-4 border-t border-white/5 pt-4 text-xs leading-relaxed text-slate-500">
             The ${RANDOM_GIVEAWAY_PRIZE} bonus is drawn at random each month among everyone who played solo under
-            our code, independent of rank — win or lose, everyone qualifies.
+            our code and earned at least <strong className="text-slate-300">100 XP</strong> that month — win or
+            lose, everyone above that bar qualifies.
           </p>
         </div>
 
