@@ -141,24 +141,6 @@ export default async function LeaderboardPage() {
           </div>
         </div>
 
-        {/* How it works summary */}
-        <div className="rounded-2xl border border-white/8 bg-surface-800 p-6">
-          <h2 className="text-base font-bold text-white mb-4">How it works</h2>
-          <div className="grid sm:grid-cols-3 gap-4">
-            {[
-              { step: '1', icon: '🎰', title: 'Play solo', desc: 'Use our affiliate code when you play at the casino' },
-              { step: '2', icon: '📈', title: 'Generate revenue', desc: 'Your play automatically generates a % for LuckAndLoadTV' },
-              { step: '3', icon: '💸', title: 'Get paid', desc: 'We send 100% back to you on the 1st of each month' },
-            ].map(item => (
-              <div key={item.step} className="text-center p-4 rounded-xl bg-surface-700/50">
-                <div className="text-2xl mb-2">{item.icon}</div>
-                <p className="text-white text-sm font-semibold mb-1">{item.title}</p>
-                <p className="text-slate-400 text-xs leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
       </div>
     </div>
   )
