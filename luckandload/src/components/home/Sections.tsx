@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { formatRelativeTime } from '@/lib/utils'
@@ -210,8 +211,12 @@ export function HypeSection() {
                 >
                   our link
                 </a>
-                {' '}and play solo under our code. You generate a % for us —{' '}
-                <strong className="text-white">and we give 100% of it back to you</strong> through monthly payouts.
+                {' '}and play solo under our code. Every month we pay out{' '}
+                <strong className="text-white">$1,000</strong> — ranked prizes for the{' '}
+                <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold">
+                  top 10 on the leaderboard
+                </Link>
+                {' '}plus a $20 random draw open to everyone who plays under our code.
               </p>
             </div>
           </div>
