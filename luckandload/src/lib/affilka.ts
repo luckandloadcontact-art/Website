@@ -1,3 +1,5 @@
+import { unstable_cache } from 'next/cache'
+
 // Henter månedlig leaderboard-data fra Affilka (Hype.bet) sitt affiliate-API.
 // Rangerer spillerne som har spilt under vår affiliate-kode etter hvor mye de har satset (wagered)
 // denne måneden, og setter premie basert på plassering.
@@ -32,7 +34,12 @@ function currentMonthRange(now = new Date()) {
   return { from: fmt(from), to: fmt(now) }
 }
 
-export async function getLeaderboardData(): Promise<LeaderboardData | null> {
+// NB: hele denne funksjonen (inkl. updatedAt-tidsstempelet) caches samlet i 360s via
+// unstable_cache lenger ned -- ikke bare selve fetch-kallet. Ellers ville updatedAt alltid
+// vist "nå" (rendringstidspunktet) uansett om dataene faktisk var ferske eller opptil 6 min
+// gamle, siden resten av funksjonen kjører på nytt for hvert request selv om fetch-resultatet
+// er cachet.
+async function fetchLeaderboardData(): Promise<LeaderboardData | null> {
   const apiKey = process.env.AFFILKA_API_KEY
   if (!apiKey) {
     console.error('[affilka] AFFILKA_API_KEY er ikke satt')
@@ -46,10 +53,10 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ apiKey, from, to }),
-      // Affilka har 5 min cooldown per API-nøkkel (delt på ALLE som bruker nøkkelen, ikke
-      // per besøkende) -- cacher litt lenger enn selve cooldownen for å ha margin.
+      // Selve throttlingen skjer nå i unstable_cache-laget rundt denne funksjonen, så dette
+      // kallet skal alltid gå live når funksjonen faktisk kjører.
       // OBS: ikke test dette endepunktet manuelt mens siden er live, det spiser av samme kvote.
-      next: { revalidate: 360 },
+      cache: 'no-store',
     })
 
     if (!res.ok) {
@@ -91,6 +98,12 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
     return null
   }
 }
+
+// Cacher hele resultatet (data + updatedAt) samlet i 360s -- se kommentaren over
+// fetchLeaderboardData for hvorfor dette må gjøres her og ikke bare på selve fetch-kallet.
+export const getLeaderboardData = unstable_cache(fetchLeaderboardData, ['leaderboard-data'], {
+  revalidate: 360,
+})
 
 export function formatXP(xpCents: number): string {
   return Math.round(xpCents / 100).toLocaleString('en-US')
