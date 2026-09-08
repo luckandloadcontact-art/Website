@@ -13,7 +13,7 @@ export interface LeaderboardEntry {
 
 export interface LeaderboardData {
   entries: LeaderboardEntry[]
-  totalUsers: number
+  totalPlayers: number
   periodFrom: string
   periodTo: string
   updatedAt: string
@@ -21,7 +21,9 @@ export interface LeaderboardData {
 
 // Premier for plass 1-6. Resten av potten ($20) deles ikke ut etter plassering,
 // men trekkes tilfeldig blant alle som har spilt solo under koden vår (se leaderboard-siden).
-const PLACEMENT_PRIZES = [500, 200, 100, 80, 60, 40]
+export const PLACEMENT_PRIZES = [500, 200, 100, 80, 60, 40]
+export const RANDOM_GIVEAWAY_PRIZE = 20
+export const TOTAL_PRIZE_POOL = PLACEMENT_PRIZES.reduce((sum, p) => sum + p, 0) + RANDOM_GIVEAWAY_PRIZE
 const TOP_N = 10
 
 function currentMonthRange(now = new Date()) {
@@ -77,7 +79,9 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
 
     return {
       entries,
-      totalUsers: data.summary?.totalUsers ?? entries.length,
+      // NB: Affilka sitt eget "totalUsers"-felt betyr nye registreringer i perioden,
+      // ikke antall aktive spillere -- bruk lengden på hele listen i stedet.
+      totalPlayers: summarizedBets.length,
       periodFrom: from,
       periodTo: to,
       updatedAt: new Date().toISOString(),
@@ -90,4 +94,9 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
 
 export function formatXP(xpCents: number): string {
   return Math.round(xpCents / 100).toLocaleString('en-US')
+}
+
+export function daysUntilPayout(now = new Date()): number {
+  const nextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
+  return Math.max(1, Math.ceil((nextMonth.getTime() - now.getTime()) / 86_400_000))
 }

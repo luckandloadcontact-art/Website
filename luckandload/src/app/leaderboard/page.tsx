@@ -1,144 +1,204 @@
-import { CheckCircle, CalendarDays, Gift, Users } from 'lucide-react'
-import { getLeaderboardData, formatXP } from '@/lib/affilka'
-import { getRankLabel, getRankColor, formatDate } from '@/lib/utils'
+import { Trophy, Users, Clock, Gift, Zap, Target, CalendarDays } from 'lucide-react'
+import {
+  getLeaderboardData,
+  formatXP,
+  daysUntilPayout,
+  TOTAL_PRIZE_POOL,
+  RANDOM_GIVEAWAY_PRIZE,
+  type LeaderboardEntry,
+} from '@/lib/affilka'
+import { formatDate, cn } from '@/lib/utils'
+import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 
 export const revalidate = 360
+
+const PODIUM_STYLE = {
+  1: {
+    ring: 'ring-2 ring-gold-400/70',
+    badge: 'bg-gold-500 text-black',
+    lift: 'sm:-mt-4',
+    glow: 'shadow-[0_0_44px_-12px_rgba(201,165,60,0.5)] border-gold-500/25',
+    avatarSize: 76,
+    prizeColor: 'text-gold-400',
+  },
+  2: {
+    ring: 'ring-2 ring-slate-300/50',
+    badge: 'bg-slate-300 text-black',
+    lift: '',
+    glow: 'border-white/8',
+    avatarSize: 60,
+    prizeColor: 'text-hype',
+  },
+  3: {
+    ring: 'ring-2 ring-amber-600/60',
+    badge: 'bg-amber-600 text-black',
+    lift: '',
+    glow: 'border-white/8',
+    avatarSize: 60,
+    prizeColor: 'text-hype',
+  },
+} as const
+
+function PodiumCard({ entry, place }: { entry: LeaderboardEntry; place: 1 | 2 | 3 }) {
+  const s = PODIUM_STYLE[place]
+  return (
+    <div
+      className={cn(
+        'relative flex flex-col items-center rounded-2xl border bg-surface-800 px-3 py-6 text-center',
+        s.lift,
+        s.glow
+      )}
+    >
+      <span
+        className={cn(
+          'absolute -top-3 flex h-6 w-6 items-center justify-center rounded-full text-xs font-black',
+          s.badge
+        )}
+      >
+        {place}
+      </span>
+      <PlayerAvatar src={entry.avatar} name={entry.username} size={s.avatarSize} className={s.ring} />
+      <p className="mt-3 max-w-full truncate text-sm font-bold text-white">{entry.username}</p>
+      <p className="mt-0.5 text-xs tabular-nums text-slate-500">{formatXP(entry.xpPoints)} XP</p>
+      <p className={cn('mt-3 text-xl font-black tabular-nums', s.prizeColor)}>${entry.prize}</p>
+    </div>
+  )
+}
+
+function StatPill({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-xl border border-white/8 bg-surface-800 px-3 py-3">
+      <div className="flex items-center gap-1.5 text-slate-500">
+        {icon}
+        <span className="text-[11px] uppercase tracking-wide">{label}</span>
+      </div>
+      <span className="text-base font-bold text-white tabular-nums">{value}</span>
+    </div>
+  )
+}
+
+function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex items-start gap-2.5">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/5 text-brand-400">
+        {icon}
+      </div>
+      <div className="min-w-0">
+        <p className="text-[11px] uppercase tracking-wide text-slate-500">{label}</p>
+        <p className="truncate text-sm font-semibold text-white">{value}</p>
+      </div>
+    </div>
+  )
+}
 
 export default async function LeaderboardPage() {
   const data = await getLeaderboardData()
   const entries = data?.entries ?? []
+  const top3 = entries.slice(0, 3)
+  const rest = entries.slice(3)
+  const showPodium = top3.length === 3
+
+  const monthLabel = data
+    ? new Date(`${data.periodFrom}T00:00:00Z`).toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      })
+    : ''
 
   return (
     <div className="min-h-screen">
 
       {/* Header */}
-      <div className="border-b border-white/5 bg-surface-950/50">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 text-center">
-          <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500/10 border border-brand-500/20 mb-5">
-            <span className="text-3xl">🏆</span>
+      <div className="border-b border-white/5 bg-gradient-to-b from-surface-900 to-surface-950">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+          <div className="flex flex-col items-center gap-3 text-center">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-gold-500/30 bg-gold-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-gold-400">
+              <Trophy size={13} /> LuckAndLoadTV
+            </div>
+            <h1 className="text-3xl font-black text-white sm:text-4xl">Monthly Leaderboard</h1>
+            <p className="max-w-xl text-sm text-slate-400 sm:text-base">
+              Top 10 players ranked by XP earned playing under our affiliate code this month.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-white mb-4">
-            LuckAndLoadTV Leaderboard
-          </h1>
-          <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-            🧠 If you play solo under our code, you generate a percentage for us — and we give{' '}
-            <strong className="text-white">100% of it back to you</strong> through monthly payouts ❤️
-          </p>
+
+          <div className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-3">
+            <StatPill icon={<Gift size={13} />} label="Prize pool" value={`$${TOTAL_PRIZE_POOL}`} />
+            <StatPill icon={<Users size={13} />} label="Players" value={String(data?.totalPlayers ?? 0)} />
+            <StatPill icon={<Clock size={13} />} label="Resets in" value={`${daysUntilPayout()}d`} />
+          </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 space-y-4">
 
-        {/* Live leaderboard */}
-        <div className="rounded-2xl border border-white/8 bg-surface-800 overflow-hidden">
-          <div className="flex items-center justify-between px-6 pt-6 pb-4">
-            <h2 className="text-base font-bold text-white">This month's ranking</h2>
-            {data && (
-              <span className="text-xs text-slate-500 flex items-center gap-1.5">
-                <Users size={13} /> {data.totalUsers} players
-              </span>
-            )}
+        {!data && (
+          <div className="rounded-2xl border border-white/8 bg-surface-800 p-6 text-center text-sm text-slate-400">
+            Couldn't load the leaderboard right now — check back in a few minutes.
           </div>
+        )}
 
-          {!data && (
-            <p className="px-6 pb-6 text-sm text-slate-400">
-              Couldn't load the leaderboard right now — check back in a few minutes.
-            </p>
-          )}
+        {data && entries.length === 0 && (
+          <div className="rounded-2xl border border-white/8 bg-surface-800 p-6 text-center text-sm text-slate-400">
+            No plays under our code yet this month — be the first player on the board.
+          </div>
+        )}
 
-          {data && entries.length === 0 && (
-            <p className="px-6 pb-6 text-sm text-slate-400">
-              No plays under our code yet this month — be the first on the board! 🎰
-            </p>
-          )}
+        {/* Podium */}
+        {showPodium && (
+          <div className="grid grid-cols-3 items-end gap-3 sm:gap-4">
+            <PodiumCard entry={top3[1]} place={2} />
+            <PodiumCard entry={top3[0]} place={1} />
+            <PodiumCard entry={top3[2]} place={3} />
+          </div>
+        )}
 
-          {entries.length > 0 && (
+        {/* Ranks 4+ */}
+        {(showPodium ? rest : entries).length > 0 && (
+          <div className="overflow-hidden rounded-2xl border border-white/8 bg-surface-800">
             <div className="divide-y divide-white/5">
-              {entries.map((entry) => (
+              {(showPodium ? rest : entries).map((entry) => (
                 <div
                   key={entry.rank}
-                  className={`flex items-center gap-4 px-6 py-3.5 ${
-                    entry.rank === 1 ? 'bg-gold-500/5' : ''
-                  }`}
+                  className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-white/[0.02] sm:px-6 sm:gap-4"
                 >
-                  <span className={`w-8 text-center text-lg font-bold shrink-0 ${getRankColor(entry.rank)}`}>
-                    {getRankLabel(entry.rank)}
+                  <span className="w-5 shrink-0 text-center text-sm font-bold tabular-nums text-slate-500">
+                    {entry.rank}
                   </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white text-sm font-semibold truncate">{entry.username}</p>
-                    <p className="text-slate-500 text-xs">{formatXP(entry.xpPoints)} XP</p>
+                  <PlayerAvatar src={entry.avatar} name={entry.username} size={32} />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-white">{entry.username}</p>
+                    <p className="text-xs tabular-nums text-slate-500">{formatXP(entry.xpPoints)} XP</p>
                   </div>
-                  <span
-                    className={`text-sm font-bold shrink-0 ${
-                      entry.prize ? 'text-green-400' : 'text-slate-500'
-                    }`}
-                  >
-                    {entry.prize ? `$${entry.prize}` : 'Runner-up'}
-                  </span>
+                  {entry.prize ? (
+                    <span className="shrink-0 text-sm font-bold tabular-nums text-hype">${entry.prize}</span>
+                  ) : (
+                    <span className="shrink-0 text-xs font-medium text-slate-600">Runner-up</span>
+                  )}
                 </div>
               ))}
             </div>
-          )}
-
-          {data && (
-            <p className="px-6 py-3 text-[11px] text-slate-600 border-t border-white/5">
-              Period: {formatDate(data.periodFrom)} – {formatDate(data.periodTo)} · Updated {formatDate(data.updatedAt)}
-            </p>
-          )}
-        </div>
-
-        {/* Random giveaway */}
-        <div className="rounded-2xl border border-gold-500/20 bg-surface-800 p-6 flex gap-4 items-start">
-          <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-xl bg-gold-500/10 border border-gold-500/20">
-            <Gift size={18} className="text-gold-400" />
           </div>
-          <div>
-            <h3 className="text-white font-semibold mb-1">+ $20 Random Giveaway</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              On top of the ranking prizes above, we draw <strong className="text-white">$20 at random</strong> every
-              month among everyone who played solo under our code — win or lose, everyone qualifies.
-            </p>
-          </div>
-        </div>
+        )}
 
-        {/* Requirements + Payouts */}
-        <div className="grid sm:grid-cols-2 gap-4">
+        {data && entries.length > 0 && (
+          <p className="text-center text-[11px] text-slate-600">
+            {monthLabel} · Updated {formatDate(data.updatedAt)}
+          </p>
+        )}
 
-          {/* Requirements */}
-          <div className="rounded-2xl border border-brand-500/20 bg-surface-800 p-6">
-            <div className="flex items-center gap-2 mb-5">
-              <CheckCircle size={18} className="text-brand-400" />
-              <h2 className="text-base font-bold text-white">Requirements</h2>
-            </div>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <span className="mt-0.5 h-5 w-5 rounded-full bg-brand-500/20 text-brand-400 text-[11px] font-bold flex items-center justify-center shrink-0">✓</span>
-                <span className="text-slate-300 text-sm leading-relaxed">Play under <strong className="text-white">our affiliate code</strong></span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="mt-0.5 h-5 w-5 rounded-full bg-brand-500/20 text-brand-400 text-[11px] font-bold flex items-center justify-center shrink-0">✓</span>
-                <span className="text-slate-300 text-sm leading-relaxed">Minimum <strong className="text-white">$5 generated</strong> per month</span>
-              </li>
-            </ul>
+        {/* Info strip */}
+        <div className="rounded-2xl border border-white/8 bg-surface-800 p-5 sm:p-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6">
+            <InfoItem icon={<Zap size={15} />} label="Play under" value="Code LuckAndLoad" />
+            <InfoItem icon={<Target size={15} />} label="Minimum" value="$5 generated/mo" />
+            <InfoItem icon={<CalendarDays size={15} />} label="Paid out" value="1st of month" />
+            <InfoItem icon={<Gift size={15} />} label="Bonus draw" value={`+$${RANDOM_GIVEAWAY_PRIZE} random`} />
           </div>
-
-          {/* Payouts */}
-          <div className="rounded-2xl border border-green-500/20 bg-surface-800 p-6">
-            <div className="flex items-center gap-2 mb-5">
-              <CalendarDays size={18} className="text-green-400" />
-              <h2 className="text-base font-bold text-white">Payouts</h2>
-            </div>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <span className="mt-0.5 h-5 w-5 rounded-full bg-green-500/20 text-green-400 text-[11px] font-bold flex items-center justify-center shrink-0">💰</span>
-                <span className="text-slate-300 text-sm leading-relaxed">Paid out on the <strong className="text-white">1st of every month</strong></span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="mt-0.5 h-5 w-5 rounded-full bg-green-500/20 text-green-400 text-[11px] font-bold flex items-center justify-center shrink-0">❤️</span>
-                <span className="text-slate-300 text-sm leading-relaxed"><strong className="text-white">100%</strong> of generated revenue goes back to you</span>
-              </li>
-            </ul>
-          </div>
+          <p className="mt-4 border-t border-white/5 pt-4 text-xs leading-relaxed text-slate-500">
+            The ${RANDOM_GIVEAWAY_PRIZE} bonus is drawn at random each month among everyone who played solo under
+            our code, independent of rank — win or lose, everyone qualifies.
+          </p>
         </div>
 
       </div>
