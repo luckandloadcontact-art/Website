@@ -2,7 +2,7 @@ import { CheckCircle, CalendarDays, Gift, Users } from 'lucide-react'
 import { getLeaderboardData, formatXP } from '@/lib/affilka'
 import { getRankLabel, getRankColor, formatDate } from '@/lib/utils'
 
-export const revalidate = 300
+export const revalidate = 360
 
 export default async function LeaderboardPage() {
   const data = await getLeaderboardData()

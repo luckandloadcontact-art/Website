@@ -44,8 +44,10 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ apiKey, from, to }),
-      // Affilka har 5 min cooldown per API-nøkkel -- caches i 5 min på tvers av alle besøkende.
-      next: { revalidate: 300 },
+      // Affilka har 5 min cooldown per API-nøkkel (delt på ALLE som bruker nøkkelen, ikke
+      // per besøkende) -- cacher litt lenger enn selve cooldownen for å ha margin.
+      // OBS: ikke test dette endepunktet manuelt mens siden er live, det spiser av samme kvote.
+      next: { revalidate: 360 },
     })
 
     if (!res.ok) {

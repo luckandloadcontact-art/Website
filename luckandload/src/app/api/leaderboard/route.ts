@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getLeaderboardData } from '@/lib/affilka'
 
-export const revalidate = 300
+export const revalidate = 360
 
 export async function GET() {
   const data = await getLeaderboardData()
