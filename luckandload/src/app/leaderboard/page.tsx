@@ -1,6 +1,13 @@
-import { Trophy, CheckCircle, CalendarDays, Clock } from 'lucide-react'
+import { CheckCircle, CalendarDays, Gift, Users } from 'lucide-react'
+import { getLeaderboardData, formatUSD } from '@/lib/affilka'
+import { getRankLabel, getRankColor, formatDate } from '@/lib/utils'
 
-export default function LeaderboardPage() {
+export const revalidate = 300
+
+export default async function LeaderboardPage() {
+  const data = await getLeaderboardData()
+  const entries = data?.entries ?? []
+
   return (
     <div className="min-h-screen">
 
@@ -8,10 +15,10 @@ export default function LeaderboardPage() {
       <div className="border-b border-white/5 bg-surface-950/50">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12 text-center">
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-500/10 border border-brand-500/20 mb-5">
-            <span className="text-3xl">💰</span>
+            <span className="text-3xl">🏆</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-white mb-4">
-            LuckAndLoadTV Monthly Payouts
+            LuckAndLoadTV Leaderboard
           </h1>
           <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
             🧠 If you play solo under our code, you generate a percentage for us — and we give{' '}
@@ -21,6 +28,78 @@ export default function LeaderboardPage() {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 space-y-6">
+
+        {/* Live leaderboard */}
+        <div className="rounded-2xl border border-white/8 bg-surface-800 overflow-hidden">
+          <div className="flex items-center justify-between px-6 pt-6 pb-4">
+            <h2 className="text-base font-bold text-white">This month's ranking</h2>
+            {data && (
+              <span className="text-xs text-slate-500 flex items-center gap-1.5">
+                <Users size={13} /> {data.totalUsers} players
+              </span>
+            )}
+          </div>
+
+          {!data && (
+            <p className="px-6 pb-6 text-sm text-slate-400">
+              Couldn't load the leaderboard right now — check back in a few minutes.
+            </p>
+          )}
+
+          {data && entries.length === 0 && (
+            <p className="px-6 pb-6 text-sm text-slate-400">
+              No plays under our code yet this month — be the first on the board! 🎰
+            </p>
+          )}
+
+          {entries.length > 0 && (
+            <div className="divide-y divide-white/5">
+              {entries.map((entry) => (
+                <div
+                  key={entry.rank}
+                  className={`flex items-center gap-4 px-6 py-3.5 ${
+                    entry.rank === 1 ? 'bg-gold-500/5' : ''
+                  }`}
+                >
+                  <span className={`w-8 text-center text-lg font-bold shrink-0 ${getRankColor(entry.rank)}`}>
+                    {getRankLabel(entry.rank)}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm font-semibold truncate">{entry.username}</p>
+                    <p className="text-slate-500 text-xs">{formatUSD(entry.wageredCents)} wagered</p>
+                  </div>
+                  <span
+                    className={`text-sm font-bold shrink-0 ${
+                      entry.prize ? 'text-green-400' : 'text-slate-500'
+                    }`}
+                  >
+                    {entry.prize ? `$${entry.prize}` : 'Runner-up'}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {data && (
+            <p className="px-6 py-3 text-[11px] text-slate-600 border-t border-white/5">
+              Period: {formatDate(data.periodFrom)} – {formatDate(data.periodTo)} · Updated {formatDate(data.updatedAt)}
+            </p>
+          )}
+        </div>
+
+        {/* Random giveaway */}
+        <div className="rounded-2xl border border-gold-500/20 bg-surface-800 p-6 flex gap-4 items-start">
+          <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-xl bg-gold-500/10 border border-gold-500/20">
+            <Gift size={18} className="text-gold-400" />
+          </div>
+          <div>
+            <h3 className="text-white font-semibold mb-1">+ $20 Random Giveaway</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              On top of the ranking prizes above, we draw <strong className="text-white">$20 at random</strong> every
+              month among everyone who played solo under our code — win or lose, everyone qualifies.
+            </p>
+          </div>
+        </div>
 
         {/* Requirements + Payouts */}
         <div className="grid sm:grid-cols-2 gap-4">
@@ -77,19 +156,6 @@ export default function LeaderboardPage() {
                 <p className="text-slate-400 text-xs leading-relaxed">{item.desc}</p>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Future leaderboard note */}
-        <div className="rounded-2xl border border-white/8 bg-surface-800/60 p-6 flex gap-4 items-start">
-          <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-xl bg-brand-500/10 border border-brand-500/20">
-            <Clock size={18} className="text-brand-400" />
-          </div>
-          <div>
-            <h3 className="text-white font-semibold mb-1">Traditional Leaderboard — Coming Soon</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              In the future we will transition to a more traditional leaderboard where you can track your ranking, compete with other community members, and earn rewards based on your activity. Stay tuned!
-            </p>
           </div>
         </div>
 
