@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getLeaderboardData } from '@/lib/affilka'
 
-export const revalidate = 360
+// Se leaderboard/page.tsx for hvorfor dette må være force-dynamic og ikke statisk/ISR.
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   const data = await getLeaderboardData()
