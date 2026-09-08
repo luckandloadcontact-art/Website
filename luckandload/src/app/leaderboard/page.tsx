@@ -1,4 +1,4 @@
-import { Trophy, Users, Clock, Gift, Zap, Target, CalendarDays } from 'lucide-react'
+import { Trophy, Shuffle, Clock, Gift, Zap, Target, CalendarDays } from 'lucide-react'
 import {
   getLeaderboardData,
   formatXP,
@@ -124,7 +124,7 @@ export default async function LeaderboardPage() {
 
           <div className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-3">
             <StatPill icon={<Gift size={13} />} label="Prize pool" value={`$${TOTAL_PRIZE_POOL}`} />
-            <StatPill icon={<Users size={13} />} label="Players" value={String(data?.totalPlayers ?? 0)} />
+            <StatPill icon={<Shuffle size={13} />} label="Random draw" value={`$${RANDOM_GIVEAWAY_PRIZE}`} />
             <StatPill icon={<Clock size={13} />} label="Resets in" value={`${daysUntilPayout()}d`} />
           </div>
         </div>
