@@ -6,7 +6,7 @@ export interface LeaderboardEntry {
   rank: number
   username: string
   avatar: string | null
-  wageredCents: number
+  xpPoints: number
   bets: number
   prize: number | null // USD, null = ingen fast premie (f.eks. "Runner-up")
 }
@@ -56,17 +56,19 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
     const data = await res.json()
     const summarizedBets: Array<{
       user?: { username?: string; avatar?: string | null }
-      wagered?: number
+      xpPoints?: number
       bets?: number
     }> = data.summarizedBets ?? []
 
-    const sorted = [...summarizedBets].sort((a, b) => (b.wagered ?? 0) - (a.wagered ?? 0))
+    // Rangert etter XP, ikke wagered -- XP er vektet av Hype.bet per spill, så det
+    // kan ikke "abuses" ved å kjøre store volum på lav-house-edge-spill (f.eks. Hilo).
+    const sorted = [...summarizedBets].sort((a, b) => (b.xpPoints ?? 0) - (a.xpPoints ?? 0))
 
     const entries: LeaderboardEntry[] = sorted.slice(0, TOP_N).map((item, i) => ({
       rank: i + 1,
       username: item.user?.username ?? 'Ukjent spiller',
       avatar: item.user?.avatar ?? null,
-      wageredCents: item.wagered ?? 0,
+      xpPoints: item.xpPoints ?? 0,
       bets: item.bets ?? 0,
       prize: PLACEMENT_PRIZES[i] ?? null,
     }))
@@ -84,6 +86,6 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
   }
 }
 
-export function formatUSD(cents: number): string {
-  return `$${(cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+export function formatXP(xpCents: number): string {
+  return Math.round(xpCents / 100).toLocaleString('en-US')
 }

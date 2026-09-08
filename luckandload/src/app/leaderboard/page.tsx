@@ -1,5 +1,5 @@
 import { CheckCircle, CalendarDays, Gift, Users } from 'lucide-react'
-import { getLeaderboardData, formatUSD } from '@/lib/affilka'
+import { getLeaderboardData, formatXP } from '@/lib/affilka'
 import { getRankLabel, getRankColor, formatDate } from '@/lib/utils'
 
 export const revalidate = 300
@@ -66,7 +66,7 @@ export default async function LeaderboardPage() {
                   </span>
                   <div className="flex-1 min-w-0">
                     <p className="text-white text-sm font-semibold truncate">{entry.username}</p>
-                    <p className="text-slate-500 text-xs">{formatUSD(entry.wageredCents)} wagered</p>
+                    <p className="text-slate-500 text-xs">{formatXP(entry.xpPoints)} XP</p>
                   </div>
                   <span
                     className={`text-sm font-bold shrink-0 ${
