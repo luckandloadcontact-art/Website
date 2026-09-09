@@ -7,7 +7,7 @@ import {
   RANDOM_GIVEAWAY_PRIZE,
   type LeaderboardEntry,
 } from '@/lib/affilka'
-import { formatDate, cn } from '@/lib/utils'
+import { formatRelativeTime, cn } from '@/lib/utils'
 import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 
 // Rendres dynamisk per request i stedet for å bli forhåndsbygget statisk -- ellers ville
@@ -187,7 +187,7 @@ export default async function LeaderboardPage() {
 
         {data && entries.length > 0 && (
           <p className="text-center text-[11px] text-slate-600">
-            {monthLabel} · Updated {formatDate(data.updatedAt)}
+            {monthLabel} · Updated {formatRelativeTime(data.updatedAt)}
           </p>
         )}
 
