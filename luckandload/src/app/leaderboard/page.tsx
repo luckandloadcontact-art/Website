@@ -193,7 +193,7 @@ export default async function LeaderboardPage() {
 
         {/* Info strip */}
         <div className="rounded-2xl border border-white/8 bg-surface-800 p-5 sm:p-6">
-          <div className="grid grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
             <InfoItem icon={<Zap size={15} />} label="Play under" value="Code LuckAndLoad" />
             <InfoItem icon={<CalendarDays size={15} />} label="Paid out" value="1st of month" />
             <InfoItem icon={<Gift size={15} />} label="Bonus draw" value={`+$${RANDOM_GIVEAWAY_PRIZE} random`} />
