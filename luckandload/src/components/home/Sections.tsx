@@ -214,7 +214,7 @@ export function HypeSection() {
                 {' '}and play solo under our code. Every month we pay out{' '}
                 <strong className="text-white">$1,000</strong> — ranked prizes for the{' '}
                 <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold">
-                  top 10 on the leaderboard
+                  top 6 on the leaderboard
                 </Link>
                 {' '}plus a $20 random draw open to everyone who plays under our code.
               </p>
