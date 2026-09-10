@@ -27,6 +27,7 @@ export const PLACEMENT_PRIZES = [500, 200, 100, 80, 60, 40]
 export const RANDOM_GIVEAWAY_PRIZE = 20
 export const TOTAL_PRIZE_POOL = PLACEMENT_PRIZES.reduce((sum, p) => sum + p, 0) + RANDOM_GIVEAWAY_PRIZE
 const TOP_N = 10
+const REVALIDATE_SECONDS = 1200 // 20 min -- se begrunnelse ved fetchLeaderboardData
 
 function currentMonthRange(now = new Date()) {
   const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
@@ -34,11 +35,16 @@ function currentMonthRange(now = new Date()) {
   return { from: fmt(from), to: fmt(now) }
 }
 
-// NB: hele denne funksjonen (inkl. updatedAt-tidsstempelet) caches samlet i 360s via
-// unstable_cache lenger ned -- ikke bare selve fetch-kallet. Ellers ville updatedAt alltid
-// vist "nå" (rendringstidspunktet) uansett om dataene faktisk var ferske eller opptil 6 min
-// gamle, siden resten av funksjonen kjører på nytt for hvert request selv om fetch-resultatet
-// er cachet.
+// NB: hele denne funksjonen (inkl. updatedAt-tidsstempelet) caches samlet via unstable_cache
+// lenger ned -- ikke bare selve fetch-kallet. Ellers ville updatedAt alltid vist "nå"
+// (rendringstidspunktet) uansett om dataene faktisk var ferske, siden resten av funksjonen
+// kjører på nytt for hvert request selv om fetch-resultatet er cachet.
+//
+// Cache-intervallet er satt til 20 min (se REVALIDATE_SECONDS) -- Hype.bet-affiliate-support
+// har bekreftet at XP-tallene deres uansett kun regnes ut på nytt én gang i timen internt, så
+// å spørre oftere enn det gir ingen ferskere data, bare unødvendig belastning på Affilkas
+// delte 5-min cooldown. 20 min gir god margin til å fange opp den timelige oppdateringen uten
+// å polle unødvendig ofte.
 async function fetchLeaderboardData(): Promise<LeaderboardData | null> {
   const apiKey = process.env.AFFILKA_API_KEY
   if (!apiKey) {
@@ -99,10 +105,10 @@ async function fetchLeaderboardData(): Promise<LeaderboardData | null> {
   }
 }
 
-// Cacher hele resultatet (data + updatedAt) samlet i 360s -- se kommentaren over
+// Cacher hele resultatet (data + updatedAt) samlet -- se kommentaren over
 // fetchLeaderboardData for hvorfor dette må gjøres her og ikke bare på selve fetch-kallet.
 export const getLeaderboardData = unstable_cache(fetchLeaderboardData, ['leaderboard-data'], {
-  revalidate: 360,
+  revalidate: REVALIDATE_SECONDS,
 })
 
 export function formatXP(xpCents: number): string {

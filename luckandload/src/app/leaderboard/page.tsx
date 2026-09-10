@@ -13,7 +13,7 @@ import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 // Rendres dynamisk per request i stedet for å bli forhåndsbygget statisk -- ellers ville
 // hver eneste "git push"-deploy trigget et eget kall til Affilka under bygget, og disse
 // kunne kollidere med hverandre (og med besøkende) på den delte 5-min cooldownen.
-// Selve caching/deduping av API-kallet skjer likevel i getLeaderboardData() (360s).
+// Selve caching/deduping av API-kallet skjer likevel i getLeaderboardData() (se lib/affilka.ts).
 export const dynamic = 'force-dynamic'
 
 const PODIUM_STYLE = {
