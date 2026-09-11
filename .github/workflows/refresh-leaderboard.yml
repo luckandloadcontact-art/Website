@@ -1,0 +1,17 @@
+name: Refresh leaderboard cache
+
+# Pinger leaderboard-refresh-endepunktet hvert 20. minutt, uavhengig av besøkstrafikk på
+# nettsiden. Se src/app/api/cron/refresh-leaderboard/route.ts for hvorfor.
+on:
+  schedule:
+    - cron: '*/20 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping refresh endpoint
+        run: |
+          curl -sf -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "https://luckandloadtv.com/api/cron/refresh-leaderboard"
