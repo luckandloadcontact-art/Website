@@ -30,7 +30,17 @@ const REVALIDATE_SECONDS = 360 // 6 min -- se begrunnelse ved fetchLeaderboardDa
 function currentMonthRange(now = new Date()) {
   const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
   const fmt = (d: Date) => d.toISOString().slice(0, 10)
-  return { from: fmt(from), to: fmt(now) }
+
+  // "to" sendes som i MORGEN, ikke i dag. Bekreftet empirisk 2026-09-12: når "to" er eksakt
+  // dagens dato, ser Affilka ut til å returnere et fastlåst/precomputet svar som ikke
+  // oppdaterer seg (bekreftet: én spillers XP sto stille i over en time på tvers av mange
+  // ferske kall). Med "to" satt til i morgen får vi konsekvent et friskt tall -- Affilka
+  // klemmer uansett datoen ned til nåværende tidspunkt når den peker fremover i tid (se
+  // dateRange.to i responsen, som ekko'er tilbake det faktiske spørretidspunktet).
+  const to = new Date(now)
+  to.setUTCDate(to.getUTCDate() + 1)
+
+  return { from: fmt(from), to: fmt(to) }
 }
 
 // Cache-intervallet er satt til 6 min (se REVALIDATE_SECONDS). Affilka-support sa først at
