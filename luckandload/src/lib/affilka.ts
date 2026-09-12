@@ -27,7 +27,7 @@ export const PLACEMENT_PRIZES = [500, 200, 100, 80, 60, 40]
 export const RANDOM_GIVEAWAY_PRIZE = 20
 export const TOTAL_PRIZE_POOL = PLACEMENT_PRIZES.reduce((sum, p) => sum + p, 0) + RANDOM_GIVEAWAY_PRIZE
 const TOP_N = 10
-const REVALIDATE_SECONDS = 1200 // 20 min -- se begrunnelse ved fetchLeaderboardData
+const REVALIDATE_SECONDS = 360 // 6 min -- se begrunnelse ved fetchLeaderboardData
 
 function currentMonthRange(now = new Date()) {
   const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
@@ -40,11 +40,11 @@ function currentMonthRange(now = new Date()) {
 // (rendringstidspunktet) uansett om dataene faktisk var ferske, siden resten av funksjonen
 // kjører på nytt for hvert request selv om fetch-resultatet er cachet.
 //
-// Cache-intervallet er satt til 20 min (se REVALIDATE_SECONDS) -- Hype.bet-affiliate-support
-// har bekreftet at XP-tallene deres uansett kun regnes ut på nytt én gang i timen internt, så
-// å spørre oftere enn det gir ingen ferskere data, bare unødvendig belastning på Affilkas
-// delte 5-min cooldown. 20 min gir god margin til å fange opp den timelige oppdateringen uten
-// å polle unødvendig ofte.
+// Cache-intervallet er satt til 6 min (se REVALIDATE_SECONDS). Affilka-support sa først at
+// tallene deres kun regnes ut hver time -- men vi fant en annen Hype-affiliate (Nordicslots)
+// hvis side poller live hvert 5. min med suksess og får ferske tall, med samme 5-min cooldown
+// som er dokumentert. "Hver time" var altså upresist. 6 min gir litt margin over den reelle
+// 5-min-grensen uten å polle unødvendig ofte.
 async function fetchLeaderboardData(): Promise<LeaderboardData | null> {
   const apiKey = process.env.AFFILKA_API_KEY
   if (!apiKey) {
