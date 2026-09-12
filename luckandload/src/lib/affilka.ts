@@ -1,5 +1,3 @@
-import { unstable_cache } from 'next/cache'
-
 // Henter månedlig leaderboard-data fra Affilka (Hype.bet) sitt affiliate-API.
 // Rangerer spillerne som har spilt under vår affiliate-kode etter hvor mye de har satset (wagered)
 // denne måneden, og setter premie basert på plassering.
@@ -35,23 +33,14 @@ function currentMonthRange(now = new Date()) {
   return { from: fmt(from), to: fmt(now) }
 }
 
-// NB: hele denne funksjonen (inkl. updatedAt-tidsstempelet) caches samlet via unstable_cache
-// lenger ned -- ikke bare selve fetch-kallet. Ellers ville updatedAt alltid vist "nå"
-// (rendringstidspunktet) uansett om dataene faktisk var ferske, siden resten av funksjonen
-// kjører på nytt for hvert request selv om fetch-resultatet er cachet.
-//
 // Cache-intervallet er satt til 6 min (se REVALIDATE_SECONDS). Affilka-support sa først at
 // tallene deres kun regnes ut hver time -- men vi fant en annen Hype-affiliate (Nordicslots)
 // hvis side poller live hvert 5. min med suksess og får ferske tall, med samme 5-min cooldown
 // som er dokumentert. "Hver time" var altså upresist. 6 min gir litt margin over den reelle
 // 5-min-grensen uten å polle unødvendig ofte.
-// VIKTIG: denne funksjonen må KASTE (throw) ved feil, ikke returnere null. unstable_cache
-// lenger ned cacher kun vellykkede (resolved) resultater -- en kastet feil blir aldri lagret,
-// så neste kall (cron eller en ekte besøkende) får prøve på nytt med en gang. Hadde vi
-// returnert null her, ville unstable_cache lagret NULL i hele REVALIDATE_SECONDS-vinduet, og
-// én forbigående glipp (f.eks. to samtidige kall som kolliderte med Affilkas 5-min cooldown)
-// ville vist feilmelding til ALLE besøkende i opptil 6 minutter selv om et nytt forsøk ville
-// fungert med en gang. Dette skjedde faktisk i praksis 2026-09-12 og var årsaken til denne fiksen.
+//
+// VIKTIG: denne funksjonen må KASTE (throw) ved feil, ikke returnere null -- se getLeaderboardData
+// lenger ned for hvorfor.
 async function fetchLeaderboardData(): Promise<LeaderboardData> {
   const apiKey = process.env.AFFILKA_API_KEY
   if (!apiKey) {
@@ -64,8 +53,8 @@ async function fetchLeaderboardData(): Promise<LeaderboardData> {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ apiKey, from, to }),
-    // Selve throttlingen skjer nå i unstable_cache-laget rundt denne funksjonen, så dette
-    // kallet skal alltid gå live når funksjonen faktisk kjører.
+    // Selve throttlingen skjer i cache-laget rundt denne funksjonen (se getLeaderboardData),
+    // så dette kallet skal alltid gå live når funksjonen faktisk kjører.
     // OBS: ikke test dette endepunktet manuelt mens siden er live, det spiser av samme kvote.
     cache: 'no-store',
   })
@@ -106,22 +95,37 @@ async function fetchLeaderboardData(): Promise<LeaderboardData> {
   }
 }
 
-// Cacher hele resultatet (data + updatedAt) samlet -- se kommentaren over
-// fetchLeaderboardData for hvorfor dette må gjøres her og ikke bare på selve fetch-kallet.
-const getCachedLeaderboardData = unstable_cache(fetchLeaderboardData, ['leaderboard-data'], {
-  revalidate: REVALIDATE_SECONDS,
-})
+// Enkel, eksplisitt in-memory cache (modul-nivå variabel) -- brukt i stedet for
+// Next sin unstable_cache/fetch-revalidate. Årsak (funnet og bekreftet 2026-09-12): den
+// innebygde cachen ser ut til å bruke stale-while-revalidate (vis gammel data med en gang,
+// hent ny i bakgrunnen) -- og i et serverless-miljø kan den bakgrunnsjobben bli drept før den
+// rekker å lagre det ferske resultatet, slik at cachen sitter fast på gammel data på ubestemt
+// tid. Bekreftet i praksis: cron-endepunktet hentet friskt, mens selve siden fortsatt viste
+// 12+ min gammel data ved gjentatte besøk rett etterpå.
+//
+// Denne varianten er 100% eksplisitt: er cachen utløpt, VENTER requesten på et ferskt kall før
+// den svarer -- ingen bakgrunnsjobb som kan bli avbrutt. Ulempen er at cachen er per
+// server-instans (ikke globalt delt på tvers av Vercel sine regioner/instanser), men det var
+// unstable_cache-varianten i praksis heller ikke, så dette gjør ikke ting verre -- bare
+// forutsigbart. Bonus: hvis et friskt forsøk feiler (f.eks. rate limit), serveres siste kjente
+// gode data i stedet for feilmelding, så lenge vi har hentet noe vellykket tidligere.
+let cachedResult: { data: LeaderboardData; fetchedAt: number } | null = null
 
-// Offentlig API: fanger opp kastede feil selv (fra manglende nøkkel, rate limit, nettverksfeil
-// e.l.) og returnerer null i stedet -- se kommentaren over fetchLeaderboardData for hvorfor
-// feilen selv aldri må caches. Kallere (siden, cron-endepunktet) trenger kun forholde seg til
-// "data eller null", akkurat som før.
 export async function getLeaderboardData(): Promise<LeaderboardData | null> {
+  const isStale = !cachedResult || Date.now() - cachedResult.fetchedAt > REVALIDATE_SECONDS * 1000
+
+  if (!isStale) {
+    return cachedResult!.data
+  }
+
   try {
-    return await getCachedLeaderboardData()
+    const fresh = await fetchLeaderboardData()
+    cachedResult = { data: fresh, fetchedAt: Date.now() }
+    return fresh
   } catch (err) {
     console.error('[affilka] Klarte ikke hente leaderboard', err)
-    return null
+    // Stale-if-error: bedre å vise litt gamle (men ekte) tall enn en feilmelding.
+    return cachedResult?.data ?? null
   }
 }
 
