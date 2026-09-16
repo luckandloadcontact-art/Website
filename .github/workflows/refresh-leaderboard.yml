@@ -13,7 +13,14 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
+      # "Best effort" -- en mislykket ping her (f.eks. fordi den traff Affilka sin delte 5-min
+      # cooldown akkurat da) er forventet og ufarlig: siden har sin egen stale-if-error fallback
+      # og viser siste kjente gode data til besøkende uansett. Jobben skal derfor ALDRI feile
+      # synlig (ingen -f på curl) -- det unngår falske "run failed"-varsler på epost for noe som
+      # ikke er et reelt problem. HTTP-status logges likevel, for manuell feilsøking ved behov.
       - name: Ping refresh endpoint
         run: |
-          curl -sf -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
-            "https://luckandloadtv.com/api/cron/refresh-leaderboard"
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "https://luckandloadtv.com/api/cron/refresh-leaderboard")
+          echo "Refresh endpoint svarte HTTP $status"
