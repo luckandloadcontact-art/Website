@@ -108,7 +108,7 @@ function MatchCard({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-2xl border bg-surface-800',
+        'relative w-full overflow-hidden rounded-2xl border bg-surface-800',
         match.winner ? 'border-gold-500/30' : 'border-white/10',
         big && 'shadow-[0_0_60px_-16px_rgba(201,165,60,0.4)]'
       )}
@@ -213,7 +213,7 @@ export function Bracket({ results, editable, onPick, onClear, pendingMatchId }: 
 
       {/* Desktop: ekte horisontalt bracket-tre med sammenkoblede linjer */}
       <div className="hidden lg:block">
-        <div className="grid grid-cols-[1fr_40px_0.85fr_40px_0.85fr_40px_0.85fr_40px_1fr] xl:grid-cols-[1fr_56px_0.85fr_56px_0.85fr_56px_0.85fr_56px_1fr]">
+        <div className="grid grid-cols-[1fr_40px_0.95fr_40px_1.05fr_40px_0.95fr_40px_1fr] xl:grid-cols-[1fr_56px_0.95fr_56px_1.05fr_56px_0.95fr_56px_1fr]">
           <RoundLabel>Quarterfinals</RoundLabel>
           <div />
           <RoundLabel>Semifinals</RoundLabel>
@@ -224,7 +224,7 @@ export function Bracket({ results, editable, onPick, onClear, pendingMatchId }: 
           <div />
           <RoundLabel>Quarterfinals</RoundLabel>
         </div>
-        <div className="grid grid-cols-[1fr_40px_0.85fr_40px_0.85fr_40px_0.85fr_40px_1fr] xl:grid-cols-[1fr_56px_0.85fr_56px_0.85fr_56px_0.85fr_56px_1fr]">
+        <div className="grid grid-cols-[1fr_40px_0.95fr_40px_1.05fr_40px_0.95fr_40px_1fr] xl:grid-cols-[1fr_56px_0.95fr_56px_1.05fr_56px_0.95fr_56px_1fr]">
           <div className="grid grid-rows-2 gap-10">
             {renderMatch(qfA[0])}
             {renderMatch(qfA[1])}
