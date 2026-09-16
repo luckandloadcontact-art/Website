@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/blackjack', label: 'Daily Blackjack' },
   { href: '/leaderboard', label: 'Leaderboard' },
+  { href: '/events', label: 'Events' },
   { href: '/contact', label: 'Contact' },
   { href: null, label: 'Forum', comingSoon: true },
 ]

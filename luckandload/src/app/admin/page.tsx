@@ -4,16 +4,19 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import {
   LayoutDashboard, Users, Megaphone, Trophy,
-  Plus, Save, Trash2, RefreshCw, TrendingUp, Shield
+  Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import { Avatar, Badge, StatCard } from '@/components/ui/Badge'
 import { formatPoints, formatDate, cn } from '@/lib/utils'
 import type { User, Announcement } from '@/types'
+import type { ResultsMap } from '@/lib/tournament'
+import { EVENT_TITLE } from '@/lib/tournament'
+import { Bracket } from '@/components/events/Bracket'
 import toast from 'react-hot-toast'
 
-type AdminTab = 'overview' | 'users' | 'announcements'
+type AdminTab = 'overview' | 'users' | 'announcements' | 'events'
 
 export default function AdminPage() {
   const { data: session, status } = useSession()
@@ -21,6 +24,8 @@ export default function AdminPage() {
   const [tab, setTab] = useState<AdminTab>('overview')
   const [users, setUsers] = useState<User[]>([])
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
+  const [tournamentResults, setTournamentResults] = useState<ResultsMap>({})
+  const [pendingMatchId, setPendingMatchId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   // New announcement form
@@ -45,12 +50,14 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [usersRes, annRes] = await Promise.all([
+      const [usersRes, annRes, tourneyRes] = await Promise.all([
         fetch('/api/admin/users'),
         fetch('/api/admin/announcements'),
+        fetch('/api/admin/tournament'),
       ])
       if (usersRes.ok) setUsers(await usersRes.json())
       if (annRes.ok) setAnnouncements(await annRes.json())
+      if (tourneyRes.ok) setTournamentResults(await tourneyRes.json())
     } catch {
       toast.error('Failed to load data')
     } finally {
@@ -116,6 +123,41 @@ export default function AdminPage() {
     else toast.error('Failed to delete')
   }
 
+  async function handlePickWinner(matchId: string, winner: string) {
+    setPendingMatchId(matchId)
+    try {
+      const res = await fetch('/api/admin/tournament', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ matchId, winner }),
+      })
+      if (res.ok) {
+        toast.success('Winner saved')
+        await fetchData()
+      } else {
+        const data = await res.json().catch(() => ({}))
+        toast.error(data.error || 'Failed to save winner')
+      }
+    } finally {
+      setPendingMatchId(null)
+    }
+  }
+
+  async function handleClearMatch(matchId: string) {
+    setPendingMatchId(matchId)
+    try {
+      const res = await fetch(`/api/admin/tournament?matchId=${encodeURIComponent(matchId)}`, { method: 'DELETE' })
+      if (res.ok) {
+        toast.success('Match reset')
+        await fetchData()
+      } else {
+        toast.error('Failed to reset match')
+      }
+    } finally {
+      setPendingMatchId(null)
+    }
+  }
+
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -128,6 +170,7 @@ export default function AdminPage() {
     { key: 'overview', label: 'Overview', icon: <LayoutDashboard size={15} /> },
     { key: 'users', label: 'Users', icon: <Users size={15} /> },
     { key: 'announcements', label: 'Announcements', icon: <Megaphone size={15} /> },
+    { key: 'events', label: 'Events', icon: <Swords size={15} /> },
   ]
 
   return (
@@ -397,6 +440,31 @@ export default function AdminPage() {
               </div>
             </Card>
           </div>
+        )}
+
+        {/* Events */}
+        {tab === 'events' && (
+          <Card>
+            <CardHeader>
+              <h2 className="font-semibold text-white flex items-center gap-2 pb-0">
+                <Swords size={15} className="text-brand-500" />
+                {EVENT_TITLE}
+              </h2>
+              <p className="text-xs text-slate-500 pt-1">
+                Click a provider to set them as the winner of that match. Semifinals and the
+                final unlock once the matches feeding into them are decided.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <Bracket
+                results={tournamentResults}
+                editable
+                pendingMatchId={pendingMatchId}
+                onPick={handlePickWinner}
+                onClear={handleClearMatch}
+              />
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>
