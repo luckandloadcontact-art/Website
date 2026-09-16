@@ -35,10 +35,10 @@ export default async function EventsPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 space-y-4">
-        <div className="rounded-2xl border border-white/8 bg-surface-800 p-5 sm:p-6">
+      <div className="mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 py-10 space-y-4">
+        <div className="rounded-2xl border border-white/8 bg-surface-800 p-5 sm:p-8">
           <h2 className="mb-1 text-lg font-black text-white">{EVENT_TITLE}</h2>
-          <p className="mb-6 text-sm text-slate-400">
+          <p className="mb-8 text-sm text-slate-400">
             8 providers, single elimination, one champion. Who takes the crown?
           </p>
           <Bracket results={results} />

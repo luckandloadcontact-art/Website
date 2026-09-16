@@ -17,10 +17,12 @@ interface BracketProps {
 
 function VsBadge() {
   return (
-    <div className="relative z-10 flex justify-center">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-gold-500/70 bg-surface-900 text-xs font-black italic tracking-wide text-gold-400 shadow-lg shadow-black/50">
+    <div className="flex items-center gap-3 px-4 py-2 sm:px-6">
+      <div className="h-px flex-1 bg-white/10" />
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-gold-500/70 bg-surface-900 text-[11px] font-black italic tracking-wide text-gold-400 shadow-md shadow-black/50 sm:h-10 sm:w-10 sm:text-xs">
         VS
       </div>
+      <div className="h-px flex-1 bg-white/10" />
     </div>
   )
 }
@@ -62,7 +64,7 @@ function ProviderSlot({
       onClick={clickable ? onClick : undefined}
       disabled={!clickable}
       className={cn(
-        'flex w-full items-center gap-3 p-3 text-left transition-all',
+        'flex w-full items-center gap-4 p-4 text-left transition-all sm:p-5',
         isWinner && 'bg-gradient-to-r from-gold-500/15 to-transparent',
         decided && !isWinner && 'opacity-35 grayscale',
         clickable && 'cursor-pointer hover:bg-white/5',
@@ -78,13 +80,10 @@ function ProviderSlot({
       >
         <Image src={p.image} alt={p.name} fill sizes={`${size}px`} className="object-cover" />
       </div>
-      <div className="min-w-0 flex-1">
-        <p className={cn('truncate text-sm font-bold sm:text-base', isWinner ? 'text-white' : 'text-slate-300')}>
-          {p.name}
-        </p>
-        <p className="truncate text-[11px] text-slate-500 sm:text-xs">{p.game}</p>
-      </div>
-      {isWinner && <Trophy size={18} className="shrink-0 text-gold-400" />}
+      <p className={cn('min-w-0 flex-1 truncate text-base font-bold sm:text-lg', isWinner ? 'text-white' : 'text-slate-300')}>
+        {p.name}
+      </p>
+      {isWinner && <Trophy size={20} className="shrink-0 text-gold-400" />}
     </button>
   )
 }
@@ -120,18 +119,16 @@ function MatchCard({
         decided={!!match.winner}
         clickable={canPick}
         onClick={() => match.providerA && onPick?.(match.providerA)}
-        size={big ? 72 : 56}
+        size={big ? 96 : 80}
       />
-      <div className="relative h-px bg-white/10">
-        <VsBadge />
-      </div>
+      <VsBadge />
       <ProviderSlot
         providerId={match.providerB}
         isWinner={!!match.winner && match.winner === match.providerB}
         decided={!!match.winner}
         clickable={canPick}
         onClick={() => match.providerB && onPick?.(match.providerB)}
-        size={big ? 72 : 56}
+        size={big ? 96 : 80}
       />
       {editable && match.winner && (
         <button
@@ -204,24 +201,24 @@ export function Bracket({ results, editable, onPick, onClear, pendingMatchId }: 
 
       {/* Desktop: horisontal bracket-tre */}
       <div className="hidden lg:block">
-        <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-4">
+        <div className="grid grid-cols-[1.1fr_auto_1fr_auto_1.1fr] gap-6 xl:gap-10">
           <RoundLabel>Quarterfinals</RoundLabel>
           <div />
           <RoundLabel>Semifinals · Final</RoundLabel>
           <div />
           <RoundLabel>Quarterfinals</RoundLabel>
         </div>
-        <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-4">
-          <div className="space-y-8">{qfA.map(m => renderMatch(m))}</div>
+        <div className="grid grid-cols-[1.1fr_auto_1fr_auto_1.1fr] items-center gap-6 xl:gap-10">
+          <div className="space-y-10">{qfA.map(m => renderMatch(m))}</div>
           <FeederConnector />
-          <div className="space-y-4">
-            <Trophy size={28} className="mx-auto mb-2 text-gold-500/40" />
+          <div className="space-y-6">
+            <Trophy size={32} className="mx-auto mb-2 text-gold-500/40" />
             {renderMatch(sfA)}
             <div className="pt-4">{renderMatch(bracket.final, true)}</div>
             {renderMatch(sfB)}
           </div>
           <FeederConnector />
-          <div className="space-y-8">{qfB.map(m => renderMatch(m))}</div>
+          <div className="space-y-10">{qfB.map(m => renderMatch(m))}</div>
         </div>
       </div>
 
@@ -237,7 +234,7 @@ export function Bracket({ results, editable, onPick, onClear, pendingMatchId }: 
         </div>
         <div>
           <RoundLabel>Final</RoundLabel>
-          <div className="mx-auto max-w-sm">{renderMatch(bracket.final, true)}</div>
+          <div className="mx-auto max-w-md">{renderMatch(bracket.final, true)}</div>
         </div>
       </div>
     </div>
