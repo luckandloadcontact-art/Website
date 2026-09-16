@@ -151,14 +151,26 @@ function RoundLabel({ children }: { children: React.ReactNode }) {
   )
 }
 
-/** Kobler to feeder-kamper visuelt til kampen de fører inn i, på desktop. */
-function FeederConnector() {
+// Ekte bracket-koblingslinjer, tegnet med SVG i et 0-100 koordinatsystem (preserveAspectRatio
+// "none" gjør at det strekker seg akkurat til cellens faktiske bredde/høyde, uansett
+// pikselstørrelse) -- matematisk korrekt uansett hvor høye kampkortene faktisk blir, siden
+// CSS Grid sin standard "stretch"-oppførsel garanterer at denne cellen alltid får nøyaktig
+// samme høyde som naboraden med de to kampene den kobler sammen.
+function ElbowConnector({ mirror }: { mirror?: boolean }) {
+  const path = mirror
+    ? 'M100,25 H50 V50 M100,75 H50 V50 M50,50 H0'
+    : 'M0,25 H50 V50 M0,75 H50 V50 M50,50 H100'
   return (
-    <div className="hidden items-stretch lg:flex">
-      <div className="flex flex-col justify-around py-6">
-        <div className="h-px w-6 bg-white/15" />
-        <div className="h-px w-6 bg-white/15" />
-      </div>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full">
+      <path d={path} stroke="rgba(255,255,255,0.15)" strokeWidth={2} fill="none" vectorEffect="non-scaling-stroke" />
+    </svg>
+  )
+}
+
+function StraightConnector() {
+  return (
+    <div className="flex h-full items-center">
+      <div className="h-px w-full bg-white/15" />
     </div>
   )
 }
@@ -199,26 +211,40 @@ export function Bracket({ results, editable, onPick, onClear, pendingMatchId }: 
         </div>
       )}
 
-      {/* Desktop: horisontal bracket-tre */}
+      {/* Desktop: ekte horisontalt bracket-tre med sammenkoblede linjer */}
       <div className="hidden lg:block">
-        <div className="grid grid-cols-[1.1fr_auto_1fr_auto_1.1fr] gap-6 xl:gap-10">
+        <div className="grid grid-cols-[1fr_40px_0.85fr_40px_0.85fr_40px_0.85fr_40px_1fr] xl:grid-cols-[1fr_56px_0.85fr_56px_0.85fr_56px_0.85fr_56px_1fr]">
           <RoundLabel>Quarterfinals</RoundLabel>
           <div />
-          <RoundLabel>Semifinals · Final</RoundLabel>
+          <RoundLabel>Semifinals</RoundLabel>
+          <div />
+          <RoundLabel>Final</RoundLabel>
+          <div />
+          <RoundLabel>Semifinals</RoundLabel>
           <div />
           <RoundLabel>Quarterfinals</RoundLabel>
         </div>
-        <div className="grid grid-cols-[1.1fr_auto_1fr_auto_1.1fr] items-center gap-6 xl:gap-10">
-          <div className="space-y-10">{qfA.map(m => renderMatch(m))}</div>
-          <FeederConnector />
-          <div className="space-y-6">
-            <Trophy size={32} className="mx-auto mb-2 text-gold-500/40" />
-            {renderMatch(sfA)}
-            <div className="pt-4">{renderMatch(bracket.final, true)}</div>
-            {renderMatch(sfB)}
+        <div className="grid grid-cols-[1fr_40px_0.85fr_40px_0.85fr_40px_0.85fr_40px_1fr] xl:grid-cols-[1fr_56px_0.85fr_56px_0.85fr_56px_0.85fr_56px_1fr]">
+          <div className="grid grid-rows-2 gap-10">
+            {renderMatch(qfA[0])}
+            {renderMatch(qfA[1])}
           </div>
-          <FeederConnector />
-          <div className="space-y-10">{qfB.map(m => renderMatch(m))}</div>
+          <ElbowConnector />
+          <div className="flex items-center">{renderMatch(sfA)}</div>
+          <StraightConnector />
+          <div className="flex items-center">
+            <div className="relative w-full">
+              <Trophy size={30} className="absolute left-1/2 -top-11 -translate-x-1/2 text-gold-500/40" />
+              {renderMatch(bracket.final, true)}
+            </div>
+          </div>
+          <StraightConnector />
+          <div className="flex items-center">{renderMatch(sfB)}</div>
+          <ElbowConnector mirror />
+          <div className="grid grid-rows-2 gap-10">
+            {renderMatch(qfB[0])}
+            {renderMatch(qfB[1])}
+          </div>
         </div>
       </div>
 
