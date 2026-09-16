@@ -7,19 +7,19 @@ export interface Provider {
   name: string
   /** Navnet på slotten "easter egget" er hentet fra. */
   game: string
-  /** Emoji-ikon som representerer spillet -- ingen bruk av faktisk opphavsrettsbeskyttet artwork. */
-  icon: string
+  /** Beskjært utsnitt av spillets offisielle nøkkelgrafikk/cover art (public/providers/). */
+  image: string
 }
 
 export const PROVIDERS: Record<string, Provider> = {
-  pragmatic: { id: 'pragmatic', name: 'Pragmatic Play', game: 'Gates of Olympus', icon: '⚡' },
-  bgaming: { id: 'bgaming', name: 'BGaming', game: 'Elvis Frog in Vegas', icon: '🐸' },
-  hacksaw: { id: 'hacksaw', name: 'Hacksaw Gaming', game: 'Wanted Dead or a Wild', icon: '🤠' },
-  belatra: { id: 'belatra', name: 'Belatra', game: 'Long Neck Fortune', icon: '🦒' },
-  petersons: { id: 'petersons', name: 'Peter & Sons', game: 'Wild Swarm', icon: '🐝' },
-  relax: { id: 'relax', name: 'Relax Gaming', game: 'Book of Power', icon: '📖' },
-  nolimit: { id: 'nolimit', name: 'Nolimit City', game: 'Duck Hunters', icon: '🦆' },
-  slotmill: { id: 'slotmill', name: 'Slotmill', game: 'Big Bass Chicken Feed', icon: '🐔' },
+  pragmatic: { id: 'pragmatic', name: 'Pragmatic Play', game: 'Gates of Olympus', image: '/providers/pragmatic.jpg' },
+  bgaming: { id: 'bgaming', name: 'BGaming', game: 'Elvis Frog in Vegas', image: '/providers/bgaming.jpg' },
+  hacksaw: { id: 'hacksaw', name: 'Hacksaw Gaming', game: 'Wanted Dead or a Wild', image: '/providers/hacksaw.jpg' },
+  belatra: { id: 'belatra', name: 'Belatra', game: 'Long Neck Fortune', image: '/providers/belatra.jpg' },
+  petersons: { id: 'petersons', name: 'Peter & Sons', game: 'Barbarossa', image: '/providers/petersons.jpg' },
+  relax: { id: 'relax', name: 'Relax Gaming', game: 'Book of Power', image: '/providers/relax.jpg' },
+  nolimit: { id: 'nolimit', name: 'Nolimit City', game: 'Duck Hunters', image: '/providers/nolimit.jpg' },
+  slotmill: { id: 'slotmill', name: 'Slotmill', game: 'Lucky Lucifer', image: '/providers/slotmill.jpg' },
 }
 
 export const EVENT_SLUG = 'slot-provider-battle'
