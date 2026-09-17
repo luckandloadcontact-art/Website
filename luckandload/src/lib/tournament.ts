@@ -15,7 +15,7 @@ export const PROVIDERS: Record<string, Provider> = {
   pragmatic: { id: 'pragmatic', name: 'Pragmatic Play', game: 'Gates of Olympus', image: '/providers/pragmatic.jpg' },
   bgaming: { id: 'bgaming', name: 'BGaming', game: 'Elvis Frog in Vegas', image: '/providers/bgaming.jpg' },
   hacksaw: { id: 'hacksaw', name: 'Hacksaw Gaming', game: 'Wanted Dead or a Wild', image: '/providers/hacksaw.jpg' },
-  belatra: { id: 'belatra', name: 'Belatra', game: 'Long Neck Fortune', image: '/providers/belatra.jpg' },
+  shadylady: { id: 'shadylady', name: 'ShadyLady / Just Slots', game: "Devil's Finger", image: '/providers/shadylady.jpg' },
   petersons: { id: 'petersons', name: 'Peter & Sons', game: 'Barbarossa', image: '/providers/petersons.jpg' },
   relax: { id: 'relax', name: 'Relax Gaming', game: 'Book of Power', image: '/providers/relax.jpg' },
   nolimit: { id: 'nolimit', name: 'Nolimit City', game: 'Duck Hunters', image: '/providers/nolimit.jpg' },
@@ -30,7 +30,7 @@ export const EVENT_TITLE = 'Slot Provider Battle'
 export const BRACKET_DEF = {
   qf: [
     { id: 'qf1', side: 'A' as const, a: 'pragmatic', b: 'bgaming' },
-    { id: 'qf2', side: 'A' as const, a: 'hacksaw', b: 'belatra' },
+    { id: 'qf2', side: 'A' as const, a: 'hacksaw', b: 'shadylady' },
     { id: 'qf3', side: 'B' as const, a: 'petersons', b: 'relax' },
     { id: 'qf4', side: 'B' as const, a: 'nolimit', b: 'slotmill' },
   ],
