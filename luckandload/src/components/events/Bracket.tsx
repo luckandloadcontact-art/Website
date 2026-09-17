@@ -80,7 +80,7 @@ function ProviderSlot({
       >
         <Image src={p.image} alt={p.name} fill sizes={`${size}px`} className="object-cover" />
       </div>
-      <p className={cn('min-w-0 flex-1 truncate text-base font-bold sm:text-lg', isWinner ? 'text-white' : 'text-slate-300')}>
+      <p className={cn('min-w-0 flex-1 text-base font-bold leading-tight sm:text-lg', isWinner ? 'text-white' : 'text-slate-300')}>
         {p.name}
       </p>
       {isWinner && <Trophy size={20} className="shrink-0 text-gold-400" />}
