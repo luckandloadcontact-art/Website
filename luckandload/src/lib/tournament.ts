@@ -19,7 +19,7 @@ export const PROVIDERS: Record<string, Provider> = {
   petersons: { id: 'petersons', name: 'Peter & Sons', game: 'Barbarossa', image: '/providers/petersons.jpg' },
   relax: { id: 'relax', name: 'Relax Gaming', game: 'Book of Power', image: '/providers/relax.jpg' },
   nolimit: { id: 'nolimit', name: 'Nolimit City', game: 'Duck Hunters', image: '/providers/nolimit.jpg' },
-  slotmill: { id: 'slotmill', name: 'Slotmill', game: 'Coin Quest 2', image: '/providers/slotmill.jpg' },
+  slotmill: { id: 'slotmill', name: 'Slotmill', game: 'Reel Rampage', image: '/providers/slotmill.jpg' },
 }
 
 export const EVENT_SLUG = 'slot-provider-battle'
