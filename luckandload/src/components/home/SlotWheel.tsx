@@ -6,7 +6,10 @@ import { Dices, ExternalLink, Coins } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WHEEL_GAMES, HYPE_PLAY_URL, type WheelGame } from '@/lib/slotWheel'
 
-const SPIN_TICKS = 24 // minimum antall "hopp" før animasjonen får lov til å stoppe
+// Minimum antall "hopp" før animasjonen får lov til å stoppe -- skalert med antall spill, så
+// spinnet alltid rekker minst et par runder rundt hele listen uansett hvor mange spill vi har
+// lagt til (og bare enda flere kommer).
+const SPIN_TICKS = Math.max(24, WHEEL_GAMES.length * 2)
 const BASE_DELAY = 70 // ms mellom hvert hopp i starten (raskt)
 const MAX_DELAY = 320 // ms mellom hvert hopp mot slutten (bremser ned)
 
