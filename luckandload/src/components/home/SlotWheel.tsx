@@ -54,8 +54,29 @@ export function SlotWheel() {
   const [transitioning, setTransitioning] = useState(false)
   const [minBet, setMinBet] = useState(20)
   const [maxBet, setMaxBet] = useState(100)
+  // Egen tekst-state for input-feltene, slik at man kan slette hele tallet og skrive et nytt
+  // uten at det hopper tilbake til minimumsverdien (20) på hvert tastetrykk. Feltet klammes
+  // først til gyldig verdi når man forlater det (blur).
+  const [minBetInput, setMinBetInput] = useState('20')
+  const [maxBetInput, setMaxBetInput] = useState('100')
   const [buyAmountOn, setBuyAmountOn] = useState(false)
   const [suggestedBuy, setSuggestedBuy] = useState<number | null>(null)
+
+  function commitMinBet(raw: string) {
+    const clamped = Math.max(20, Math.round(Number(raw)) || 20)
+    setMinBet(clamped)
+    setMinBetInput(String(clamped))
+    if (maxBet < clamped) {
+      setMaxBet(clamped)
+      setMaxBetInput(String(clamped))
+    }
+  }
+
+  function commitMaxBet(raw: string) {
+    const clamped = Math.max(minBet, Math.round(Number(raw)) || minBet)
+    setMaxBet(clamped)
+    setMaxBetInput(String(clamped))
+  }
 
   const viewportRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -194,8 +215,12 @@ export function SlotWheel() {
             <input
               type="number"
               min={20}
-              value={minBet}
-              onChange={e => setMinBet(Math.max(20, Number(e.target.value) || 20))}
+              value={minBetInput}
+              onChange={e => setMinBetInput(e.target.value)}
+              onBlur={e => commitMinBet(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') e.currentTarget.blur()
+              }}
               className="w-14 bg-transparent text-right font-bold text-white focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </label>
@@ -204,8 +229,12 @@ export function SlotWheel() {
             <input
               type="number"
               min={minBet}
-              value={maxBet}
-              onChange={e => setMaxBet(Math.max(minBet, Number(e.target.value) || minBet))}
+              value={maxBetInput}
+              onChange={e => setMaxBetInput(e.target.value)}
+              onBlur={e => commitMaxBet(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') e.currentTarget.blur()
+              }}
               className="w-16 bg-transparent text-right font-bold text-white focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </label>
