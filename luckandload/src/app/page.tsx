@@ -1,5 +1,6 @@
 import { Hero } from '@/components/home/Hero'
 import { LiveSection, AboutSection, CommunitySection, AnnouncementsSection, HypeSection } from '@/components/home/Sections'
+import { SlotWheel } from '@/components/home/SlotWheel'
 import { createAdminClient } from '@/lib/supabase'
 import type { Announcement } from '@/types'
 
@@ -27,6 +28,7 @@ export default async function HomePage() {
       <Hero />
       <HypeSection />
       <CommunitySection />
+      <SlotWheel />
       <LiveSection />
       <AboutSection />
       {announcements.length > 0 && <AnnouncementsSection announcements={announcements} />}
