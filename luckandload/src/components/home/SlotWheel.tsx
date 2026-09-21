@@ -170,6 +170,17 @@ export function SlotWheel() {
                   )}
                 >
                   <Image src={game.image} alt={game.name} fill sizes="176px" className="object-cover" />
+                  {game.needsLabel && (
+                    <>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                      <p className="absolute inset-x-2 bottom-2 text-center text-xs font-bold leading-tight text-white">
+                        {game.name}
+                        <span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-wide text-slate-300">
+                          {game.provider}
+                        </span>
+                      </p>
+                    </>
+                  )}
                 </div>
               )
             })}
