@@ -79,6 +79,20 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'bigbamboo2', name: 'Big Bamboo II', provider: 'Push Gaming', image: '/wheel/bigbamboo2.jpg' },
   { id: 'breakout', name: 'Breakout', provider: 'Nolimit City', image: '/wheel/breakout.jpg' },
   { id: 'bookofshadows', name: 'Book of Shadows', provider: 'Nolimit City', image: '/wheel/bookofshadows.jpg' },
+  { id: 'beastgains', name: 'Beast Gains', provider: 'Relax Gaming', image: '/wheel/beastgains.jpg' },
+  { id: 'holyhandgrenade2', name: 'Holy Hand Grenade II', provider: 'Relax Gaming', image: '/wheel/holyhandgrenade2.jpg' },
+  { id: 'xwayshoarder2', name: 'xWays Hoarder 2', provider: 'Nolimit City', image: '/wheel/xwayshoarder2.jpg' },
+  { id: 'folsomprison', name: 'Folsom Prison', provider: 'Nolimit City', image: '/wheel/folsomprison.jpg' },
+  { id: 'dasxboot', name: 'Das xBoot', provider: 'Nolimit City', image: '/wheel/dasxboot.jpg' },
+  { id: 'lepharaoh', name: 'Le Pharaoh', provider: 'Hacksaw Gaming', image: '/wheel/lepharaoh.jpg' },
+  { id: 'netgains', name: 'Net Gains', provider: 'Relax Gaming', image: '/wheel/netgains.jpg' },
+  { id: 'sixsixsix', name: '666', provider: 'Hacksaw Gaming', image: '/wheel/sixsixsix.jpg' },
+  { id: 'bigbassfootballbonanza', name: 'Big Bass Football Bonanza', provider: 'Pragmatic Play', image: '/wheel/bigbassfootballbonanza.jpg' },
+  { id: 'ravsosiris', name: 'Ra vs Osiris', provider: 'Pragmatic Play', image: '/wheel/ravsosiris.jpg' },
+  { id: 'darksummoning', name: 'Dark Summoning', provider: 'Hacksaw Gaming', image: '/wheel/darksummoning.jpg' },
+  { id: 'deadmansdrop', name: "Dead Man's Drop", provider: 'Slotmill', image: '/wheel/deadmansdrop.jpg' },
+  { id: 'sugarrush1000', name: 'Sugar Rush 1000', provider: 'Pragmatic Play', image: '/wheel/sugarrush1000.jpg' },
+  { id: 'xmasdrop', name: 'Xmas Drop', provider: 'Hacksaw Gaming', image: '/wheel/xmasdrop.jpg' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
