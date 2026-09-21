@@ -52,7 +52,7 @@ export function SlotWheel() {
   const [result, setResult] = useState<WheelGame | null>(null)
   const [offset, setOffset] = useState(0)
   const [transitioning, setTransitioning] = useState(false)
-  const [minBet, setMinBet] = useState(1)
+  const [minBet, setMinBet] = useState(20)
   const [maxBet, setMaxBet] = useState(100)
   const [buyAmountOn, setBuyAmountOn] = useState(false)
   const [suggestedBuy, setSuggestedBuy] = useState<number | null>(null)
@@ -182,9 +182,9 @@ export function SlotWheel() {
             <span className="text-xs text-slate-500">Min</span>
             <input
               type="number"
-              min={0}
+              min={20}
               value={minBet}
-              onChange={e => setMinBet(Math.max(0, Number(e.target.value) || 0))}
+              onChange={e => setMinBet(Math.max(20, Number(e.target.value) || 20))}
               className="w-14 bg-transparent text-right font-bold text-white focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </label>
