@@ -119,8 +119,8 @@ export function SlotWheel() {
       */}
       <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
         {WHEEL_GAMES.map(game => (
-          <div key={game.id} className="relative aspect-[3/4] w-24 sm:w-32">
-            <Image src={game.image} alt="" fill sizes="128px" priority />
+          <div key={game.id} className="relative aspect-[3/4] w-32 sm:w-44">
+            <Image src={game.image} alt="" fill sizes="176px" priority />
           </div>
         ))}
       </div>
@@ -130,13 +130,13 @@ export function SlotWheel() {
           <h2 className="text-xl font-bold text-white">Slot Wheel</h2>
         </div>
         <p className="mb-8 max-w-xl text-sm text-slate-400">
-          Can&apos;t decide what to play? Spin the wheel and let it pick your next game.
+          Can&apos;t decide what to play? Spin the wheel and let the professionals pick for you.
         </p>
 
         {/* Reel */}
         <div
           ref={viewportRef}
-          className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl border border-white/10 bg-surface-800 py-4"
+          className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-surface-800 py-6"
           style={{
             maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
             WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
@@ -163,13 +163,13 @@ export function SlotWheel() {
                     itemRefs.current[i] = el
                   }}
                   className={cn(
-                    'relative aspect-[3/4] w-24 shrink-0 overflow-hidden rounded-xl border-2 sm:w-32',
+                    'relative aspect-[3/4] w-32 shrink-0 overflow-hidden rounded-xl border-2 sm:w-44',
                     isWinner
                       ? 'border-gold-400 shadow-[0_0_24px_-4px_rgba(201,165,60,0.8)]'
                       : 'border-white/10'
                   )}
                 >
-                  <Image src={game.image} alt={game.name} fill sizes="128px" className="object-cover" />
+                  <Image src={game.image} alt={game.name} fill sizes="176px" className="object-cover" />
                 </div>
               )
             })}
