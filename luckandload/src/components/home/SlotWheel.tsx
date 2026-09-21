@@ -109,6 +109,21 @@ export function SlotWheel() {
 
   return (
     <section className="border-t border-white/5 py-16">
+      {/*
+        Forhåndslaster alle spillbildene i samme størrelse som stripen bruker (usynlig, tar ingen
+        plass). next/image lat-laster ellers ikoner som aldri har vært synlige på skjermen, og
+        siden stripen "ruller" med CSS-transform (ikke ekte scroll) rekker ikke nettleseren å
+        hente dem før de suser forbi -- det så ut som manglende/like bilder i det aller første
+        spinnet etter en fersk sideinnlasting. Med priority ligger alle i nettleserens cache
+        allerede før man trykker Spin.
+      */}
+      <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
+        {WHEEL_GAMES.map(game => (
+          <div key={game.id} className="relative aspect-[3/4] w-24 sm:w-32">
+            <Image src={game.image} alt="" fill sizes="128px" priority />
+          </div>
+        ))}
+      </div>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-2 flex items-center gap-3">
           <Dices size={20} className="text-brand-500" />
