@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { Dices, ExternalLink, Coins } from 'lucide-react'
+import { Check, Dices, ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WHEEL_GAMES, HYPE_PLAY_URL, type WheelGame } from '@/lib/slotWheel'
 
@@ -17,6 +17,17 @@ const NO_REPEAT_WINDOW = 8
 
 function randomGame(): WheelGame {
   return WHEEL_GAMES[Math.floor(Math.random() * WHEEL_GAMES.length)]
+}
+
+const BUY_AMOUNT_STEP = 20
+
+/** Tilfeldig beløp mellom min og max, men alltid et multiplum av BUY_AMOUNT_STEP (20, 40, 60 ...). */
+function randomSteppedAmount(min: number, max: number): number {
+  const lo = Math.ceil(min / BUY_AMOUNT_STEP) * BUY_AMOUNT_STEP
+  const hi = Math.floor(max / BUY_AMOUNT_STEP) * BUY_AMOUNT_STEP
+  if (hi < lo) return Math.round(min / BUY_AMOUNT_STEP) * BUY_AMOUNT_STEP
+  const steps = (hi - lo) / BUY_AMOUNT_STEP
+  return lo + Math.floor(Math.random() * (steps + 1)) * BUY_AMOUNT_STEP
 }
 
 /** Bygger en ny, tilfeldig rekkefølge av kort for stripen -- uten at samme spill dukker opp to ganger innenfor NO_REPEAT_WINDOW. */
@@ -91,8 +102,7 @@ export function SlotWheel() {
       const winner = items[WINNER_POS]
       setResult(winner)
       if (buyAmountOn) {
-        const bet = minBet + Math.random() * Math.max(0, maxBet - minBet)
-        setSuggestedBuy(Math.round(bet * 100))
+        setSuggestedBuy(randomSteppedAmount(minBet, maxBet))
       }
     }, SPIN_DURATION_MS)
   }
@@ -153,44 +163,50 @@ export function SlotWheel() {
 
         {/* Controls */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <label className="flex items-center gap-2 rounded-xl border border-white/10 bg-surface-800 px-3 py-2 text-sm">
+          <label className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-800 px-4 py-2.5 text-sm">
             <span className="text-xs text-slate-500">Min</span>
             <input
               type="number"
               min={0}
               value={minBet}
               onChange={e => setMinBet(Math.max(0, Number(e.target.value) || 0))}
-              className="w-14 bg-transparent text-right text-white focus:outline-none"
+              className="w-14 bg-transparent text-right font-bold text-white focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </label>
-          <label className="flex items-center gap-2 rounded-xl border border-white/10 bg-surface-800 px-3 py-2 text-sm">
+          <label className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-800 px-4 py-2.5 text-sm">
             <span className="text-xs text-slate-500">Max</span>
             <input
               type="number"
               min={minBet}
               value={maxBet}
               onChange={e => setMaxBet(Math.max(minBet, Number(e.target.value) || minBet))}
-              className="w-16 bg-transparent text-right text-white focus:outline-none"
+              className="w-16 bg-transparent text-right font-bold text-white focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </label>
           <button
             type="button"
             onClick={() => setBuyAmountOn(v => !v)}
-            className={cn(
-              'flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition-colors',
-              buyAmountOn
-                ? 'border-gold-500/40 bg-gold-500/10 text-gold-400'
-                : 'border-white/10 bg-surface-800 text-slate-400 hover:text-white'
-            )}
+            className="flex items-center gap-2.5 rounded-full border border-white/10 bg-surface-800 py-2 pl-2 pr-4 text-xs font-semibold text-slate-300 transition-colors hover:text-white"
           >
-            <Coins size={15} />
-            Buy Amount
+            <span
+              className={cn(
+                'flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-colors',
+                buyAmountOn ? 'border-hype bg-hype text-black' : 'border-white/20 text-transparent'
+              )}
+            >
+              <Check size={13} strokeWidth={3} />
+            </span>
+            <span className="leading-tight">
+              Buy
+              <br />
+              Amount
+            </span>
           </button>
           <button
             type="button"
             onClick={handleSpin}
             disabled={spinning}
-            className="rounded-xl bg-gradient-to-r from-brand-500 to-gold-500 px-8 py-2.5 text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-brand-500/25 transition-all hover:scale-105 hover:shadow-brand-500/40 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+            className="rounded-full bg-gradient-to-r from-brand-500 to-gold-500 px-10 py-3 text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-brand-500/25 transition-all hover:scale-105 hover:shadow-brand-500/40 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
           >
             {spinning ? 'Spinning…' : 'Spin'}
           </button>
