@@ -69,6 +69,16 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'nitronights', name: 'Nitro Nights', provider: 'Hacksaw Gaming', image: '/wheel/nitronights.jpg' },
   { id: 'roninstackways', name: 'Ronin Stackways', provider: 'Hacksaw Gaming', image: '/wheel/roninstackways.jpg' },
   { id: 'ultimateslotofamerica', name: 'Ultimate Slot of America', provider: 'Hacksaw Gaming', image: '/wheel/ultimateslotofamerica.jpg' },
+  { id: 'bruteforcealienonslaught', name: 'Brute Force: Alien Onslaught', provider: 'Nolimit City', image: '/wheel/bruteforcealienonslaught.jpg' },
+  { id: 'bizarre', name: 'Bizarre', provider: 'Nolimit City', image: '/wheel/bizarre.jpg' },
+  { id: 'itero', name: 'Itero', provider: 'Hacksaw Gaming', image: '/wheel/itero.jpg' },
+  { id: 'disorder', name: 'Disorder', provider: 'Nolimit City', image: '/wheel/disorder.jpg' },
+  { id: 'spearofathena', name: 'Spear of Athena', provider: 'Hacksaw Gaming', image: '/wheel/spearofathena.jpg' },
+  { id: 'shogunskylord1', name: 'Shogun Skylord', provider: 'Just Slots', image: '/wheel/shogunskylord1.jpg' },
+  { id: 'piratebonanza', name: 'Pirate Bonanza', provider: 'Hacksaw Gaming', image: '/wheel/piratebonanza.jpg' },
+  { id: 'bigbamboo2', name: 'Big Bamboo II', provider: 'Push Gaming', image: '/wheel/bigbamboo2.jpg' },
+  { id: 'breakout', name: 'Breakout', provider: 'Nolimit City', image: '/wheel/breakout.jpg' },
+  { id: 'bookofshadows', name: 'Book of Shadows', provider: 'Nolimit City', image: '/wheel/bookofshadows.jpg' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
