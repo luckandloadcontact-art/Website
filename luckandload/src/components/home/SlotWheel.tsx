@@ -19,48 +19,65 @@ function randomGame(): WheelGame {
   return WHEEL_GAMES[Math.floor(Math.random() * WHEEL_GAMES.length)]
 }
 
-/** Én kort "tikk" i spinnlyden -- en kort klikk-tone med rask decay, som en case-opening-reel. */
+/** Kort hvit-støy-buffer, brukt som råmateriale for både tikk og whir under -- gir en mekanisk
+ * lyd i stedet for en tydelig "tone" (som square/sawtooth-oscillatorer lett gir). */
+function createNoiseBuffer(ctx: AudioContext, durationSec: number): AudioBuffer {
+  const length = Math.max(1, Math.floor(ctx.sampleRate * durationSec))
+  const buffer = ctx.createBuffer(1, length, ctx.sampleRate)
+  const data = buffer.getChannelData(0)
+  for (let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1
+  return buffer
+}
+
+/** Én kort "klikk" i spinnlyden -- båndpassfiltrert støy med rask decay, som en mekanisk reel. */
 function playTick(ctx: AudioContext, time: number, volume: number) {
-  const osc = ctx.createOscillator()
+  const noise = ctx.createBufferSource()
+  noise.buffer = createNoiseBuffer(ctx, 0.02)
+  const filter = ctx.createBiquadFilter()
+  filter.type = 'bandpass'
+  filter.frequency.setValueAtTime(2400, time)
+  filter.Q.value = 2.5
   const gain = ctx.createGain()
-  osc.type = 'square'
-  osc.frequency.setValueAtTime(820, time)
-  gain.gain.setValueAtTime(0, time)
-  gain.gain.linearRampToValueAtTime(volume, time + 0.002)
-  gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.045)
-  osc.connect(gain)
+  gain.gain.setValueAtTime(volume, time)
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.02)
+  noise.connect(filter)
+  filter.connect(gain)
   gain.connect(ctx.destination)
-  osc.start(time)
-  osc.stop(time + 0.05)
+  noise.start(time)
+  noise.stop(time + 0.025)
 }
 
 /**
- * Spinnlyd: en lav "dur" gjennom hele spinnet (som toner ut mot slutten) pluss en rekke tikk
- * som starter tett og bremser ned i takt med den visuelle deselerasjonen -- samme følelse som
- * når man åpner en CS-case.
+ * Spinnlyd: en mekanisk "whir" gjennom hele spinnet (filtrert støy som mørkner etter hvert som
+ * den bremser) pluss en rekke klikk som starter tett og glisner ut i takt med den visuelle
+ * deselerasjonen -- samme følelse som når man åpner en CS-case.
  */
 function playSpinSound(ctx: AudioContext, durationMs: number) {
   const now = ctx.currentTime
   const durationSec = durationMs / 1000
 
-  const drone = ctx.createOscillator()
-  const droneGain = ctx.createGain()
-  drone.type = 'sawtooth'
-  drone.frequency.setValueAtTime(90, now)
-  drone.frequency.exponentialRampToValueAtTime(48, now + durationSec)
-  droneGain.gain.setValueAtTime(0, now)
-  droneGain.gain.linearRampToValueAtTime(0.05, now + 0.15)
-  droneGain.gain.setValueAtTime(0.05, now + Math.max(0.16, durationSec - 0.4))
-  droneGain.gain.exponentialRampToValueAtTime(0.0001, now + durationSec)
-  drone.connect(droneGain)
-  droneGain.connect(ctx.destination)
-  drone.start(now)
-  drone.stop(now + durationSec + 0.05)
+  const whir = ctx.createBufferSource()
+  whir.buffer = createNoiseBuffer(ctx, durationSec)
+  const filter = ctx.createBiquadFilter()
+  filter.type = 'bandpass'
+  filter.Q.value = 0.7
+  filter.frequency.setValueAtTime(900, now)
+  filter.frequency.exponentialRampToValueAtTime(160, now + durationSec)
+  const whirGain = ctx.createGain()
+  whirGain.gain.setValueAtTime(0, now)
+  whirGain.gain.linearRampToValueAtTime(0.1, now + 0.2)
+  whirGain.gain.setValueAtTime(0.1, now + Math.max(0.3, durationSec - 0.5))
+  whirGain.gain.exponentialRampToValueAtTime(0.0001, now + durationSec)
+  whir.connect(filter)
+  filter.connect(whirGain)
+  whirGain.connect(ctx.destination)
+  whir.start(now)
+  whir.stop(now + durationSec + 0.05)
 
   let t = 0
   while (t < durationSec - 0.05) {
     const progress = t / durationSec
-    playTick(ctx, now + t, 0.16 * (1 - progress * 0.5))
+    playTick(ctx, now + t, 0.22 * (1 - progress * 0.4))
     t += 0.035 + progress ** 2 * 0.22
   }
 }
