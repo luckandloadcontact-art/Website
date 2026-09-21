@@ -1,39 +1,47 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Dices, ExternalLink, Coins } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WHEEL_GAMES, HYPE_PLAY_URL, type WheelGame } from '@/lib/slotWheel'
 
-// Minimum antall "hopp" før animasjonen får lov til å stoppe -- skalert med antall spill, så
-// spinnet alltid rekker minst et par runder rundt hele listen uansett hvor mange spill vi har
-// lagt til (og bare enda flere kommer).
-const SPIN_TICKS = Math.max(24, WHEEL_GAMES.length * 2)
-const BASE_DELAY = 70 // ms mellom hvert hopp i starten (raskt)
-const MAX_DELAY = 320 // ms mellom hvert hopp mot slutten (bremser ned)
+// Hvor mange kort som genereres for én "rull" -- lang nok til at animasjonen føles som et
+// ordentlig spinn, med litt buffer etter vinneren så stripen ikke ser tom ut idet den stopper.
+const REEL_LENGTH = 36
+const WINNER_POS = 28
+const SPIN_DURATION_MS = 4200
+
+function randomGame(): WheelGame {
+  return WHEEL_GAMES[Math.floor(Math.random() * WHEEL_GAMES.length)]
+}
+
+/** Bygger en ny, tilfeldig rekkefølge av kort for stripen, med en garantert vinner på WINNER_POS. */
+function buildReel(): WheelGame[] {
+  const items = Array.from({ length: REEL_LENGTH }, randomGame)
+  items[WINNER_POS] = randomGame()
+  return items
+}
 
 export function SlotWheel() {
-  const [highlight, setHighlight] = useState(0)
+  const [reel, setReel] = useState<WheelGame[]>(() => buildReel())
   const [spinning, setSpinning] = useState(false)
   const [result, setResult] = useState<WheelGame | null>(null)
+  const [offset, setOffset] = useState(0)
+  const [transitioning, setTransitioning] = useState(false)
   const [minBet, setMinBet] = useState(1)
   const [maxBet, setMaxBet] = useState(100)
   const [buyAmountOn, setBuyAmountOn] = useState(false)
   const [suggestedBuy, setSuggestedBuy] = useState<number | null>(null)
 
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Rydd opp en eventuell pågående animasjon hvis komponenten forsvinner midt i et spinn.
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [])
-
-  const scrollToIndex = useCallback((i: number) => {
-    cardRefs.current[i]?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
   }, [])
 
   function handleSpin() {
@@ -42,32 +50,39 @@ export function SlotWheel() {
     setSuggestedBuy(null)
     setSpinning(true)
 
-    const finalIndex = Math.floor(Math.random() * WHEEL_GAMES.length)
-    let current = highlight
-    let tick = 0
+    const items = buildReel()
 
-    function step() {
-      current = (current + 1) % WHEEL_GAMES.length
-      tick++
-      setHighlight(current)
-      scrollToIndex(current)
+    // Hopp tilbake til start uten animasjon først, så selve spinnet alltid har samme lengde å
+    // reise uansett hvor forrige spinn landet.
+    setTransitioning(false)
+    setReel(items)
+    setOffset(0)
 
-      const progress = Math.min(1, tick / SPIN_TICKS)
-      const delay = BASE_DELAY + (MAX_DELAY - BASE_DELAY) * progress ** 2
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const viewport = viewportRef.current
+        const first = itemRefs.current[0]
+        const second = itemRefs.current[1]
+        if (!viewport || !first || !second) return
 
-      if (tick < SPIN_TICKS || current !== finalIndex) {
-        timeoutRef.current = setTimeout(step, delay)
-      } else {
-        setSpinning(false)
-        setResult(WHEEL_GAMES[finalIndex])
-        if (buyAmountOn) {
-          const bet = minBet + Math.random() * Math.max(0, maxBet - minBet)
-          setSuggestedBuy(Math.round(bet * 100))
-        }
+        const itemStep = second.offsetLeft - first.offsetLeft
+        const itemCenter = first.offsetLeft + first.offsetWidth / 2 + WINNER_POS * itemStep - first.offsetLeft
+        const target = viewport.offsetWidth / 2 - itemCenter
+
+        setTransitioning(true)
+        setOffset(target)
+      })
+    })
+
+    timeoutRef.current = setTimeout(() => {
+      setSpinning(false)
+      const winner = items[WINNER_POS]
+      setResult(winner)
+      if (buyAmountOn) {
+        const bet = minBet + Math.random() * Math.max(0, maxBet - minBet)
+        setSuggestedBuy(Math.round(bet * 100))
       }
-    }
-
-    timeoutRef.current = setTimeout(step, BASE_DELAY)
+    }, SPIN_DURATION_MS)
   }
 
   return (
@@ -81,44 +96,47 @@ export function SlotWheel() {
           Can&apos;t decide what to play? Spin the wheel and let it pick your next game.
         </p>
 
-        {/* Carousel */}
-        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4">
-          {WHEEL_GAMES.map((game, i) => {
-            const isResult = result?.id === game.id
-            const isHighlighted = spinning && i === highlight
+        {/* Reel */}
+        <div
+          ref={viewportRef}
+          className="relative mx-auto max-w-3xl overflow-hidden rounded-2xl border border-white/10 bg-surface-800 py-4"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+          }}
+        >
+          {/* Fast midtmarkør */}
+          <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-0.5 -translate-x-1/2 bg-gold-400/80 shadow-[0_0_12px_2px_rgba(201,165,60,0.6)]" />
+          <div className="pointer-events-none absolute left-1/2 top-0 z-10 -translate-x-1/2 border-x-8 border-t-8 border-x-transparent border-t-gold-400" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 z-10 -translate-x-1/2 border-x-8 border-b-8 border-x-transparent border-b-gold-400" />
 
-            return (
-              <div
-                key={game.id}
-                ref={el => {
-                  cardRefs.current[i] = el
-                }}
-                className={cn(
-                  'relative aspect-[3/4] w-36 shrink-0 snap-center overflow-hidden rounded-2xl border-2 transition-all duration-150 sm:w-44',
-                  isResult
-                    ? 'scale-105 border-gold-400 shadow-[0_0_30px_-4px_rgba(201,165,60,0.7)]'
-                    : isHighlighted
-                      ? 'scale-105 border-brand-400'
-                      : 'border-white/10 opacity-70'
-                )}
-              >
-                <Image src={game.image} alt={game.name} fill sizes="176px" className="object-cover" />
-                {/* De fleste cover-bildene har allerede tittel + leverandør innebygd (hentet
-                    direkte fra Hype.bet). Vis kun vår egen tekst-overlay for de få som mangler det. */}
-                {game.needsLabel && (
-                  <>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-                    <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-slate-300 backdrop-blur">
-                      {game.provider}
-                    </span>
-                    <p className="absolute bottom-2 left-2 right-2 text-xs font-bold leading-tight text-white">
-                      {game.name}
-                    </p>
-                  </>
-                )}
-              </div>
-            )
-          })}
+          <div
+            className="flex gap-3 pl-3"
+            style={{
+              transform: `translateX(${offset}px)`,
+              transition: transitioning ? `transform ${SPIN_DURATION_MS}ms cubic-bezier(0.12,0.72,0.18,1)` : 'none',
+            }}
+          >
+            {reel.map((game, i) => {
+              const isWinner = !spinning && result && i === WINNER_POS
+              return (
+                <div
+                  key={i}
+                  ref={el => {
+                    itemRefs.current[i] = el
+                  }}
+                  className={cn(
+                    'relative aspect-[3/4] w-24 shrink-0 overflow-hidden rounded-xl border-2 sm:w-32',
+                    isWinner
+                      ? 'border-gold-400 shadow-[0_0_24px_-4px_rgba(201,165,60,0.8)]'
+                      : 'border-white/10'
+                  )}
+                >
+                  <Image src={game.image} alt={game.name} fill sizes="128px" className="object-cover" />
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         {/* Controls */}
