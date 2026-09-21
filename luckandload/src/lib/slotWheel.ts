@@ -27,6 +27,19 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'fist', name: 'Fist of Destruction', provider: 'Hacksaw Gaming', image: '/wheel/fist.jpg' },
   { id: 'ripcity', name: 'RIP City', provider: 'Hacksaw Gaming', image: '/wheel/ripcity.jpg' },
   { id: 'anubis', name: 'Hand of Anubis', provider: 'Hacksaw Gaming', image: '/wheel/anubis.jpg' },
+  { id: 'dorkunit', name: 'Dork Unit', provider: 'Hacksaw Gaming', image: '/wheel/dorkunit.jpg' },
+  { id: 'jawsofjustice', name: 'Jaws of Justice', provider: 'Hacksaw Gaming', image: '/wheel/jawsofjustice.jpg' },
+  { id: 'lifeanddeath', name: 'Life and Death', provider: 'Hacksaw Gaming', image: '/wheel/lifeanddeath.jpg' },
+  { id: 'duckhuntershh', name: 'Duck Hunters: Happy Hour', provider: 'Nolimit City', image: '/wheel/duckhuntershh.jpg' },
+  { id: 'juicyfruits', name: 'Juicy Fruits', provider: 'Pragmatic Play', image: '/wheel/juicyfruits.jpg' },
+  { id: 'sunprincess', name: 'Sun Princess', provider: 'Hacksaw Gaming', image: '/wheel/sunprincess.jpg' },
+  { id: 'bookofpower', name: 'Book of Power', provider: 'Relax Gaming', image: '/wheel/bookofpower.jpg' },
+  { id: 'armyofares', name: 'Army of Ares', provider: 'Hacksaw Gaming', image: '/wheel/armyofares.jpg' },
+  { id: 'crazyexgf', name: "Crazy Ex-Girlfriend", provider: 'Nolimit City', image: '/wheel/crazyexgf.jpg' },
+  { id: 'seamen', name: 'Seamen', provider: 'Nolimit City', image: '/wheel/seamen.jpg' },
+  { id: 'mayanstackways', name: 'Mayan Stackways', provider: 'Hacksaw Gaming', image: '/wheel/mayanstackways.jpg' },
+  { id: 'rainandruin', name: 'Rain and Ruin', provider: 'Just Slots', image: '/wheel/rainandruin.jpg' },
+  { id: 'demonsgate', name: "Demon's Gate", provider: 'Slotmill', image: '/wheel/demonsgate.jpg' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
