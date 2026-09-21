@@ -19,69 +19,6 @@ function randomGame(): WheelGame {
   return WHEEL_GAMES[Math.floor(Math.random() * WHEEL_GAMES.length)]
 }
 
-/** Kort hvit-støy-buffer, brukt som råmateriale for både tikk og whir under -- gir en mekanisk
- * lyd i stedet for en tydelig "tone" (som square/sawtooth-oscillatorer lett gir). */
-function createNoiseBuffer(ctx: AudioContext, durationSec: number): AudioBuffer {
-  const length = Math.max(1, Math.floor(ctx.sampleRate * durationSec))
-  const buffer = ctx.createBuffer(1, length, ctx.sampleRate)
-  const data = buffer.getChannelData(0)
-  for (let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1
-  return buffer
-}
-
-/** Én kort "klikk" i spinnlyden -- båndpassfiltrert støy med rask decay, som en mekanisk reel. */
-function playTick(ctx: AudioContext, time: number, volume: number) {
-  const noise = ctx.createBufferSource()
-  noise.buffer = createNoiseBuffer(ctx, 0.02)
-  const filter = ctx.createBiquadFilter()
-  filter.type = 'bandpass'
-  filter.frequency.setValueAtTime(2400, time)
-  filter.Q.value = 2.5
-  const gain = ctx.createGain()
-  gain.gain.setValueAtTime(volume, time)
-  gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.02)
-  noise.connect(filter)
-  filter.connect(gain)
-  gain.connect(ctx.destination)
-  noise.start(time)
-  noise.stop(time + 0.025)
-}
-
-/**
- * Spinnlyd: en mekanisk "whir" gjennom hele spinnet (filtrert støy som mørkner etter hvert som
- * den bremser) pluss en rekke klikk som starter tett og glisner ut i takt med den visuelle
- * deselerasjonen -- samme følelse som når man åpner en CS-case.
- */
-function playSpinSound(ctx: AudioContext, durationMs: number) {
-  const now = ctx.currentTime
-  const durationSec = durationMs / 1000
-
-  const whir = ctx.createBufferSource()
-  whir.buffer = createNoiseBuffer(ctx, durationSec)
-  const filter = ctx.createBiquadFilter()
-  filter.type = 'bandpass'
-  filter.Q.value = 0.7
-  filter.frequency.setValueAtTime(900, now)
-  filter.frequency.exponentialRampToValueAtTime(160, now + durationSec)
-  const whirGain = ctx.createGain()
-  whirGain.gain.setValueAtTime(0, now)
-  whirGain.gain.linearRampToValueAtTime(0.1, now + 0.2)
-  whirGain.gain.setValueAtTime(0.1, now + Math.max(0.3, durationSec - 0.5))
-  whirGain.gain.exponentialRampToValueAtTime(0.0001, now + durationSec)
-  whir.connect(filter)
-  filter.connect(whirGain)
-  whirGain.connect(ctx.destination)
-  whir.start(now)
-  whir.stop(now + durationSec + 0.05)
-
-  let t = 0
-  while (t < durationSec - 0.05) {
-    const progress = t / durationSec
-    playTick(ctx, now + t, 0.22 * (1 - progress * 0.4))
-    t += 0.035 + progress ** 2 * 0.22
-  }
-}
-
 const BUY_AMOUNT_STEP = 20
 
 /** Tilfeldig beløp mellom min og max, men alltid et multiplum av BUY_AMOUNT_STEP (20, 40, 60 ...). */
@@ -149,12 +86,10 @@ export function SlotWheel() {
   const viewportRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const audioCtxRef = useRef<AudioContext | null>(null)
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
-      audioCtxRef.current?.close()
     }
   }, [])
 
@@ -163,16 +98,6 @@ export function SlotWheel() {
     setResult(null)
     setSuggestedBuy(null)
     setSpinning(true)
-
-    // AudioContext må opprettes/gjenopptas inne i en brukerhandling (klikket her) for at
-    // nettlesere skal tillate lyd.
-    const AudioContextCtor = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-    if (AudioContextCtor) {
-      if (!audioCtxRef.current) audioCtxRef.current = new AudioContextCtor()
-      const ctx = audioCtxRef.current
-      if (ctx.state === 'suspended') ctx.resume()
-      playSpinSound(ctx, SPIN_DURATION_MS)
-    }
 
     const items = buildReel()
 
