@@ -61,6 +61,11 @@ export function SlotWheel() {
   const [maxBetInput, setMaxBetInput] = useState('100')
   const [buyAmountOn, setBuyAmountOn] = useState(false)
   const [suggestedBuy, setSuggestedBuy] = useState<number | null>(null)
+  // Teller antall forhåndslastede spillbilder som er ferdig (eller feilet) -- Spin er sperret
+  // til alle er klare, slik at det ikke spiller noen rolle hvor mange spill listen vokser til;
+  // uten dette kunne man rekke å spinne før alle rakk å bli hentet inn i nettleser-cachen.
+  const [loadedCount, setLoadedCount] = useState(0)
+  const assetsReady = loadedCount >= WHEEL_GAMES.length
 
   function commitMinBet(raw: string) {
     const clamped = Math.max(20, Math.round(Number(raw)) || 20)
@@ -89,7 +94,7 @@ export function SlotWheel() {
   }, [])
 
   function handleSpin() {
-    if (spinning) return
+    if (spinning || !assetsReady) return
     setResult(null)
     setSuggestedBuy(null)
     setSpinning(true)
@@ -135,13 +140,23 @@ export function SlotWheel() {
         plass). next/image lat-laster ellers ikoner som aldri har vært synlige på skjermen, og
         siden stripen "ruller" med CSS-transform (ikke ekte scroll) rekker ikke nettleseren å
         hente dem før de suser forbi -- det så ut som manglende/like bilder i det aller første
-        spinnet etter en fersk sideinnlasting. Med priority ligger alle i nettleserens cache
-        allerede før man trykker Spin.
+        spinnet etter en fersk sideinnlasting. Vi teller onLoad/onError for hvert bilde og
+        sperrer Spin-knappen (assetsReady) til absolutt alle er klare i nettleserens cache --
+        dette skalerer uansett hvor mange spill listen vokser til, i stedet for å bare håpe at
+        forhåndslastingen rakk å bli ferdig i tide.
       */}
       <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
         {WHEEL_GAMES.map(game => (
           <div key={game.id} className="relative aspect-[3/4] w-32 sm:w-44">
-            <Image src={game.image} alt="" fill sizes="176px" priority />
+            <Image
+              src={game.image}
+              alt=""
+              fill
+              sizes="176px"
+              priority
+              onLoad={() => setLoadedCount(c => c + 1)}
+              onError={() => setLoadedCount(c => c + 1)}
+            />
           </div>
         ))}
       </div>
@@ -260,10 +275,10 @@ export function SlotWheel() {
           <button
             type="button"
             onClick={handleSpin}
-            disabled={spinning}
+            disabled={spinning || !assetsReady}
             className="rounded-full bg-gradient-to-r from-brand-500 to-gold-500 px-10 py-3 text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-brand-500/25 transition-all hover:scale-105 hover:shadow-brand-500/40 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
           >
-            {spinning ? 'Spinning…' : 'Spin'}
+            {!assetsReady ? 'Loading…' : spinning ? 'Spinning…' : 'Spin'}
           </button>
         </div>
 
