@@ -100,13 +100,19 @@ export function SlotWheel() {
                 )}
               >
                 <Image src={game.image} alt={game.name} fill sizes="176px" className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-                <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-slate-300 backdrop-blur">
-                  {game.provider}
-                </span>
-                <p className="absolute bottom-2 left-2 right-2 text-xs font-bold leading-tight text-white">
-                  {game.name}
-                </p>
+                {/* De fleste cover-bildene har allerede tittel + leverandør innebygd (hentet
+                    direkte fra Hype.bet). Vis kun vår egen tekst-overlay for de få som mangler det. */}
+                {game.needsLabel && (
+                  <>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
+                    <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-slate-300 backdrop-blur">
+                      {game.provider}
+                    </span>
+                    <p className="absolute bottom-2 left-2 right-2 text-xs font-bold leading-tight text-white">
+                      {game.name}
+                    </p>
+                  </>
+                )}
               </div>
             )
           })}
