@@ -19,6 +19,52 @@ function randomGame(): WheelGame {
   return WHEEL_GAMES[Math.floor(Math.random() * WHEEL_GAMES.length)]
 }
 
+/** Én kort "tikk" i spinnlyden -- en kort klikk-tone med rask decay, som en case-opening-reel. */
+function playTick(ctx: AudioContext, time: number, volume: number) {
+  const osc = ctx.createOscillator()
+  const gain = ctx.createGain()
+  osc.type = 'square'
+  osc.frequency.setValueAtTime(820, time)
+  gain.gain.setValueAtTime(0, time)
+  gain.gain.linearRampToValueAtTime(volume, time + 0.002)
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.045)
+  osc.connect(gain)
+  gain.connect(ctx.destination)
+  osc.start(time)
+  osc.stop(time + 0.05)
+}
+
+/**
+ * Spinnlyd: en lav "dur" gjennom hele spinnet (som toner ut mot slutten) pluss en rekke tikk
+ * som starter tett og bremser ned i takt med den visuelle deselerasjonen -- samme følelse som
+ * når man åpner en CS-case.
+ */
+function playSpinSound(ctx: AudioContext, durationMs: number) {
+  const now = ctx.currentTime
+  const durationSec = durationMs / 1000
+
+  const drone = ctx.createOscillator()
+  const droneGain = ctx.createGain()
+  drone.type = 'sawtooth'
+  drone.frequency.setValueAtTime(90, now)
+  drone.frequency.exponentialRampToValueAtTime(48, now + durationSec)
+  droneGain.gain.setValueAtTime(0, now)
+  droneGain.gain.linearRampToValueAtTime(0.05, now + 0.15)
+  droneGain.gain.setValueAtTime(0.05, now + Math.max(0.16, durationSec - 0.4))
+  droneGain.gain.exponentialRampToValueAtTime(0.0001, now + durationSec)
+  drone.connect(droneGain)
+  droneGain.connect(ctx.destination)
+  drone.start(now)
+  drone.stop(now + durationSec + 0.05)
+
+  let t = 0
+  while (t < durationSec - 0.05) {
+    const progress = t / durationSec
+    playTick(ctx, now + t, 0.16 * (1 - progress * 0.5))
+    t += 0.035 + progress ** 2 * 0.22
+  }
+}
+
 const BUY_AMOUNT_STEP = 20
 
 /** Tilfeldig beløp mellom min og max, men alltid et multiplum av BUY_AMOUNT_STEP (20, 40, 60 ...). */
@@ -86,10 +132,12 @@ export function SlotWheel() {
   const viewportRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const audioCtxRef = useRef<AudioContext | null>(null)
 
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      audioCtxRef.current?.close()
     }
   }, [])
 
@@ -98,6 +146,16 @@ export function SlotWheel() {
     setResult(null)
     setSuggestedBuy(null)
     setSpinning(true)
+
+    // AudioContext må opprettes/gjenopptas inne i en brukerhandling (klikket her) for at
+    // nettlesere skal tillate lyd.
+    const AudioContextCtor = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+    if (AudioContextCtor) {
+      if (!audioCtxRef.current) audioCtxRef.current = new AudioContextCtor()
+      const ctx = audioCtxRef.current
+      if (ctx.state === 'suspended') ctx.resume()
+      playSpinSound(ctx, SPIN_DURATION_MS)
+    }
 
     const items = buildReel()
 
