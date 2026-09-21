@@ -8,18 +8,30 @@ import { WHEEL_GAMES, HYPE_PLAY_URL, type WheelGame } from '@/lib/slotWheel'
 
 // Hvor mange kort som genereres for én "rull" -- lang nok til at animasjonen føles som et
 // ordentlig spinn, med litt buffer etter vinneren så stripen ikke ser tom ut idet den stopper.
-const REEL_LENGTH = 36
-const WINNER_POS = 28
-const SPIN_DURATION_MS = 4200
+const REEL_LENGTH = 48
+const WINNER_POS = 40
+const SPIN_DURATION_MS = 5200
+// Ingen spill får gjenta seg innenfor dette vinduet, slik at man aldri ser samme spill to
+// ganger samtidig i den synlige stripen.
+const NO_REPEAT_WINDOW = 8
 
 function randomGame(): WheelGame {
   return WHEEL_GAMES[Math.floor(Math.random() * WHEEL_GAMES.length)]
 }
 
-/** Bygger en ny, tilfeldig rekkefølge av kort for stripen, med en garantert vinner på WINNER_POS. */
+/** Bygger en ny, tilfeldig rekkefølge av kort for stripen -- uten at samme spill dukker opp to ganger innenfor NO_REPEAT_WINDOW. */
 function buildReel(): WheelGame[] {
-  const items = Array.from({ length: REEL_LENGTH }, randomGame)
-  items[WINNER_POS] = randomGame()
+  const items: WheelGame[] = []
+  for (let i = 0; i < REEL_LENGTH; i++) {
+    const recent = items.slice(Math.max(0, i - NO_REPEAT_WINDOW), i)
+    let candidate = randomGame()
+    let attempts = 0
+    while (attempts < 25 && recent.some(g => g.id === candidate.id)) {
+      candidate = randomGame()
+      attempts++
+    }
+    items.push(candidate)
+  }
   return items
 }
 
