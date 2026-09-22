@@ -57,7 +57,6 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'puglife', name: 'Pug Life', provider: 'Hacksaw Gaming', image: '/wheel/puglife.jpg' },
   { id: '2wild2die', name: '2 Wild 2 Die', provider: 'Hacksaw Gaming', image: '/wheel/2wild2die.jpg' },
   { id: 'dasxbootzwei', name: 'Das xBoot Zwei', provider: 'Nolimit City', image: '/wheel/dasxboot2wei.jpg' },
-  { id: 'dorksofthedeep', name: 'Dorks of the Deep', provider: 'Hacksaw Gaming', image: '/wheel/dorksofthedeep.jpg' },
   { id: 'goldenshower', name: 'Golden Shower', provider: 'Nolimit City', image: '/wheel/goldenshower.jpg' },
   { id: 'aztecmagicmegaways', name: 'Aztec Magic Megaways', provider: 'BGaming', image: '/wheel/aztecmagicmegaways.jpg' },
   { id: 'piratebonanza2', name: 'Pirate Bonanza 2', provider: 'Backseat Gaming', image: '/wheel/piratebonanza2.jpg' },
