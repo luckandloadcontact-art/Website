@@ -118,6 +118,12 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'deadmanstrail', name: "Dead Man's Trail", provider: 'Relax Gaming', image: '/wheel/deadmanstrail.jpg' },
   { id: 'bookofabyss', name: 'Book of Abyss', provider: 'Just Slots', image: '/wheel/bookofabyss.jpg' },
   { id: 'immortal5', name: 'Immortal 5', provider: 'Relax Gaming', image: '/wheel/immortal5.jpg' },
+  { id: 'fistofdestructionmegamultiplier', name: 'Fist of Destruction Megamultiplier', provider: 'Hacksaw Gaming', image: '/wheel/fistofdestructionmegamultiplier.jpg' },
+  { id: 'sweetbonanza2500', name: 'Sweet Bonanza 2500', provider: 'Pragmatic Play', image: '/wheel/sweetbonanza2500.jpg' },
+  { id: '5lionsmegaways2', name: '5 Lions Megaways 2', provider: 'Pragmatic Play', image: '/wheel/5lionsmegaways2.jpg' },
+  { id: 'zombieschoolmegaways', name: 'Zombie School Megaways', provider: 'Pragmatic Play', image: '/wheel/zombieschoolmegaways.jpg' },
+  { id: 'retroverse', name: 'Retroverse', provider: 'Push Gaming', image: '/wheel/retroverse.jpg' },
+  { id: 'seaofspirits', name: 'Sea of Spirits', provider: 'Push Gaming', image: '/wheel/seaofspirits.jpg' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
