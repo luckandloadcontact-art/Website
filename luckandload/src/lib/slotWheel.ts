@@ -92,6 +92,7 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'deadmansdrop', name: "Dead Man's Drop", provider: 'Slotmill', image: '/wheel/deadmansdrop.jpg' },
   { id: 'sugarrush1000', name: 'Sugar Rush 1000', provider: 'Pragmatic Play', image: '/wheel/sugarrush1000.jpg' },
   { id: 'xmasdrop', name: 'Xmas Drop', provider: 'Hacksaw Gaming', image: '/wheel/xmasdrop.jpg' },
+  { id: 'fishmafia', name: 'Fish Mafia', provider: 'Just Slots', image: '/wheel/fishmafia.jpg' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
