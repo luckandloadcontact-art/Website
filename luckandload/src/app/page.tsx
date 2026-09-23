@@ -1,5 +1,6 @@
 import { Hero } from '@/components/home/Hero'
-import { LiveSection, AboutSection, CommunitySection, AnnouncementsSection, HypeSection } from '@/components/home/Sections'
+import { AboutSection, CommunitySection, AnnouncementsSection, HypeSection } from '@/components/home/Sections'
+import { LiveSection } from '@/components/home/LiveSection'
 import { SlotWheel } from '@/components/home/SlotWheel'
 import { createAdminClient } from '@/lib/supabase'
 import type { Announcement } from '@/types'

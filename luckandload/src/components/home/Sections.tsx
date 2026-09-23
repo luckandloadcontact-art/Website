@@ -4,51 +4,7 @@ import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { formatRelativeTime } from '@/lib/utils'
 import type { Announcement } from '@/types'
-import { Tv, Users, Zap, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle } from 'lucide-react'
-
-// ─── Live / Stream placeholder ────────────────────────────
-export function LiveSection() {
-  return (
-    <section className="py-16 border-t border-white/5">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 mb-8">
-          <Tv size={20} className="text-brand-500" />
-          <h2 className="text-xl font-bold text-white">Live Stream</h2>
-        </div>
-
-        <div className="rounded-2xl border border-white/8 bg-surface-800 overflow-hidden aspect-video max-w-4xl mx-auto flex items-center justify-center">
-          <div className="text-center p-8">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-500/10 border border-brand-500/20 mb-4">
-              <Tv size={28} className="text-brand-500" />
-            </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Stream Embed</h3>
-            <p className="text-slate-500 text-sm max-w-sm">
-              Twitch or Kick embed will appear here when live. Check the social links above to watch now.
-            </p>
-            <div className="mt-4 flex justify-center gap-3">
-              <a
-                href="https://kick.com/luckandloadtv"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 px-4 py-2 text-sm text-green-400 hover:bg-green-500/20 transition-colors"
-              >
-                Watch on Kick
-              </a>
-              <a
-                href="https://twitch.tv/luckandloadtv"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-lg border border-purple-500/30 bg-purple-500/10 px-4 py-2 text-sm text-purple-400 hover:bg-purple-500/20 transition-colors"
-              >
-                Watch on Twitch
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
+import { Users, Zap, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle } from 'lucide-react'
 
 // ─── About section ────────────────────────────────────────
 export function AboutSection() {
