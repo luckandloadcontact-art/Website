@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
-import { Check, Dices, ExternalLink } from 'lucide-react'
+import { Check, Dices, ExternalLink, SlidersHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WHEEL_GAMES, HYPE_PLAY_URL, type WheelGame } from '@/lib/slotWheel'
 
@@ -15,8 +15,10 @@ const SPIN_DURATION_MS = 5200
 // ganger samtidig i den synlige stripen.
 const NO_REPEAT_WINDOW = 8
 
-function randomGame(): WheelGame {
-  return WHEEL_GAMES[Math.floor(Math.random() * WHEEL_GAMES.length)]
+const PROVIDERS = Array.from(new Set(WHEEL_GAMES.map(g => g.provider))).sort((a, b) => a.localeCompare(b))
+
+function randomGame(games: WheelGame[]): WheelGame {
+  return games[Math.floor(Math.random() * games.length)]
 }
 
 const BUY_AMOUNT_STEP = 20
@@ -31,14 +33,15 @@ function randomSteppedAmount(min: number, max: number): number {
 }
 
 /** Bygger en ny, tilfeldig rekkefølge av kort for stripen -- uten at samme spill dukker opp to ganger innenfor NO_REPEAT_WINDOW. */
-function buildReel(): WheelGame[] {
+function buildReel(games: WheelGame[]): WheelGame[] {
+  const window = Math.min(NO_REPEAT_WINDOW, Math.max(0, games.length - 1))
   const items: WheelGame[] = []
   for (let i = 0; i < REEL_LENGTH; i++) {
-    const recent = items.slice(Math.max(0, i - NO_REPEAT_WINDOW), i)
-    let candidate = randomGame()
+    const recent = items.slice(Math.max(0, i - window), i)
+    let candidate = randomGame(games)
     let attempts = 0
     while (attempts < 25 && recent.some(g => g.id === candidate.id)) {
-      candidate = randomGame()
+      candidate = randomGame(games)
       attempts++
     }
     items.push(candidate)
@@ -47,7 +50,7 @@ function buildReel(): WheelGame[] {
 }
 
 export function SlotWheel() {
-  const [reel, setReel] = useState<WheelGame[]>(() => buildReel())
+  const [reel, setReel] = useState<WheelGame[]>(() => buildReel(WHEEL_GAMES))
   const [spinning, setSpinning] = useState(false)
   const [result, setResult] = useState<WheelGame | null>(null)
   const [offset, setOffset] = useState(0)
@@ -66,6 +69,38 @@ export function SlotWheel() {
   // uten dette kunne man rekke å spinne før alle rakk å bli hentet inn i nettleser-cachen.
   const [loadedCount, setLoadedCount] = useState(0)
   const assetsReady = loadedCount >= WHEEL_GAMES.length
+
+  // Hvilke leverandører hjulet får lov til å lande på -- alle er huket av som standard.
+  const [enabledProviders, setEnabledProviders] = useState<Set<string>>(() => new Set(PROVIDERS))
+  const [filterOpen, setFilterOpen] = useState(false)
+  const filterRef = useRef<HTMLDivElement>(null)
+
+  const activeGames = useMemo(() => {
+    const filtered = WHEEL_GAMES.filter(g => enabledProviders.has(g.provider))
+    return filtered.length > 0 ? filtered : WHEEL_GAMES
+  }, [enabledProviders])
+
+  function toggleProvider(provider: string) {
+    setEnabledProviders(prev => {
+      // Ikke lov å skru av den siste gjenværende leverandøren -- da har hjulet ingenting å velge blant.
+      if (prev.has(provider) && prev.size === 1) return prev
+      const next = new Set(prev)
+      if (next.has(provider)) next.delete(provider)
+      else next.add(provider)
+      return next
+    })
+  }
+
+  useEffect(() => {
+    if (!filterOpen) return
+    function handleClickOutside(e: MouseEvent) {
+      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+        setFilterOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [filterOpen])
 
   function commitMinBet(raw: string) {
     const clamped = Math.max(20, Math.round(Number(raw)) || 20)
@@ -99,7 +134,7 @@ export function SlotWheel() {
     setSuggestedBuy(null)
     setSpinning(true)
 
-    const items = buildReel()
+    const items = buildReel(activeGames)
 
     // Hopp tilbake til start uten animasjon først, så selve spinnet alltid har samme lengde å
     // reise uansett hvor forrige spinn landet.
@@ -225,6 +260,55 @@ export function SlotWheel() {
 
         {/* Controls */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <div ref={filterRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setFilterOpen(v => !v)}
+              className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-800 px-4 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:text-white"
+            >
+              <SlidersHorizontal size={15} />
+              Filter
+              {enabledProviders.size < PROVIDERS.length && (
+                <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-brand-500 px-1 text-[10px] font-bold text-white">
+                  {enabledProviders.size}
+                </span>
+              )}
+            </button>
+
+            {filterOpen && (
+              <div className="absolute left-0 top-full z-20 mt-2 w-64 rounded-2xl border border-white/10 bg-surface-900 p-3 shadow-xl">
+                <div className="mb-2 flex items-center justify-between">
+                  <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Providers</p>
+                  <button
+                    type="button"
+                    onClick={() => setEnabledProviders(new Set(PROVIDERS))}
+                    className="text-xs font-medium text-brand-400 hover:text-brand-300"
+                  >
+                    Reset
+                  </button>
+                </div>
+                <div className="max-h-64 space-y-0.5 overflow-y-auto pr-1">
+                  {PROVIDERS.map(provider => {
+                    const checked = enabledProviders.has(provider)
+                    return (
+                      <label
+                        key={provider}
+                        className="flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-slate-300 hover:bg-white/5"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleProvider(provider)}
+                          className="h-4 w-4 rounded border-white/20 bg-surface-800 accent-brand-500"
+                        />
+                        {provider}
+                      </label>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
           <label className="flex items-center gap-2 rounded-full border border-white/10 bg-surface-800 px-4 py-2.5 text-sm">
             <span className="text-xs text-slate-500">Min</span>
             <input
