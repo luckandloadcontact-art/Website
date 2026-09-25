@@ -124,6 +124,11 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'zombieschoolmegaways', name: 'Zombie School Megaways', provider: 'Pragmatic Play', image: '/wheel/zombieschoolmegaways.jpg' },
   { id: 'retroverse', name: 'Retroverse', provider: 'Push Gaming', image: '/wheel/retroverse.jpg' },
   { id: 'seaofspirits', name: 'Sea of Spirits', provider: 'Push Gaming', image: '/wheel/seaofspirits.jpg' },
+  { id: 'fireborn', name: 'Fireborn', provider: 'Hacksaw Gaming', image: '/wheel/fireborn.jpg' },
+  { id: 'swoll', name: 'Swoll', provider: 'Shady Lady', image: '/wheel/swoll.jpg' },
+  { id: 'sew', name: 'Sew', provider: 'Shady Lady', image: '/wheel/sew.jpg' },
+  { id: 'blackfriday', name: 'Black Friday', provider: 'Shady Lady', image: '/wheel/blackfriday.jpg' },
+  { id: 'moneytrain5', name: 'Money Train 5', provider: 'Relax Gaming', image: '/wheel/moneytrain5.jpg' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
