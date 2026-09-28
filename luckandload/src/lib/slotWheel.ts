@@ -129,6 +129,9 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'sew', name: 'Sew', provider: 'Shady Lady', image: '/wheel/sew.jpg' },
   { id: 'blackfriday', name: 'Black Friday', provider: 'Shady Lady', image: '/wheel/blackfriday.jpg' },
   { id: 'moneytrain5', name: 'Money Train 5', provider: 'Relax Gaming', image: '/wheel/moneytrain5.jpg' },
+  { id: 'greedywolf', name: 'Greedy Wolf', provider: 'Pragmatic Play', image: '/wheel/greedywolf.jpg' },
+  { id: 'barbarossarevenge', name: "Barbarossa Revenge", provider: 'Peter & Sons', image: '/wheel/barbarossarevenge.jpg' },
+  { id: 'barbarossadragonempire', name: 'Barbarossa Dragon Empire', provider: 'Peter & Sons', image: '/wheel/barbarossadragonempire.jpg' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
