@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
-import { Check, Dices, ExternalLink, SlidersHorizontal } from 'lucide-react'
+import { Check, Copy, Dices, ExternalLink, SlidersHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WHEEL_GAMES, HYPE_PLAY_URL, type WheelGame } from '@/lib/slotWheel'
 
@@ -69,6 +69,17 @@ export function SlotWheel() {
   // uten dette kunne man rekke å spinne før alle rakk å bli hentet inn i nettleser-cachen.
   const [loadedCount, setLoadedCount] = useState(0)
   const assetsReady = loadedCount >= WHEEL_GAMES.length
+  const [nameCopied, setNameCopied] = useState(false)
+
+  async function copyGameName(name: string) {
+    try {
+      await navigator.clipboard.writeText(name)
+      setNameCopied(true)
+      setTimeout(() => setNameCopied(false), 1500)
+    } catch {
+      // Clipboard-API utilgjengelig (f.eks. usikker kontekst) -- ingen fallback nødvendig her.
+    }
+  }
 
   // Hvilke leverandører hjulet får lov til å lande på -- alle er huket av som standard.
   const [enabledProviders, setEnabledProviders] = useState<Set<string>>(() => new Set(PROVIDERS))
@@ -370,7 +381,17 @@ export function SlotWheel() {
         {result && (
           <div className="animate-fade-in mx-auto mt-8 max-w-md rounded-2xl border border-gold-500/30 bg-gradient-to-b from-gold-500/10 to-transparent p-6 text-center">
             <p className="mb-1 text-xs font-bold uppercase tracking-widest text-gold-400">You got</p>
-            <p className="mb-1 text-2xl font-black text-white">{result.name}</p>
+            <div className="mb-1 flex items-center justify-center gap-2">
+              <p className="text-2xl font-black text-white">{result.name}</p>
+              <button
+                type="button"
+                onClick={() => copyGameName(result.name)}
+                title="Copy game name"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 text-slate-400 transition-colors hover:border-white/20 hover:text-white"
+              >
+                {nameCopied ? <Check size={14} className="text-hype" /> : <Copy size={14} />}
+              </button>
+            </div>
             <p className="mb-4 text-sm text-slate-400">{result.provider}</p>
             {suggestedBuy != null && (
               <p className="mb-4 text-sm text-slate-300">
