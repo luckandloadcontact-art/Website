@@ -9,6 +9,7 @@ import {
 import { formatRelativeTime, cn } from '@/lib/utils'
 import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 import { LeaderboardCountdown } from '@/components/leaderboard/LeaderboardCountdown'
+import { NextRefreshCountdown } from '@/components/leaderboard/NextRefreshCountdown'
 
 // Rendres dynamisk per request i stedet for å bli forhåndsbygget statisk -- ellers ville
 // hver eneste "git push"-deploy trigget et eget kall til Affilka under bygget, og disse
@@ -187,7 +188,8 @@ export default async function LeaderboardPage() {
 
         {data && entries.length > 0 && (
           <p className="text-center text-[11px] text-slate-600">
-            {monthLabel} · Updated {formatRelativeTime(data.updatedAt)}
+            {monthLabel} · Updated {formatRelativeTime(data.updatedAt)} ·{' '}
+            <NextRefreshCountdown updatedAt={data.updatedAt} />
           </p>
         )}
 

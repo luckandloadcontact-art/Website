@@ -3,6 +3,7 @@
 // denne måneden, og setter premie basert på plassering.
 
 import { createAdminClient } from '@/lib/supabase'
+import { LEADERBOARD_REVALIDATE_SECONDS } from '@/lib/utils'
 
 export interface LeaderboardEntry {
   rank: number
@@ -27,7 +28,9 @@ export const PLACEMENT_PRIZES = [500, 200, 100, 80, 60, 40]
 export const RANDOM_GIVEAWAY_PRIZE = 20
 export const TOTAL_PRIZE_POOL = PLACEMENT_PRIZES.reduce((sum, p) => sum + p, 0) + RANDOM_GIVEAWAY_PRIZE
 const TOP_N = 10
-const REVALIDATE_SECONDS = 360 // 6 min -- se begrunnelse ved fetchLeaderboardData
+// Verdien selv bor i lib/utils.ts (se der for hvorfor) -- brukt her under det opprinnelige
+// navnet så resten av denne fila ikke trenger å endres.
+const REVALIDATE_SECONDS = LEADERBOARD_REVALIDATE_SECONDS // 6 min -- se begrunnelse ved fetchLeaderboardData
 
 function currentMonthRange(now = new Date()) {
   const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1))
@@ -167,37 +170,87 @@ export async function getLeaderboardSnapshots(): Promise<LeaderboardSnapshot[]> 
   }))
 }
 
-// Enkel, eksplisitt in-memory cache (modul-nivå variabel) -- brukt i stedet for
-// Next sin unstable_cache/fetch-revalidate. Årsak (funnet og bekreftet 2026-09-12): den
-// innebygde cachen ser ut til å bruke stale-while-revalidate (vis gammel data med en gang,
-// hent ny i bakgrunnen) -- og i et serverless-miljø kan den bakgrunnsjobben bli drept før den
-// rekker å lagre det ferske resultatet, slik at cachen sitter fast på gammel data på ubestemt
-// tid. Bekreftet i praksis: cron-endepunktet hentet friskt, mens selve siden fortsatt viste
-// 12+ min gammel data ved gjentatte besøk rett etterpå.
-//
-// Denne varianten er 100% eksplisitt: er cachen utløpt, VENTER requesten på et ferskt kall før
-// den svarer -- ingen bakgrunnsjobb som kan bli avbrutt. Ulempen er at cachen er per
-// server-instans (ikke globalt delt på tvers av Vercel sine regioner/instanser), men det var
-// unstable_cache-varianten i praksis heller ikke, så dette gjør ikke ting verre -- bare
-// forutsigbart. Bonus: hvis et friskt forsøk feiler (f.eks. rate limit), serveres siste kjente
-// gode data i stedet for feilmelding, så lenge vi har hentet noe vellykket tidligere.
-let cachedResult: { data: LeaderboardData; fetchedAt: number } | null = null
+// Delt cache i Supabase (leaderboard_cache, én fast rad med id='current') -- IKKE en
+// in-memory-variabel. Årsak: Vercel kjører flere serverless-instanser samtidig, og hver instans
+// hadde tidligere sin EGEN in-memory-cache -- så den reelle raten mot Affilka var i praksis
+// "opptil 6-min-vinduet PER instans", ikke globalt. Kombinert med manuell testing (f.eks. mot
+// cron-endepunktene) kunne det derfor skje flere reelle Affilka-kall innenfor samme 6-min-vindu
+// og trigge Affilka sin ekte 5-min cooldown -- noe som fikk den offentlige leaderboard-siden til
+// å vise feilmelding for besøkende (skjedde 2026-09-30). Denne varianten bruker et atomisk
+// "claim" (en betinget UPDATE) i databasen, som fungerer som en delt lås på tvers av ALLE
+// instanser: kun den ene requesten som faktisk vinner UPDATE-en får lov til å kalle Affilka --
+// alle andre (uansett hvor mange, uansett hvilken instans) får bare siste kjente data tilbake.
+const CACHE_ROW_ID = 'current'
+// Hvor lenge et "claim" regnes som gyldig før det anses forlatt (f.eks. en instans som krasjet
+// midt i et kall) og en ny request får lov til å prøve på nytt.
+const CLAIM_TIMEOUT_MS = 30_000
+
+interface LeaderboardCacheRow {
+  data: LeaderboardData | null
+  fetched_at: string
+  fetch_claimed_at: string | null
+}
 
 export async function getLeaderboardData(): Promise<LeaderboardData | null> {
-  const isStale = !cachedResult || Date.now() - cachedResult.fetchedAt > REVALIDATE_SECONDS * 1000
+  const supabase = createAdminClient()
+
+  const { data: rowRaw } = await supabase
+    .from('leaderboard_cache')
+    .select('data, fetched_at, fetch_claimed_at')
+    .eq('id', CACHE_ROW_ID)
+    .maybeSingle()
+  const row = rowRaw as LeaderboardCacheRow | null
+
+  const cached = row?.data ?? null
+  const fetchedAtMs = row ? new Date(row.fetched_at).getTime() : 0
+  const isStale = Date.now() - fetchedAtMs > REVALIDATE_SECONDS * 1000
 
   if (!isStale) {
-    return cachedResult!.data
+    return cached
+  }
+
+  const nowIso = new Date().toISOString()
+  const claimCutoffIso = new Date(Date.now() - CLAIM_TIMEOUT_MS).toISOString()
+  const staleCutoffIso = new Date(Date.now() - REVALIDATE_SECONDS * 1000).toISOString()
+
+  // Kun requesten som faktisk klarer denne betingede UPDATE-en (fortsatt utløpt OG ingen andre
+  // holder på å hente akkurat nå) vinner retten til å kalle Affilka.
+  const { data: claimedRows } = await supabase
+    .from('leaderboard_cache')
+    .update({ fetch_claimed_at: nowIso })
+    .eq('id', CACHE_ROW_ID)
+    .lt('fetched_at', staleCutoffIso)
+    .or(`fetch_claimed_at.is.null,fetch_claimed_at.lt.${claimCutoffIso}`)
+    .select('data')
+
+  const wonClaim = (claimedRows?.length ?? 0) > 0
+
+  if (!wonClaim) {
+    // Tapte kappløpet -- enten er data allerede blitt friskere enn vi trodde, eller en annen
+    // instans henter akkurat nå. Les raden på nytt i stedet for å returnere vårt (potensielt
+    // eldre) opprinnelige read, men kall aldri Affilka selv her.
+    const { data: latestRaw } = await supabase
+      .from('leaderboard_cache')
+      .select('data')
+      .eq('id', CACHE_ROW_ID)
+      .maybeSingle()
+    const latest = latestRaw as { data: LeaderboardData | null } | null
+    return latest?.data ?? cached
   }
 
   try {
     const fresh = await fetchLeaderboardData()
-    cachedResult = { data: fresh, fetchedAt: Date.now() }
+    await supabase
+      .from('leaderboard_cache')
+      .update({ data: fresh, fetched_at: fresh.updatedAt, fetch_claimed_at: null })
+      .eq('id', CACHE_ROW_ID)
     return fresh
   } catch (err) {
     console.error('[affilka] Klarte ikke hente leaderboard', err)
-    // Stale-if-error: bedre å vise litt gamle (men ekte) tall enn en feilmelding.
-    return cachedResult?.data ?? null
+    // Frigi claimet med en gang (i stedet for å vente på CLAIM_TIMEOUT_MS) slik at neste forsøk
+    // ikke blokkeres unødvendig, og server siste kjente gode data i stedet for en feilmelding.
+    await supabase.from('leaderboard_cache').update({ fetch_claimed_at: null }).eq('id', CACHE_ROW_ID)
+    return cached
   }
 }
 

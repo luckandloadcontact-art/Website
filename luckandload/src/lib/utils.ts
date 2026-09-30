@@ -13,6 +13,13 @@ export function formatXP(xpCents: number): string {
   return Math.round(xpCents / 100).toLocaleString('en-US')
 }
 
+// Hvor lenge leaderboard-tallene caches før et nytt kall til Affilka er lov (se
+// lib/affilka.ts). Ligger her (ikke i affilka.ts) fordi client components (som
+// NextRefreshCountdown) trenger verdien -- en runtime-import fra affilka.ts ville dratt
+// next/headers inn i klient-bunten og feilet hele bygget (se advarselen ved formatXP-
+// re-eksporten i affilka.ts).
+export const LEADERBOARD_REVALIDATE_SECONDS = 360
+
 export function formatDate(date: string | Date): string {
   return new Intl.DateTimeFormat('en-GB', {
     day: 'numeric', month: 'short', year: 'numeric',
