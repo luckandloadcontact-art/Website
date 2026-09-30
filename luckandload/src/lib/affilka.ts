@@ -116,7 +116,7 @@ export function isLastDayOfMonthUTC(now = new Date()): boolean {
 }
 
 /**
- * Fryser leaderboardet slik det er akkurat nå ned i leaderboard_snapshots, nøkket på måneden
+ * Fryser leaderboardet slik det er akkurat nå ned i leaderboard_month_snapshots, nøkket på måneden
  * (period_from). Kjøres normalt av cron-jobben rett før månedsskiftet -- upsert gjør at flere
  * kjøringer samme dag bare overskriver hverandre, så siste (og dermed mest oppdaterte) forsøk
  * før midnatt UTC vinner. Henter alltid FRISKE tall direkte fra Affilka (ikke modul-cachen
@@ -126,7 +126,7 @@ export async function captureLeaderboardSnapshot(): Promise<LeaderboardData> {
   const data = await fetchLeaderboardData()
 
   const supabase = createAdminClient()
-  const { error } = await supabase.from('leaderboard_snapshots').upsert(
+  const { error } = await supabase.from('leaderboard_month_snapshots').upsert(
     {
       period_from: data.periodFrom,
       period_to: data.periodTo,
@@ -153,7 +153,7 @@ export interface LeaderboardSnapshot {
 export async function getLeaderboardSnapshots(): Promise<LeaderboardSnapshot[]> {
   const supabase = createAdminClient()
   const { data, error } = await supabase
-    .from('leaderboard_snapshots')
+    .from('leaderboard_month_snapshots')
     .select('period_from, period_to, entries, total_players, captured_at')
     .order('period_from', { ascending: false })
   if (error) throw new Error(`[affilka] Klarte ikke hente leaderboard-snapshots: ${error.message}`)
