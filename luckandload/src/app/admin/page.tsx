@@ -4,19 +4,21 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import {
   LayoutDashboard, Users, Megaphone, Trophy,
-  Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords
+  Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords, History, Camera, ChevronDown
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import { Avatar, Badge, StatCard } from '@/components/ui/Badge'
-import { formatPoints, formatDate, cn } from '@/lib/utils'
+import { formatPoints, formatDate, formatRelativeTime, cn } from '@/lib/utils'
 import type { User, Announcement } from '@/types'
 import type { ResultsMap } from '@/lib/tournament'
 import { EVENT_TITLE } from '@/lib/tournament'
 import { Bracket } from '@/components/events/Bracket'
+import { formatXP, type LeaderboardSnapshot } from '@/lib/affilka'
+import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 import toast from 'react-hot-toast'
 
-type AdminTab = 'overview' | 'users' | 'announcements' | 'events'
+type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard'
 
 export default function AdminPage() {
   const { data: session, status } = useSession()
@@ -27,6 +29,9 @@ export default function AdminPage() {
   const [tournamentResults, setTournamentResults] = useState<ResultsMap>({})
   const [pendingMatchId, setPendingMatchId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [snapshots, setSnapshots] = useState<LeaderboardSnapshot[]>([])
+  const [capturingSnapshot, setCapturingSnapshot] = useState(false)
+  const [expandedSnapshot, setExpandedSnapshot] = useState<string | null>(null)
 
   // New announcement form
   const [newAnn, setNewAnn] = useState({ title: '', body: '', type: 'info', pinned: false })
@@ -50,14 +55,16 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [usersRes, annRes, tourneyRes] = await Promise.all([
+      const [usersRes, annRes, tourneyRes, snapshotsRes] = await Promise.all([
         fetch('/api/admin/users'),
         fetch('/api/admin/announcements'),
         fetch('/api/admin/tournament'),
+        fetch('/api/admin/leaderboard-snapshots'),
       ])
       if (usersRes.ok) setUsers(await usersRes.json())
       if (annRes.ok) setAnnouncements(await annRes.json())
       if (tourneyRes.ok) setTournamentResults(await tourneyRes.json())
+      if (snapshotsRes.ok) setSnapshots(await snapshotsRes.json())
     } catch {
       toast.error('Failed to load data')
     } finally {
@@ -143,6 +150,22 @@ export default function AdminPage() {
     }
   }
 
+  async function handleCaptureSnapshot() {
+    setCapturingSnapshot(true)
+    try {
+      const res = await fetch('/api/admin/leaderboard-snapshots', { method: 'POST' })
+      if (res.ok) {
+        toast.success('Leaderboard-snapshot lagret')
+        await fetchData()
+      } else {
+        const data = await res.json().catch(() => ({}))
+        toast.error(data.error || 'Failed to capture snapshot')
+      }
+    } finally {
+      setCapturingSnapshot(false)
+    }
+  }
+
   async function handleClearMatch(matchId: string) {
     setPendingMatchId(matchId)
     try {
@@ -171,6 +194,7 @@ export default function AdminPage() {
     { key: 'users', label: 'Users', icon: <Users size={15} /> },
     { key: 'announcements', label: 'Announcements', icon: <Megaphone size={15} /> },
     { key: 'events', label: 'Events', icon: <Swords size={15} /> },
+    { key: 'leaderboard', label: 'Leaderboard', icon: <History size={15} /> },
   ]
 
   return (
@@ -465,6 +489,98 @@ export default function AdminPage() {
               />
             </CardContent>
           </Card>
+        )}
+
+        {/* Leaderboard history */}
+        {tab === 'leaderboard' && (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <h2 className="font-semibold text-white flex items-center gap-2 pb-0">
+                  <Camera size={15} className="text-brand-500" />
+                  Capture snapshot
+                </h2>
+                <p className="text-xs text-slate-500 pt-1">
+                  Freezes this month&apos;s leaderboard exactly as it is right now. This also runs
+                  automatically right before every month ends, but you can trigger it manually
+                  here too (e.g. as a backup, or to save a mid-month snapshot).
+                </p>
+              </CardHeader>
+              <CardContent>
+                <Button onClick={handleCaptureSnapshot} disabled={capturingSnapshot}>
+                  <Camera size={13} />
+                  {capturingSnapshot ? 'Capturing…' : 'Capture current month now'}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <h2 className="font-semibold text-white flex items-center gap-2 pb-0">
+                  <History size={15} className="text-brand-500" />
+                  Saved months
+                  <Badge variant="default" className="ml-auto">{snapshots.length}</Badge>
+                </h2>
+              </CardHeader>
+              <div className="divide-y divide-white/5">
+                {snapshots.map(snap => {
+                  const monthLabel = new Date(`${snap.periodFrom}T00:00:00Z`).toLocaleDateString('en-US', {
+                    month: 'long',
+                    year: 'numeric',
+                    timeZone: 'UTC',
+                  })
+                  const isOpen = expandedSnapshot === snap.periodFrom
+                  return (
+                    <div key={snap.periodFrom}>
+                      <button
+                        type="button"
+                        onClick={() => setExpandedSnapshot(isOpen ? null : snap.periodFrom)}
+                        className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-white/[0.02]"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-white">{monthLabel}</p>
+                          <p className="text-xs text-slate-500">
+                            {snap.entries.length} players saved · Captured {formatRelativeTime(snap.capturedAt)}
+                          </p>
+                        </div>
+                        <ChevronDown
+                          size={16}
+                          className={cn('shrink-0 text-slate-500 transition-transform', isOpen && 'rotate-180')}
+                        />
+                      </button>
+                      {isOpen && (
+                        <div className="divide-y divide-white/5 bg-surface-900/40">
+                          {snap.entries.map(entry => (
+                            <div key={entry.rank} className="flex items-center gap-3 px-5 py-3 sm:px-8">
+                              <span className="w-5 shrink-0 text-center text-sm font-bold tabular-nums text-slate-500">
+                                {entry.rank}
+                              </span>
+                              <PlayerAvatar src={entry.avatar} name={entry.username} size={28} />
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-semibold text-white">{entry.username}</p>
+                                <p className="text-xs tabular-nums text-slate-500">{formatXP(entry.xpPoints)} XP</p>
+                              </div>
+                              {entry.prize ? (
+                                <span className="shrink-0 text-sm font-bold tabular-nums text-hype">${entry.prize}</span>
+                              ) : (
+                                <span className="shrink-0 text-xs font-medium text-slate-600">Runner-up</span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+                {!snapshots.length && (
+                  <p className="px-5 py-8 text-center text-slate-600 text-sm">
+                    No snapshots saved yet — one is captured automatically right before each
+                    month ends.
+                  </p>
+                )}
+              </div>
+            </Card>
+          </div>
         )}
       </div>
     </div>

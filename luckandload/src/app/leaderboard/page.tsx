@@ -2,13 +2,13 @@ import { Trophy, Shuffle, Clock, Gift, Zap, CalendarDays } from 'lucide-react'
 import {
   getLeaderboardData,
   formatXP,
-  daysUntilPayout,
   TOTAL_PRIZE_POOL,
   RANDOM_GIVEAWAY_PRIZE,
   type LeaderboardEntry,
 } from '@/lib/affilka'
 import { formatRelativeTime, cn } from '@/lib/utils'
 import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
+import { LeaderboardCountdown } from '@/components/leaderboard/LeaderboardCountdown'
 
 // Rendres dynamisk per request i stedet for å bli forhåndsbygget statisk -- ellers ville
 // hver eneste "git push"-deploy trigget et eget kall til Affilka under bygget, og disse
@@ -69,7 +69,7 @@ function PodiumCard({ entry, place }: { entry: LeaderboardEntry; place: 1 | 2 | 
   )
 }
 
-function StatPill({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function StatPill({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col items-center gap-1 rounded-xl border border-white/8 bg-surface-800 px-3 py-3">
       <div className="flex items-center gap-1.5 text-slate-500">
@@ -129,7 +129,7 @@ export default async function LeaderboardPage() {
           <div className="mx-auto mt-8 grid max-w-md grid-cols-3 gap-3">
             <StatPill icon={<Gift size={13} />} label="Prize pool" value={`$${TOTAL_PRIZE_POOL}`} />
             <StatPill icon={<Shuffle size={13} />} label="Random draw" value={`$${RANDOM_GIVEAWAY_PRIZE}`} />
-            <StatPill icon={<Clock size={13} />} label="Resets in" value={`${daysUntilPayout()}d`} />
+            <StatPill icon={<Clock size={13} />} label="Resets in" value={<LeaderboardCountdown />} />
           </div>
         </div>
       </div>

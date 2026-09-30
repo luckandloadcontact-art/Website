@@ -1,0 +1,22 @@
+name: Snapshot leaderboard at month end
+
+# Pinger snapshot-endepunktet et par ganger mot slutten av hver dag (UTC). Endepunktet gjør selv
+# ingenting med mindre det faktisk er siste dag i måneden, så det er trygt å kjøre denne daglig --
+# den fryser bare leaderboardet ned til historikken rett før månedsskiftet.
+# Se src/app/api/cron/snapshot-leaderboard/route.ts for detaljer.
+on:
+  schedule:
+    - cron: '50,58 23 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      # Samme "best effort"-prinsipp som refresh-leaderboard.yml -- skal aldri feile synlig.
+      - name: Ping snapshot endpoint
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "https://luckandloadtv.com/api/cron/snapshot-leaderboard")
+          echo "Snapshot-endepunktet svarte HTTP $status"

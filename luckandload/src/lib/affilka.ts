@@ -2,6 +2,8 @@
 // Rangerer spillerne som har spilt under vår affiliate-kode etter hvor mye de har satset (wagered)
 // denne måneden, og setter premie basert på plassering.
 
+import { createAdminClient } from '@/lib/supabase'
+
 export interface LeaderboardEntry {
   rank: number
   username: string
@@ -51,7 +53,7 @@ function currentMonthRange(now = new Date()) {
 //
 // VIKTIG: denne funksjonen må KASTE (throw) ved feil, ikke returnere null -- se getLeaderboardData
 // lenger ned for hvorfor.
-async function fetchLeaderboardData(): Promise<LeaderboardData> {
+export async function fetchLeaderboardData(): Promise<LeaderboardData> {
   const apiKey = process.env.AFFILKA_API_KEY
   if (!apiKey) {
     throw new Error('[affilka] AFFILKA_API_KEY er ikke satt')
@@ -105,6 +107,66 @@ async function fetchLeaderboardData(): Promise<LeaderboardData> {
   }
 }
 
+/** Sant kun på siste dag i inneværende måned (UTC) -- brukes til å avgjøre om det er trygt å
+ *  fryse en historikk-snapshot av leaderboardet nå (se captureLeaderboardSnapshot). */
+export function isLastDayOfMonthUTC(now = new Date()): boolean {
+  const tomorrow = new Date(now)
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1)
+  return tomorrow.getUTCMonth() !== now.getUTCMonth()
+}
+
+/**
+ * Fryser leaderboardet slik det er akkurat nå ned i leaderboard_snapshots, nøkket på måneden
+ * (period_from). Kjøres normalt av cron-jobben rett før månedsskiftet -- upsert gjør at flere
+ * kjøringer samme dag bare overskriver hverandre, så siste (og dermed mest oppdaterte) forsøk
+ * før midnatt UTC vinner. Henter alltid FRISKE tall direkte fra Affilka (ikke modul-cachen
+ * over), slik at en manuell "capture nå" fra admin-panelet ikke bare lagrer en gammel verdi.
+ */
+export async function captureLeaderboardSnapshot(): Promise<LeaderboardData> {
+  const data = await fetchLeaderboardData()
+
+  const supabase = createAdminClient()
+  const { error } = await supabase.from('leaderboard_snapshots').upsert(
+    {
+      period_from: data.periodFrom,
+      period_to: data.periodTo,
+      entries: data.entries,
+      total_players: data.totalPlayers,
+      captured_at: data.updatedAt,
+    },
+    { onConflict: 'period_from' }
+  )
+  if (error) throw new Error(`[affilka] Klarte ikke lagre leaderboard-snapshot: ${error.message}`)
+
+  return data
+}
+
+export interface LeaderboardSnapshot {
+  periodFrom: string
+  periodTo: string
+  entries: LeaderboardEntry[]
+  totalPlayers: number
+  capturedAt: string
+}
+
+/** Henter alle lagrede måneds-snapshots, nyeste først -- kun brukt av admin-panelet. */
+export async function getLeaderboardSnapshots(): Promise<LeaderboardSnapshot[]> {
+  const supabase = createAdminClient()
+  const { data, error } = await supabase
+    .from('leaderboard_snapshots')
+    .select('period_from, period_to, entries, total_players, captured_at')
+    .order('period_from', { ascending: false })
+  if (error) throw new Error(`[affilka] Klarte ikke hente leaderboard-snapshots: ${error.message}`)
+
+  return (data ?? []).map(row => ({
+    periodFrom: row.period_from,
+    periodTo: row.period_to,
+    entries: row.entries as LeaderboardEntry[],
+    totalPlayers: row.total_players,
+    capturedAt: row.captured_at,
+  }))
+}
+
 // Enkel, eksplisitt in-memory cache (modul-nivå variabel) -- brukt i stedet for
 // Next sin unstable_cache/fetch-revalidate. Årsak (funnet og bekreftet 2026-09-12): den
 // innebygde cachen ser ut til å bruke stale-while-revalidate (vis gammel data med en gang,
@@ -141,9 +203,4 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
 
 export function formatXP(xpCents: number): string {
   return Math.round(xpCents / 100).toLocaleString('en-US')
-}
-
-export function daysUntilPayout(now = new Date()): number {
-  const nextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1))
-  return Math.max(1, Math.ceil((nextMonth.getTime() - now.getTime()) / 86_400_000))
 }
