@@ -9,12 +9,14 @@ import {
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import { Avatar, Badge, StatCard } from '@/components/ui/Badge'
-import { formatPoints, formatDate, formatRelativeTime, cn } from '@/lib/utils'
+import { formatPoints, formatDate, formatRelativeTime, formatXP, cn } from '@/lib/utils'
 import type { User, Announcement } from '@/types'
 import type { ResultsMap } from '@/lib/tournament'
 import { EVENT_TITLE } from '@/lib/tournament'
 import { Bracket } from '@/components/events/Bracket'
-import { formatXP, type LeaderboardSnapshot } from '@/lib/affilka'
+// Kun type-import fra affilka.ts -- se advarselen ved formatXP-re-eksporten der for hvorfor en
+// runtime-import herfra ville feilet bygget (denne fila er en client component).
+import type { LeaderboardSnapshot } from '@/lib/affilka'
 import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 import toast from 'react-hot-toast'
 

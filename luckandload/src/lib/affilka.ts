@@ -201,6 +201,10 @@ export async function getLeaderboardData(): Promise<LeaderboardData | null> {
   }
 }
 
-export function formatXP(xpCents: number): string {
-  return Math.round(xpCents / 100).toLocaleString('en-US')
-}
+// formatXP flyttet til lib/utils.ts (ren funksjon, ingen avhengigheter) -- re-eksporteres her så
+// eksisterende importer (f.eks. leaderboard-siden) ikke trenger å endres. VIKTIG: ikke legg til
+// flere runtime-importer her uten å tenke gjennom det -- denne fila importerer createAdminClient
+// (og dermed next/headers via lib/supabase), og admin-panelet (en client component) importerer
+// typer herfra. Next.js nekter å bunte next/headers inn i en client-bundle, så en runtime-import
+// fra denne fila inn i en 'use client'-fil feiler hele bygget (skjedde med formatXP 2026-09-30).
+export { formatXP } from '@/lib/utils'

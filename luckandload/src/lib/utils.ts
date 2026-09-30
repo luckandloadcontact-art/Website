@@ -9,6 +9,10 @@ export function formatPoints(points: number): string {
   return points.toLocaleString('en-US')
 }
 
+export function formatXP(xpCents: number): string {
+  return Math.round(xpCents / 100).toLocaleString('en-US')
+}
+
 export function formatDate(date: string | Date): string {
   return new Intl.DateTimeFormat('en-GB', {
     day: 'numeric', month: 'short', year: 'numeric',
