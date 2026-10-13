@@ -230,7 +230,13 @@ export async function getSocialFeed(force = false): Promise<SocialFeedResult> {
 
   const nowIso = new Date().toISOString()
   const claimCutoffIso = new Date(Date.now() - CLAIM_TIMEOUT_MS).toISOString()
-  const staleCutoffIso = new Date(Date.now() - FEED_REVALIDATE_SECONDS * 1000).toISOString()
+  // Ved force=true skal "er cachen utløpt"-betingelsen i selve databasespørringen alltid slå
+  // til (uansett hvor fersk raden faktisk er) -- derfor "nå + 1 dag" i stedet for "nå - 30 min".
+  // Uten dette ville force kun påvirket isStale-sjekken over, mens selve UPDATE...WHERE fortsatt
+  // krevde en reelt utløpt rad og dermed aldri faktisk klarte seg (dette var en reell bug).
+  const staleCutoffIso = force
+    ? new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+    : new Date(Date.now() - FEED_REVALIDATE_SECONDS * 1000).toISOString()
 
   const { data: claimedRows } = await supabase
     .from('social_feed_cache')
