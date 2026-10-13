@@ -210,7 +210,7 @@ interface FeedCacheRow {
   fetch_claimed_at: string | null
 }
 
-export async function getSocialFeed(): Promise<SocialFeedResult> {
+export async function getSocialFeed(force = false): Promise<SocialFeedResult> {
   const supabase = createAdminClient()
 
   const { data: rowRaw } = await supabase
@@ -222,7 +222,7 @@ export async function getSocialFeed(): Promise<SocialFeedResult> {
 
   const cachedPosts = row?.items ?? []
   const fetchedAtMs = row ? new Date(row.fetched_at).getTime() : 0
-  const isStale = Date.now() - fetchedAtMs > FEED_REVALIDATE_SECONDS * 1000
+  const isStale = force || Date.now() - fetchedAtMs > FEED_REVALIDATE_SECONDS * 1000
 
   if (!isStale) {
     return { posts: cachedPosts, fetchedAt: row!.fetched_at }

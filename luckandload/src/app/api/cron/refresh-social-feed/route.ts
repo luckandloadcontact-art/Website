@@ -15,8 +15,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const force = new URL(request.url).searchParams.get('force') === 'true'
+
   try {
-    const { posts, fetchedAt } = await getSocialFeed()
+    const { posts, fetchedAt } = await getSocialFeed(force)
     return NextResponse.json({ ok: true, posts: posts.length, fetchedAt })
   } catch (err) {
     return NextResponse.json(
