@@ -1,0 +1,19 @@
+name: Refresh Instagram access token
+
+# Fornyer Instagram sin long-lived access token ukentlig. Se
+# src/app/api/cron/refresh-instagram-token/route.ts.
+on:
+  schedule:
+    - cron: '0 6 * * 1' # hver mandag kl. 06:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping refresh endpoint
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            "https://luckandloadtv.com/api/cron/refresh-instagram-token")
+          echo "Refresh endpoint svarte HTTP $status"

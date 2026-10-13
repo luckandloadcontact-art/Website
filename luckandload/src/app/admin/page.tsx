@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import {
   LayoutDashboard, Users, Megaphone, Trophy,
-  Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords, History, Camera, ChevronDown
+  Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords, History, Camera, ChevronDown, Instagram
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
@@ -46,6 +46,12 @@ export default function AdminPage() {
   // Blackjack hand grant
   const [bjTarget, setBjTarget] = useState('')
 
+  // Instagram token (news feed)
+  const [igStatus, setIgStatus] = useState<{ configured: boolean; ig_user_id?: string; expires_at?: string } | null>(null)
+  const [igAccessToken, setIgAccessToken] = useState('')
+  const [igUserId, setIgUserId] = useState('')
+  const [savingIgToken, setSavingIgToken] = useState(false)
+
   useEffect(() => {
     if (status === 'loading') return
     const role = session?.user?.role
@@ -57,16 +63,18 @@ export default function AdminPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [usersRes, annRes, tourneyRes, snapshotsRes] = await Promise.all([
+      const [usersRes, annRes, tourneyRes, snapshotsRes, igRes] = await Promise.all([
         fetch('/api/admin/users'),
         fetch('/api/admin/announcements'),
         fetch('/api/admin/tournament'),
         fetch('/api/admin/leaderboard-snapshots'),
+        fetch('/api/admin/instagram-token'),
       ])
       if (usersRes.ok) setUsers(await usersRes.json())
       if (annRes.ok) setAnnouncements(await annRes.json())
       if (tourneyRes.ok) setTournamentResults(await tourneyRes.json())
       if (snapshotsRes.ok) setSnapshots(await snapshotsRes.json())
+      if (igRes.ok) setIgStatus(await igRes.json())
     } catch {
       toast.error('Failed to load data')
     } finally {
@@ -149,6 +157,29 @@ export default function AdminPage() {
       }
     } finally {
       setPendingMatchId(null)
+    }
+  }
+
+  async function handleSaveInstagramToken(e: React.FormEvent) {
+    e.preventDefault()
+    if (!igAccessToken || !igUserId) return
+    setSavingIgToken(true)
+    try {
+      const res = await fetch('/api/admin/instagram-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessToken: igAccessToken, igUserId }),
+      })
+      if (res.ok) {
+        toast.success('Instagram-token lagret')
+        setIgAccessToken(''); setIgUserId('')
+        fetchData()
+      } else {
+        const data = await res.json().catch(() => ({}))
+        toast.error(data.error || 'Failed to save Instagram token')
+      }
+    } finally {
+      setSavingIgToken(false)
     }
   }
 
@@ -314,6 +345,42 @@ export default function AdminPage() {
                   <Button type="submit" disabled={!bjTarget}>
                     <Save size={13} />
                     Grant Hands
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <h2 className="font-semibold text-white flex items-center gap-2">
+                  <Instagram size={15} className="text-brand-500" />
+                  Instagram (News feed)
+                </h2>
+                <p className="text-xs text-slate-500 pt-1">
+                  {igStatus?.configured
+                    ? <>Connected to <strong className="text-slate-300">{igStatus.ig_user_id}</strong> · token auto-refreshes weekly.</>
+                    : 'Not connected yet -- paste a long-lived access token below (see setup guide).'}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSaveInstagramToken} className="grid sm:grid-cols-3 gap-3">
+                  <input
+                    type="text"
+                    placeholder="IG User ID"
+                    value={igUserId}
+                    onChange={e => setIgUserId(e.target.value)}
+                    className="rounded-lg border border-white/10 bg-surface-700 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-brand-500 focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Long-lived access token"
+                    value={igAccessToken}
+                    onChange={e => setIgAccessToken(e.target.value)}
+                    className="rounded-lg border border-white/10 bg-surface-700 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-brand-500 focus:outline-none"
+                  />
+                  <Button type="submit" disabled={!igAccessToken || !igUserId || savingIgToken}>
+                    <Save size={13} />
+                    {savingIgToken ? 'Saving…' : 'Save token'}
                   </Button>
                 </form>
               </CardContent>
