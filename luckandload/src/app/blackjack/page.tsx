@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession, signIn } from 'next-auth/react'
 import { canSplit, POINTS, REDEMPTION_TIERS, suitSymbol, isRedSuit, calculateHandValue } from '@/lib/blackjack'
 import type { Card } from '@/lib/blackjack'
+import { BlackjackCountdown } from '@/components/blackjack/BlackjackCountdown'
 
 // ── Sound ─────────────────────────────────────────────────────────────────
 function mkSound(type: 'deal' | 'win' | 'lose' | 'push') {
@@ -603,7 +604,7 @@ export default function BlackjackPage() {
             {!isActiveHand ? (
               <button onClick={dealHand} disabled={busy || gs?.handsRemaining === 0}
                 className="w-full py-3 lg:py-5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-black text-lg lg:text-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-brand-500/20">
-                {dealing ? '🃏 Dealing…' : gs?.handsRemaining === 0 ? '⏰ Come back tomorrow' : '🃏 Deal Hand'}
+                {dealing ? '🃏 Dealing…' : gs?.handsRemaining === 0 ? <BlackjackCountdown /> : '🃏 Deal Hand'}
               </button>
             ) : (
               <div className={`grid gap-3 ${showSplitBtn ? 'grid-cols-4' : 'grid-cols-3'}`}>

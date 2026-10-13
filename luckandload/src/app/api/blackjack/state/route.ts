@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
-import { maskDealerCards, calculateHandValue } from '@/lib/blackjack'
+import { maskDealerCards, calculateHandValue, getBlackjackDay, getPreviousBlackjackDay } from '@/lib/blackjack'
 
 export async function GET() {
   const session = await getServerSession(authOptions)
@@ -11,7 +11,7 @@ export async function GET() {
   }
 
   const supabase = createAdminClient()
-  const today = new Date().toISOString().split('T')[0]
+  const today = getBlackjackDay()
   const userId = session.user.dbId
 
   const [{ data: bjSession }, { data: activeHand }, { data: user }] = await Promise.all([
@@ -19,6 +19,18 @@ export async function GET() {
     supabase.from('blackjack_hands').select('*').eq('user_id', userId).eq('play_date', today).eq('status', 'active').maybeSingle(),
     supabase.from('users').select('points').eq('id', userId).single(),
   ])
+
+  // Før dagens første hånd er dealt finnes det ennå ingen sesjonsrad for i dag -- uten dette
+  // falt streaken synlig tilbake til 0 i UI-et helt til man spilte (selv om streaken i realiteten
+  // fortsatt stod ved lag fra i går). Faller derfor tilbake til gårsdagens streak-tall for
+  // visning, siden dagens økt ennå ikke har "forlenget" den.
+  let streakDays = bjSession?.streak_days ?? 0
+  if (!bjSession) {
+    const { data: ySession } = await supabase
+      .from('blackjack_sessions').select('streak_days')
+      .eq('user_id', userId).eq('play_date', getPreviousBlackjackDay(today)).maybeSingle()
+    streakDays = ySession?.streak_days ?? 0
+  }
 
   const handsPlayed = bjSession?.hands_played ?? 0
 
@@ -46,7 +58,7 @@ export async function GET() {
     handsPlayed,
     handsRemaining: 3 - handsPlayed,
     pointsEarnedToday: bjSession?.points_earned ?? 0,
-    streakDays: bjSession?.streak_days ?? 0,
+    streakDays,
     totalPoints: user?.points ?? 0,
     activeHand: clientHand,
   })

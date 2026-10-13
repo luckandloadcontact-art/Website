@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
 import {
   createDeck, isBlackjack, calculateHandValue, maskDealerCards,
-  POINTS, DAILY_HANDS,
+  POINTS, DAILY_HANDS, getBlackjackDay, getPreviousBlackjackDay, streakBonusForDays,
 } from '@/lib/blackjack'
 
 export async function POST() {
@@ -12,7 +12,7 @@ export async function POST() {
   if (!session?.user?.dbId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const supabase = createAdminClient()
-  const today = new Date().toISOString().split('T')[0]
+  const today = getBlackjackDay()
   const userId = session.user.dbId
 
   // Check today's session
@@ -31,18 +31,20 @@ export async function POST() {
     .eq('user_id', userId).eq('play_date', today).eq('status', 'active').maybeSingle()
   if (activeHand) return NextResponse.json({ error: 'Finish your current hand first' }, { status: 400 })
 
-  // Calculate streak (only on first hand of the day)
+  // Calculate streak (only on first hand of the day). Selve bonuspoengene tildeles IKKE her med
+  // mindre denne første hånden avgjøres med én gang (se "Award points" lenger ned) -- de aller
+  // fleste hender krever hit/stand først, og da tildeles streak-bonusen i stedet når hånden
+  // faktisk avgjøres i /api/blackjack/action (se updateSession der). Dette var tidligere en bug:
+  // bonusen ble regnet ut her, men gikk tapt for enhver hånd som ikke løste seg momentant.
   let streakDays = bjSession?.streak_days ?? 1
   let streakBonus = 0
   if (!bjSession) {
-    const yesterday = new Date()
-    yesterday.setDate(yesterday.getDate() - 1)
+    const yesterday = getPreviousBlackjackDay(today)
     const { data: ySession } = await supabase
       .from('blackjack_sessions').select('streak_days')
-      .eq('user_id', userId).eq('play_date', yesterday.toISOString().split('T')[0]).maybeSingle()
+      .eq('user_id', userId).eq('play_date', yesterday).maybeSingle()
     streakDays = ySession ? ySession.streak_days + 1 : 1
-    if (streakDays >= 14) streakBonus = 150
-    else if (streakDays >= 7) streakBonus = 50
+    streakBonus = streakBonusForDays(streakDays)
   }
 
   // Deal cards

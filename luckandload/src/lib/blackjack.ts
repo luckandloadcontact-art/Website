@@ -23,6 +23,67 @@ export const POINTS = {
 
 export const DAILY_HANDS = 3
 
+export function streakBonusForDays(streakDays: number): number {
+  if (streakDays >= 14) return 150
+  if (streakDays >= 7) return 50
+  return 0
+}
+
+// Daglig blackjack nullstilles kl. 18:00 norsk tid for ALLE spillere -- samme tidspunkt
+// uansett hvor de selv befinner seg, i stedet for midnatt UTC (serverens upubliserte
+// standard-"i dag", som varierte 1-2 timer fra faktisk midnatt i Norge avhengig av
+// sommer-/vintertid og ga en forvirrende/usynlig reset-logikk).
+const BLACKJACK_RESET_HOUR_OSLO = 18
+
+/** Tidssonens forskjell fra UTC (i ms) på et gitt tidspunkt -- bruker Intl i stedet for en egen
+ *  offset-tabell, så dette håndterer sommer-/vintertid (CEST/CET) automatisk og korrekt. */
+function getTimeZoneOffsetMs(date: Date, timeZone: string): number {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hourCycle: 'h23',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  }).formatToParts(date)
+  const get = (type: string) => Number(parts.find(p => p.type === type)?.value ?? 0)
+  const asUTC = Date.UTC(get('year'), get('month') - 1, get('day'), get('hour'), get('minute'), get('second'))
+  return asUTC - date.getTime()
+}
+
+/** Dagens "blackjack-dag" (YYYY-MM-DD) -- nullstilles kl. 18:00 norsk tid. Før kl. 18:00
+ *  lokalt i Norge regnes det fortsatt som gårsdagens blackjack-dag. */
+export function getBlackjackDay(now = new Date()): string {
+  const offsetMs = getTimeZoneOffsetMs(now, 'Europe/Oslo')
+  const osloAsUTC = new Date(now.getTime() + offsetMs)
+  const dayOffset = osloAsUTC.getUTCHours() < BLACKJACK_RESET_HOUR_OSLO ? -1 : 0
+  const d = new Date(Date.UTC(osloAsUTC.getUTCFullYear(), osloAsUTC.getUTCMonth(), osloAsUTC.getUTCDate() + dayOffset))
+  return d.toISOString().split('T')[0]
+}
+
+/** Blackjack-dagen rett før den gitte -- ren kalenderregning (ingen klokkeslett involvert),
+ *  brukt til å slå opp gårsdagens sesjon når streaken skal avgjøres. */
+export function getPreviousBlackjackDay(day: string): string {
+  const [y, m, d] = day.split('-').map(Number)
+  return new Date(Date.UTC(y, m - 1, d - 1)).toISOString().split('T')[0]
+}
+
+/** UTC-tidspunktet for neste kl. 18:00 norsk tid -- brukt av nedtellingen på blackjack-siden. */
+export function nextBlackjackResetUTC(now = new Date()): Date {
+  const offsetMs = getTimeZoneOffsetMs(now, 'Europe/Oslo')
+  const osloAsUTC = new Date(now.getTime() + offsetMs)
+  let resetAsUTC = Date.UTC(
+    osloAsUTC.getUTCFullYear(),
+    osloAsUTC.getUTCMonth(),
+    osloAsUTC.getUTCDate(),
+    BLACKJACK_RESET_HOUR_OSLO, 0, 0
+  )
+  if (resetAsUTC <= osloAsUTC.getTime()) resetAsUTC += 24 * 60 * 60 * 1000
+  return new Date(resetAsUTC - offsetMs)
+}
+
 export const REDEMPTION_TIERS = [
   { name: 'Bronze', points: 2500,  emoji: '🥉', desc: 'First reward tier' },
   { name: 'Silver', points: 5000,  emoji: '🥈', desc: 'Mid-level reward' },

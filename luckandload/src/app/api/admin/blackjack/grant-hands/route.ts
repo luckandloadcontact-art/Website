@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
+import { getBlackjackDay } from '@/lib/blackjack'
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
   if (!userId) return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
 
   const supabase = createAdminClient()
-  const today = new Date().toISOString().split('T')[0]
+  const today = getBlackjackDay()
 
   // Delete all hands and session for today — gives a completely clean slate
   await Promise.all([

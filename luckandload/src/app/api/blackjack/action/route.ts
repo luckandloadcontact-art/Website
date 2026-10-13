@@ -5,7 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
 import {
   calculateHandValue, dealerPlay, resolveHand,
-  maskDealerCards, canSplit, POINTS, DAILY_HANDS,
+  maskDealerCards, canSplit, POINTS, DAILY_HANDS, getBlackjackDay, streakBonusForDays,
 } from '@/lib/blackjack'
 import type { Card } from '@/lib/blackjack'
 
@@ -36,28 +36,37 @@ async function updateSession(
   const { data: bjSession } = await supabase
     .from('blackjack_sessions').select('*').eq('user_id', userId).eq('play_date', today).maybeSingle()
 
-  let streakBonus = 0
-  const handsPlayed = (bjSession?.hands_played ?? 0) + 1
+  const handsPlayedBefore = bjSession?.hands_played ?? 0
+  const handsPlayed = handsPlayedBefore + 1
   const allHandsBonus = handsPlayed >= DAILY_HANDS ? POINTS.allHandsBonus : 0
 
-  if (!bjSession) {
-    const yesterday = new Date()
-    yesterday.setDate(yesterday.getDate() - 1)
-    const { data: ySession } = await supabase
-      .from('blackjack_sessions').select('streak_days')
-      .eq('user_id', userId).eq('play_date', yesterday.toISOString().split('T')[0]).maybeSingle()
-    const streakDays = ySession ? ySession.streak_days + 1 : 1
-    if (streakDays >= 14) streakBonus = 150
-    else if (streakDays >= 7) streakBonus = 50
-    await supabase.from('blackjack_sessions').insert({
-      user_id: userId, play_date: today, streak_days: streakDays,
-      hands_played: handsPlayed, points_earned: pointsEarned + streakBonus + allHandsBonus,
-    })
-  } else {
+  // Streak-bonusen skal tildeles NØYAKTIG én gang per dag -- idet dagens aller første hånd
+  // (hand 1) faktisk avgjøres, uansett om det skjer momentant i /deal (da håndteres den der i
+  // stedet, se streakBonus-kommentaren der) eller her etter hit/stand. "Første hånd avgjøres
+  // her" kjennetegnes ved at økten allerede fantes (opprettet av /deal) MEN ennå ikke hadde
+  // noen fullførte hender (hands_played var 0) -- streak_days ble allerede riktig regnet ut og
+  // lagret av /deal da økten ble opprettet, så den gjenbrukes her i stedet for å regnes på nytt.
+  //
+  // Dette var tidligere buggy: denne funksjonen regnet kun ut streak_days/streakBonus i
+  // "økten finnes ikke ennå"-grenen -- men siden /deal ALLTID oppretter økten først, var den
+  // grenen i praksis død kode, og streakBonus ble alltid 0 her. Resultatet: streak-bonusen ble
+  // vist i UI (fra /deal sitt svar), men poengene ble aldri faktisk tildelt for noen hånd som
+  // krevde hit/stand før den var ferdig -- altså så godt som alle hender.
+  const streakBonus = bjSession && handsPlayedBefore === 0 ? streakBonusForDays(bjSession.streak_days) : 0
+
+  if (bjSession) {
     await supabase.from('blackjack_sessions').update({
       hands_played: handsPlayed,
       points_earned: bjSession.points_earned + pointsEarned + streakBonus + allHandsBonus,
     }).eq('user_id', userId).eq('play_date', today)
+  } else {
+    // Skal i praksis aldri inntreffe -- /deal oppretter alltid økten før noen handling er mulig.
+    // Defensiv fallback uten streak-bonus (den krever gårsdagens sesjon, som egentlig er /deal
+    // sitt ansvar å slå opp).
+    await supabase.from('blackjack_sessions').insert({
+      user_id: userId, play_date: today, streak_days: 1,
+      hands_played: handsPlayed, points_earned: pointsEarned + allHandsBonus,
+    })
   }
 
   return { streakBonus, allHandsBonus }
@@ -73,7 +82,7 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = createAdminClient()
-  const today = new Date().toISOString().split('T')[0]
+  const today = getBlackjackDay()
   const userId = session.user.dbId
 
   const { data: hand } = await supabase
