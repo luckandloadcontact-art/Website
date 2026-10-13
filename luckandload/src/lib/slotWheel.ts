@@ -85,7 +85,7 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'dasxboot', name: 'Das xBoot', provider: 'Nolimit City', image: '/wheel/dasxboot.jpg' },
   { id: 'lepharaoh', name: 'Le Pharaoh', provider: 'Hacksaw Gaming', image: '/wheel/lepharaoh.jpg' },
   { id: 'netgains', name: 'Net Gains', provider: 'Relax Gaming', image: '/wheel/netgains.jpg' },
-  { id: 'sixsixsix', name: '666', provider: 'Hacksaw Gaming', image: '/wheel/sixsixsix.jpg' },
+  { id: 'sixsixsix', name: 'SixSixSix', provider: 'Hacksaw Gaming', image: '/wheel/sixsixsix.jpg' },
   { id: 'bigbassfootballbonanza', name: 'Big Bass Football Bonanza', provider: 'Pragmatic Play', image: '/wheel/bigbassfootballbonanza.jpg' },
   { id: 'ravsosiris', name: 'Ra vs Osiris', provider: 'Pragmatic Play', image: '/wheel/ravsosiris.jpg' },
   { id: 'darksummoning', name: 'Dark Summoning', provider: 'Hacksaw Gaming', image: '/wheel/darksummoning.jpg' },
