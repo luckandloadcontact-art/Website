@@ -30,7 +30,7 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <Image
-              src="/Logo LuckAndLoadTV.jpg"
+              src="/logo-transparent.png"
               alt="LuckAndLoadTV"
               width={240}
               height={68}
