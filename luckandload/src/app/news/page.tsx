@@ -1,6 +1,6 @@
 import { Newspaper } from 'lucide-react'
 import { getSocialFeed } from '@/lib/socialFeed'
-import { MediaCard } from '@/components/news/MediaCard'
+import { NewsGrid } from '@/components/news/NewsGrid'
 
 // Samme begrunnelse som leaderboard-siden -- unngår at hver "git push"-deploy trigger et eget
 // kall mot YouTube/Instagram under bygget. Selve caching/deduping skjer i getSocialFeed().
@@ -26,17 +26,7 @@ export default async function NewsPage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        {posts.length === 0 ? (
-          <div className="rounded-2xl border border-white/8 bg-surface-800 p-8 text-center text-sm text-slate-400">
-            No posts to show yet — check back soon.
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {posts.map(post => (
-              <MediaCard key={post.id} post={post} />
-            ))}
-          </div>
-        )}
+        <NewsGrid posts={posts} />
       </div>
     </div>
   )
