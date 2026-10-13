@@ -257,10 +257,20 @@ export async function getSocialFeed(force = false): Promise<SocialFeedResult> {
 
   try {
     const fresh = await fetchFreshSocialFeed()
-    const { error: writeError } = await supabase.from('social_feed_cache').update({
+    const { data: writtenRows, error: writeError } = await supabase.from('social_feed_cache').update({
       items: fresh.posts, fetched_at: fresh.fetchedAt, fetch_claimed_at: null,
-    }).eq('id', FEED_CACHE_ROW_ID)
+    }).eq('id', FEED_CACHE_ROW_ID).select('id, fetched_at')
     if (writeError) throw new Error(`Klarte ikke lagre fersk feed: ${writeError.message}`)
+    if (!writtenRows || writtenRows.length === 0) {
+      throw new Error(`UPDATE traff 0 rader for id='${FEED_CACHE_ROW_ID}' -- raden finnes trolig ikke`)
+    }
+
+    // Diagnostikk: les raden tilbake i SAMME request for å se om skrivingen faktisk er synlig
+    // umiddelbart, eller om noe (caching et sted) gjemmer den for senere, separate requests.
+    const { data: verifyRaw } = await supabase
+      .from('social_feed_cache').select('items, fetched_at').eq('id', FEED_CACHE_ROW_ID).maybeSingle()
+    console.log('[socialFeed] Skrev', fresh.posts.length, 'poster, verifisert umiddelbart:', JSON.stringify(verifyRaw).slice(0, 200))
+
     return fresh
   } catch (err) {
     console.error('[socialFeed] Klarte ikke hente feed', err)
