@@ -257,9 +257,10 @@ export async function getSocialFeed(force = false): Promise<SocialFeedResult> {
 
   try {
     const fresh = await fetchFreshSocialFeed()
-    await supabase.from('social_feed_cache').update({
+    const { error: writeError } = await supabase.from('social_feed_cache').update({
       items: fresh.posts, fetched_at: fresh.fetchedAt, fetch_claimed_at: null,
     }).eq('id', FEED_CACHE_ROW_ID)
+    if (writeError) throw new Error(`Klarte ikke lagre fersk feed: ${writeError.message}`)
     return fresh
   } catch (err) {
     console.error('[socialFeed] Klarte ikke hente feed', err)
