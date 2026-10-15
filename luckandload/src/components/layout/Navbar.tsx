@@ -34,7 +34,7 @@ export function Navbar() {
               alt="LuckAndLoadTV"
               width={240}
               height={68}
-              className="h-14 w-auto object-contain transition-opacity group-hover:opacity-90"
+              className="h-16 w-auto object-contain transition-opacity group-hover:opacity-90"
               priority
             />
           </Link>
