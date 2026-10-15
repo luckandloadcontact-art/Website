@@ -1,7 +1,7 @@
 'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   LayoutDashboard, Users, Megaphone, Trophy,
   Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords, History, Camera, ChevronDown, Instagram
@@ -22,9 +22,20 @@ import toast from 'react-hot-toast'
 
 type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard'
 
+// useSearchParams() krever en Suspense-boundary i App Router (ellers feiler "next build") --
+// selve siden er uansett 100% client-rendered (session-gated), så fallback vises aldri reelt.
 export default function AdminPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminPageInner />
+    </Suspense>
+  )
+}
+
+function AdminPageInner() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [tab, setTab] = useState<AdminTab>('overview')
   const [users, setUsers] = useState<User[]>([])
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
@@ -59,6 +70,20 @@ export default function AdminPage() {
       router.replace('/')
     }
   }, [session, status, router])
+
+  // Instagram sin OAuth-callback sender oss hit med ?instagram_connected=1 eller
+  // ?instagram_error=... -- vis resultatet som en toast, og rydd opp i URL-en etterpå.
+  useEffect(() => {
+    const connected = searchParams.get('instagram_connected')
+    const error = searchParams.get('instagram_error')
+    if (connected) {
+      toast.success('Instagram koblet til!')
+      router.replace('/admin')
+    } else if (error) {
+      toast.error(`Instagram-tilkobling feilet: ${error}`)
+      router.replace('/admin')
+    }
+  }, [searchParams, router])
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -359,30 +384,42 @@ export default function AdminPage() {
                 <p className="text-xs text-slate-500 pt-1">
                   {igStatus?.configured
                     ? <>Connected to <strong className="text-slate-300">{igStatus.ig_user_id}</strong> · token auto-refreshes weekly.</>
-                    : 'Not connected yet -- paste a long-lived access token below (see setup guide).'}
+                    : 'Not connected yet -- click Connect Instagram and log in as the luckandloadtv account.'}
                 </p>
               </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSaveInstagramToken} className="grid sm:grid-cols-3 gap-3">
-                  <input
-                    type="text"
-                    placeholder="IG User ID"
-                    value={igUserId}
-                    onChange={e => setIgUserId(e.target.value)}
-                    className="rounded-lg border border-white/10 bg-surface-700 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-brand-500 focus:outline-none"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Long-lived access token"
-                    value={igAccessToken}
-                    onChange={e => setIgAccessToken(e.target.value)}
-                    className="rounded-lg border border-white/10 bg-surface-700 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-brand-500 focus:outline-none"
-                  />
-                  <Button type="submit" disabled={!igAccessToken || !igUserId || savingIgToken}>
-                    <Save size={13} />
-                    {savingIgToken ? 'Saving…' : 'Save token'}
+              <CardContent className="space-y-4">
+                <a href="/api/admin/instagram-oauth/start">
+                  <Button type="button">
+                    <Instagram size={13} />
+                    {igStatus?.configured ? 'Reconnect Instagram' : 'Connect Instagram'}
                   </Button>
-                </form>
+                </a>
+
+                <details className="text-xs text-slate-500">
+                  <summary className="cursor-pointer select-none hover:text-slate-300">
+                    Or paste a token manually (backup, rarely needed)
+                  </summary>
+                  <form onSubmit={handleSaveInstagramToken} className="mt-3 grid sm:grid-cols-3 gap-3">
+                    <input
+                      type="text"
+                      placeholder="IG User ID"
+                      value={igUserId}
+                      onChange={e => setIgUserId(e.target.value)}
+                      className="rounded-lg border border-white/10 bg-surface-700 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-brand-500 focus:outline-none"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Long-lived access token"
+                      value={igAccessToken}
+                      onChange={e => setIgAccessToken(e.target.value)}
+                      className="rounded-lg border border-white/10 bg-surface-700 px-3 py-2 text-sm text-white placeholder:text-slate-600 focus:border-brand-500 focus:outline-none"
+                    />
+                    <Button type="submit" disabled={!igAccessToken || !igUserId || savingIgToken}>
+                      <Save size={13} />
+                      {savingIgToken ? 'Saving…' : 'Save token'}
+                    </Button>
+                  </form>
+                </details>
               </CardContent>
             </Card>
           </div>

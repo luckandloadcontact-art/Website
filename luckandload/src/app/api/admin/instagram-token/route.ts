@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
+import { saveInstagramToken } from '@/lib/socialFeed'
 
 async function requireAdmin() {
   const session = await getServerSession(authOptions)
@@ -37,14 +38,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Mangler accessToken eller igUserId' }, { status: 400 })
   }
 
-  const expiresAt = new Date(Date.now() + (expiresInSeconds ?? 60 * 24 * 60 * 60) * 1000).toISOString()
+  try {
+    await saveInstagramToken(accessToken, igUserId, expiresInSeconds ?? 60 * 24 * 60 * 60)
+  } catch (err) {
+    return NextResponse.json({ error: err instanceof Error ? err.message : 'Ukjent feil' }, { status: 500 })
+  }
 
-  const supabase = createAdminClient()
-  const { error } = await supabase.from('instagram_token').upsert(
-    { id: 'current', access_token: accessToken, ig_user_id: igUserId, expires_at: expiresAt, updated_at: new Date().toISOString() },
-    { onConflict: 'id' }
-  )
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-
-  return NextResponse.json({ ok: true, expiresAt })
+  return NextResponse.json({ ok: true })
 }

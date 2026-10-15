@@ -154,6 +154,19 @@ async function fetchInstagramPosts(): Promise<SocialPost[]> {
     })
 }
 
+/** Lagrer/overskriver Instagram sin access-token -- brukt av både OAuth-callbacken (automatisk
+ * tilkobling) og den manuelle admin-formen (backup hvis man noen gang må lime inn en token
+ * for hånd igjen). */
+export async function saveInstagramToken(accessToken: string, igUserId: string, expiresInSeconds: number): Promise<void> {
+  const supabase = createAdminClient()
+  const expiresAt = new Date(Date.now() + expiresInSeconds * 1000).toISOString()
+  const { error } = await supabase.from('instagram_token').upsert(
+    { id: 'current', access_token: accessToken, ig_user_id: igUserId, expires_at: expiresAt, updated_at: new Date().toISOString() },
+    { onConflict: 'id' }
+  )
+  if (error) throw new Error(`[instagram] Klarte ikke lagre token: ${error.message}`)
+}
+
 /**
  * Fornyer Instagram sin long-lived access token (gyldig 60 dager, men kan fornyes -- hver
  * fornyelse nullstiller 60-dagers-telleren). Kjøres av en ukentlig cron, godt innenfor vinduet,
