@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
 import {
   createDeck, isBlackjack, calculateHandValue, maskDealerCards,
-  POINTS, DAILY_HANDS, getBlackjackDay, getPreviousBlackjackDay, streakBonusForDays,
+  POINTS, DAILY_HANDS, getBlackjackDay, getPreviousBlackjackDay,
 } from '@/lib/blackjack'
 
 export async function POST() {
@@ -31,20 +31,17 @@ export async function POST() {
     .eq('user_id', userId).eq('play_date', today).eq('status', 'active').maybeSingle()
   if (activeHand) return NextResponse.json({ error: 'Finish your current hand first' }, { status: 400 })
 
-  // Calculate streak (only on first hand of the day). Selve bonuspoengene tildeles IKKE her med
-  // mindre denne første hånden avgjøres med én gang (se "Award points" lenger ned) -- de aller
-  // fleste hender krever hit/stand først, og da tildeles streak-bonusen i stedet når hånden
-  // faktisk avgjøres i /api/blackjack/action (se updateSession der). Dette var tidligere en bug:
-  // bonusen ble regnet ut her, men gikk tapt for enhver hånd som ikke løste seg momentant.
+  // Regn ut streak (kun på dagens første hånd) -- rent sporingstall, ingen poeng/loads knyttet
+  // til det lenger. Streak-bonuspoeng ble fjernet (2026-10-19) etter gjentatte bugs med å
+  // tildele dem korrekt på tvers av /deal og /action -- selve streak-telleren beholdes slik at
+  // spilleren fortsatt kan se hvor mange dager på rad de har spilt.
   let streakDays = bjSession?.streak_days ?? 1
-  let streakBonus = 0
   if (!bjSession) {
     const yesterday = getPreviousBlackjackDay(today)
     const { data: ySession } = await supabase
       .from('blackjack_sessions').select('streak_days')
       .eq('user_id', userId).eq('play_date', yesterday).maybeSingle()
     streakDays = ySession ? ySession.streak_days + 1 : 1
-    streakBonus = streakBonusForDays(streakDays)
   }
 
   // Deal cards
@@ -67,7 +64,7 @@ export async function POST() {
   const isComplete = status !== 'active'
   const isLastHand = isComplete && handNumber === DAILY_HANDS
   const allHandsBonus = isLastHand ? POINTS.allHandsBonus : 0
-  const totalAwarded = pointsAwarded + streakBonus + allHandsBonus
+  const totalAwarded = pointsAwarded + allHandsBonus
 
   // Save hand
   const { data: hand } = await supabase.from('blackjack_hands').insert({
@@ -97,7 +94,7 @@ export async function POST() {
       supabase.from('users').update({ points: (user?.points ?? 0) + totalAwarded }).eq('id', userId),
       supabase.from('point_transactions').insert({
         user_id: userId, delta: totalAwarded,
-        reason: `Daily Blackjack hand ${handNumber}${streakBonus ? ` (🔥 streak bonus)` : ''}${allHandsBonus ? ` (all hands bonus)` : ''}`,
+        reason: `Daily Blackjack hand ${handNumber}${allHandsBonus ? ` (all hands bonus)` : ''}`,
       }),
     ])
   }
@@ -111,7 +108,6 @@ export async function POST() {
     dealerVisibleValue: calculateHandValue([dealerCards[0]]),
     status,
     pointsAwarded: totalAwarded,
-    streakBonus,
     streakDays,
     allHandsBonus,
   })

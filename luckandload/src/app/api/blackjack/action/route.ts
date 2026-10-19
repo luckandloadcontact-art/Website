@@ -5,7 +5,7 @@ import { authOptions } from '@/lib/auth'
 import { createAdminClient } from '@/lib/supabase'
 import {
   calculateHandValue, dealerPlay, resolveHand,
-  maskDealerCards, canSplit, POINTS, DAILY_HANDS, getBlackjackDay, streakBonusForDays,
+  maskDealerCards, canSplit, POINTS, DAILY_HANDS, getBlackjackDay,
 } from '@/lib/blackjack'
 import type { Card } from '@/lib/blackjack'
 
@@ -40,36 +40,20 @@ async function updateSession(
   const handsPlayed = handsPlayedBefore + 1
   const allHandsBonus = handsPlayed >= DAILY_HANDS ? POINTS.allHandsBonus : 0
 
-  // Streak-bonusen skal tildeles NØYAKTIG én gang per dag -- idet dagens aller første hånd
-  // (hand 1) faktisk avgjøres, uansett om det skjer momentant i /deal (da håndteres den der i
-  // stedet, se streakBonus-kommentaren der) eller her etter hit/stand. "Første hånd avgjøres
-  // her" kjennetegnes ved at økten allerede fantes (opprettet av /deal) MEN ennå ikke hadde
-  // noen fullførte hender (hands_played var 0) -- streak_days ble allerede riktig regnet ut og
-  // lagret av /deal da økten ble opprettet, så den gjenbrukes her i stedet for å regnes på nytt.
-  //
-  // Dette var tidligere buggy: denne funksjonen regnet kun ut streak_days/streakBonus i
-  // "økten finnes ikke ennå"-grenen -- men siden /deal ALLTID oppretter økten først, var den
-  // grenen i praksis død kode, og streakBonus ble alltid 0 her. Resultatet: streak-bonusen ble
-  // vist i UI (fra /deal sitt svar), men poengene ble aldri faktisk tildelt for noen hånd som
-  // krevde hit/stand før den var ferdig -- altså så godt som alle hender.
-  const streakBonus = bjSession && handsPlayedBefore === 0 ? streakBonusForDays(bjSession.streak_days) : 0
-
   if (bjSession) {
     await supabase.from('blackjack_sessions').update({
       hands_played: handsPlayed,
-      points_earned: bjSession.points_earned + pointsEarned + streakBonus + allHandsBonus,
+      points_earned: bjSession.points_earned + pointsEarned + allHandsBonus,
     }).eq('user_id', userId).eq('play_date', today)
   } else {
     // Skal i praksis aldri inntreffe -- /deal oppretter alltid økten før noen handling er mulig.
-    // Defensiv fallback uten streak-bonus (den krever gårsdagens sesjon, som egentlig er /deal
-    // sitt ansvar å slå opp).
     await supabase.from('blackjack_sessions').insert({
       user_id: userId, play_date: today, streak_days: 1,
       hands_played: handsPlayed, points_earned: pointsEarned + allHandsBonus,
     })
   }
 
-  return { streakBonus, allHandsBonus }
+  return { allHandsBonus }
 }
 
 export async function POST(req: NextRequest) {
@@ -195,8 +179,8 @@ export async function POST(req: NextRequest) {
     const finalSplit2Status = s2Bust ? 'bust' : h3.status
     const combined = h1.pointsAwarded + h2.pointsAwarded + h3.pointsAwarded
 
-    const { streakBonus, allHandsBonus } = await updateSession(supabase, userId, today, combined)
-    const total = combined + streakBonus + allHandsBonus
+    const { allHandsBonus } = await updateSession(supabase, userId, today, combined)
+    const total = combined + allHandsBonus
 
     await supabase.from('blackjack_hands').update({
       split2_cards: s2, deck_state: deck, split2_doubled: split2Doubled,
@@ -215,7 +199,7 @@ export async function POST(req: NextRequest) {
       split2Value: calculateHandValue(s2),
       dealerValue: calculateHandValue(finalDealer),
       status: h1.status, splitStatus: finalSplitStatus, split2Status: finalSplit2Status,
-      pointsAwarded: total, streakBonus, allHandsBonus,
+      pointsAwarded: total, allHandsBonus,
     })
   }
 
@@ -271,8 +255,8 @@ export async function POST(req: NextRequest) {
     const finalSplitStatus = splitBust ? 'bust' : h2.status
     const combined = h1.pointsAwarded + h2.pointsAwarded
 
-    const { streakBonus, allHandsBonus } = await updateSession(supabase, userId, today, combined)
-    const total = combined + streakBonus + allHandsBonus
+    const { allHandsBonus } = await updateSession(supabase, userId, today, combined)
+    const total = combined + allHandsBonus
 
     await supabase.from('blackjack_hands').update({
       split_cards: sc, deck_state: deck, split_doubled: splitDoubled,
@@ -288,7 +272,7 @@ export async function POST(req: NextRequest) {
       splitValue: calculateHandValue(sc),
       dealerValue: calculateHandValue(finalDealer),
       status: h1.status, splitStatus: finalSplitStatus,
-      pointsAwarded: total, streakBonus, allHandsBonus,
+      pointsAwarded: total, allHandsBonus,
     })
   }
 
@@ -331,8 +315,8 @@ export async function POST(req: NextRequest) {
   const resolved = resolveHand(playerCards, finalDealer, doubled)
   const finalStatus = isBust ? 'bust' : resolved.status
 
-  const { streakBonus, allHandsBonus } = await updateSession(supabase, userId, today, resolved.pointsAwarded)
-  const total = resolved.pointsAwarded + streakBonus + allHandsBonus
+  const { allHandsBonus } = await updateSession(supabase, userId, today, resolved.pointsAwarded)
+  const total = resolved.pointsAwarded + allHandsBonus
 
   await supabase.from('blackjack_hands').update({
     player_cards: playerCards, deck_state: deck, doubled,
@@ -345,6 +329,6 @@ export async function POST(req: NextRequest) {
     playerCards, dealerCards: finalDealer,
     playerValue, dealerValue: calculateHandValue(finalDealer),
     status: finalStatus, pointsAwarded: total,
-    streakBonus, allHandsBonus, doubled,
+    allHandsBonus, doubled,
   })
 }

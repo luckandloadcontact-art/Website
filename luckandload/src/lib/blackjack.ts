@@ -23,12 +23,6 @@ export const POINTS = {
 
 export const DAILY_HANDS = 3
 
-export function streakBonusForDays(streakDays: number): number {
-  if (streakDays >= 14) return 150
-  if (streakDays >= 7) return 50
-  return 0
-}
-
 // Daglig blackjack nullstilles kl. 18:00 norsk tid for ALLE spillere -- samme tidspunkt
 // uansett hvor de selv befinner seg, i stedet for midnatt UTC (serverens upubliserte
 // standard-"i dag", som varierte 1-2 timer fra faktisk midnatt i Norge avhengig av

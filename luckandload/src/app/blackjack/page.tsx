@@ -160,7 +160,7 @@ interface Result {
   playerCards: Card[]; splitCards?: Card[] | null; split2Cards?: Card[] | null; dealerCards: Card[]
   playerValue: number; splitValue?: number; split2Value?: number; dealerValue: number
   status: string; splitStatus?: string | null; split2Status?: string | null
-  pointsAwarded: number; streakBonus: number; allHandsBonus: number
+  pointsAwarded: number; allHandsBonus: number
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────
@@ -553,7 +553,6 @@ export default function BlackjackPage() {
                   </div>
                 )}
                 <div className="text-brand-300 font-semibold">{pts(result.pointsAwarded)}</div>
-                {result.streakBonus > 0 && <div className="text-orange-300 text-sm">🔥 Streak +{result.streakBonus}</div>}
                 {result.allHandsBonus > 0 && <div className="text-brand-300 text-sm">✅ All hands +{result.allHandsBonus}</div>}
               </div>
             )}
@@ -694,8 +693,6 @@ export default function BlackjackPage() {
             <div className="flex justify-between text-red-400"><span>💀 Double lose</span><span>{POINTS.doubleLose} loads</span></div>
             <div className="flex justify-between text-purple-400"><span>🃏 Split win</span><span>+{POINTS.win} loads</span></div>
             <div className="flex justify-between text-red-400"><span>🃏 Split lose</span><span>{POINTS.splitLose} loads</span></div>
-            <div className="flex justify-between text-orange-400"><span>🔥 7-day streak</span><span>+50 loads/day</span></div>
-            <div className="flex justify-between text-orange-400"><span>🔥 14-day streak</span><span>+150 loads/day</span></div>
             <div className="flex justify-between text-brand-400 col-span-2"><span>✅ All 3 hands played</span><span>{pts(POINTS.allHandsBonus)}</span></div>
           </div>
           <div className="border-t border-surface-700 pt-3 space-y-1">
