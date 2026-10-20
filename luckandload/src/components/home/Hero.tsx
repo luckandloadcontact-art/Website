@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { useSession, signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { ExternalLink, Trophy } from 'lucide-react'
@@ -58,18 +59,38 @@ const SOCIALS = [
 ]
 
 const CLIPS = [
-  { id: 'X5_eUsj6T7o', thumb: 'https://i.ytimg.com/vi/X5_eUsj6T7o/hq2.jpg' },
+  { id: 'X5_eUsj6T7o', thumb: 'https://i.ytimg.com/vi/X5_eUsj6T7o/hq2.jpg', embeddable: true },
   { id: 'HoP3z6fPP1Y', thumb: '/7k%20X%20Shogun%20Jade.png' },
   { id: 'xO4L92Hk2GI', thumb: 'https://i.ytimg.com/vi/xO4L92Hk2GI/hq2.jpg' },
   { id: 'a2FX1ANlxCo', thumb: 'https://i.ytimg.com/vi/a2FX1ANlxCo/hq2.jpg' },
 ]
 
-function ShortClip({ videoId, thumb }: { videoId: string; thumb: string }) {
+function ShortClip({ videoId, thumb, embeddable }: { videoId: string; thumb: string; embeddable?: boolean }) {
+  const [playing, setPlaying] = useState(false)
+
+  if (playing && embeddable) {
+    return (
+      <div
+        className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black"
+        style={{ aspectRatio: '9/16' }}
+      >
+        <iframe
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+          title="LuckAndLoadTV clip"
+          className="absolute inset-0 w-full h-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    )
+  }
+
   return (
     <a
       href={`https://www.youtube.com/shorts/${videoId}`}
-      target="_blank"
-      rel="noopener noreferrer"
+      target={embeddable ? undefined : '_blank'}
+      rel={embeddable ? undefined : 'noopener noreferrer'}
+      onClick={embeddable ? (e) => { e.preventDefault(); setPlaying(true) } : undefined}
       className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-surface-800 group block"
       style={{ aspectRatio: '9/16' }}
     >
@@ -113,8 +134,8 @@ export function Hero() {
 
           {/* Left clips */}
           <div className="hidden lg:flex flex-col gap-3 w-44 xl:w-52 flex-shrink-0">
-            <ShortClip videoId={CLIPS[0].id} thumb={CLIPS[0].thumb} />
-            <ShortClip videoId={CLIPS[1].id} thumb={CLIPS[1].thumb} />
+            <ShortClip videoId={CLIPS[0].id} thumb={CLIPS[0].thumb} embeddable={CLIPS[0].embeddable} />
+            <ShortClip videoId={CLIPS[1].id} thumb={CLIPS[1].thumb} embeddable={CLIPS[1].embeddable} />
           </div>
 
           {/* Hero content */}
@@ -189,15 +210,15 @@ export function Hero() {
 
           {/* Right clips */}
           <div className="hidden lg:flex flex-col gap-3 w-44 xl:w-52 flex-shrink-0">
-            <ShortClip videoId={CLIPS[2].id} thumb={CLIPS[2].thumb} />
-            <ShortClip videoId={CLIPS[3].id} thumb={CLIPS[3].thumb} />
+            <ShortClip videoId={CLIPS[2].id} thumb={CLIPS[2].thumb} embeddable={CLIPS[2].embeddable} />
+            <ShortClip videoId={CLIPS[3].id} thumb={CLIPS[3].thumb} embeddable={CLIPS[3].embeddable} />
           </div>
         </div>
 
         {/* Mobile: 2×2 grid below hero */}
         <div className="lg:hidden grid grid-cols-2 gap-3 mt-10 max-w-xs mx-auto">
           {CLIPS.map(c => (
-            <ShortClip key={c.id} videoId={c.id} thumb={c.thumb} />
+            <ShortClip key={c.id} videoId={c.id} thumb={c.thumb} embeddable={c.embeddable} />
           ))}
         </div>
 
