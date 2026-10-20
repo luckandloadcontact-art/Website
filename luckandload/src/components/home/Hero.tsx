@@ -58,10 +58,10 @@ const SOCIALS = [
 ]
 
 const CLIPS = [
-  { id: '1-mF8YGdn1A', thumb: '/3000x%20Forbidden%20Fury.png' },
+  { id: 'X5_eUsj6T7o', thumb: 'https://i.ytimg.com/vi/X5_eUsj6T7o/hq2.jpg' },
   { id: 'HoP3z6fPP1Y', thumb: '/7k%20X%20Shogun%20Jade.png' },
-  { id: '3lPSNpdKZfc', thumb: '/5%20VS%20Phoenix%20Duelreels.png' },
-  { id: 'ycvJWKaXTAY', thumb: '/Bloody%20dawn%20max%20win.png' },
+  { id: 'xO4L92Hk2GI', thumb: 'https://i.ytimg.com/vi/xO4L92Hk2GI/hq2.jpg' },
+  { id: 'a2FX1ANlxCo', thumb: 'https://i.ytimg.com/vi/a2FX1ANlxCo/hq2.jpg' },
 ]
 
 function ShortClip({ videoId, thumb }: { videoId: string; thumb: string }) {
