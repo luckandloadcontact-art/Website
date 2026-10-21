@@ -59,10 +59,10 @@ const SOCIALS = [
 ]
 
 const CLIPS = [
-  { id: 'X5_eUsj6T7o', thumb: 'https://i.ytimg.com/vi/X5_eUsj6T7o/hq2.jpg', embeddable: true },
+  { id: 'X5_eUsj6T7o', thumb: '/Zeus%20vs%20Hades.png', embeddable: true },
   { id: 'HoP3z6fPP1Y', thumb: '/7k%20X%20Shogun%20Jade.png' },
-  { id: 'xO4L92Hk2GI', thumb: 'https://i.ytimg.com/vi/xO4L92Hk2GI/hq2.jpg' },
-  { id: 'a2FX1ANlxCo', thumb: 'https://i.ytimg.com/vi/a2FX1ANlxCo/hq2.jpg' },
+  { id: 'xO4L92Hk2GI', thumb: '/Eternal%20Duel.png' },
+  { id: 'a2FX1ANlxCo', thumb: '/Full%20Screen%20Wilds.png' },
 ]
 
 function ShortClip({ videoId, thumb, embeddable }: { videoId: string; thumb: string; embeddable?: boolean }) {
