@@ -132,6 +132,9 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'greedywolf', name: 'Greedy Wolf', provider: 'Pragmatic Play', image: '/wheel/greedywolf.jpg' },
   { id: 'barbarossarevenge', name: "Barbarossa Revenge", provider: 'Peter & Sons', image: '/wheel/barbarossarevenge.jpg' },
   { id: 'barbarossadragonempire', name: 'Barbarossa Dragon Empire', provider: 'Peter & Sons', image: '/wheel/barbarossadragonempire.jpg' },
+  { id: 'darkdeserthighway', name: 'Dark Desert Highway', provider: 'Just Slots', image: '/wheel/darkdeserthighway.jpeg' },
+  { id: 'gatorhunters2', name: 'Gator Hunters 2', provider: 'Nolimit City', image: '/wheel/gatorhunters2.png' },
+  { id: 'barbarossabeyondtheedge', name: 'Barbarossa Beyond the Edge', provider: 'Peter & Sons', image: '/wheel/barbarossabeyondtheedge.png' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
