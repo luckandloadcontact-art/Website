@@ -8,6 +8,10 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.DISCORD_CLIENT_ID!,
       clientSecret: process.env.DISCORD_CLIENT_SECRET!,
       authorization: { params: { scope: 'identify email' } },
+      // Discord sender nå med en "iss"-parameter (RFC 9207) i callback-responsen. openid-client
+      // sjekker den opp mot denne verdien og feiler med "issuer must be configured on the issuer"
+      // hvis den mangler -- se https://docs.discord.com/developers/topics/oauth2.
+      issuer: 'https://discord.com',
     }),
   ],
   callbacks: {
