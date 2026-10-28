@@ -24,12 +24,13 @@ export const PUZZLE_POINTS = [25, 20, 15, 10, 5] as const
  *  Selve beskjæringen (object-position: top på en kvadratisk boks) skjuler alltid den nederste
  *  delen av bildet der spillnavn/leverandør står trykt -- scale() zoomer kun innenfor det
  *  området, så navnet kan aldri vises før spilleren faktisk har løst eller gått tom for forsøk. */
-const ZOOM_SCALE = [2.6, 2.1, 1.7, 1.3, 1.0] as const
+const ZOOM_SCALE = [2.9, 2.25, 1.75, 1.3, 1.0] as const
 
 /** Blur (px) og gråtone (%) per nivå -- første visning skal være tydelig vanskelig (svart-hvitt,
- *  uskarp), og blir gradvis skarpere og mer fargerik for hvert bom. */
-const BLUR_PX = [6, 4, 2.5, 1, 0] as const
-const GRAYSCALE_PCT = [85, 65, 40, 20, 0] as const
+ *  uskarp), og blir gradvis skarpere og mer fargerik for hvert bom. Landet midt mellom "for
+ *  vanskelig" (3.2/9px/100%) og "for lett" (2.6/6px/85%) etter testing. */
+const BLUR_PX = [7.5, 4.75, 2.75, 1, 0] as const
+const GRAYSCALE_PCT = [92, 70, 42, 20, 0] as const
 
 function hashString(s: string): number {
   let h = 0
