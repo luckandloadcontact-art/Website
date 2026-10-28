@@ -30,12 +30,12 @@ export const PUZZLE_POINTS = [25, 20, 15, 10, 5] as const
  *  en reell piksel-beskjæring, ikke en visuell CSS-zoom. Beskjæringsboksen holder seg alltid
  *  innenfor de øverste ~70% av bildet der kunsten er, slik at spillnavn/leverandør trykt
  *  nederst aldri kan havne i det utsnittet som faktisk sendes til klienten. */
-export const ZOOM_SCALE = [3.4, 2.8, 1.75, 1.3, 1.0] as const
+export const ZOOM_SCALE = [4.2, 3.1, 1.75, 1.3, 1.0] as const
 
-/** Blur-sigma (piksler) og gråtone (%) per nivå. Nivå 0-1 (de to første forsøkene) skal være
- *  tydelig vanskeligst -- skjerpet etter tilbakemelding om at de var for lette. */
-export const BLUR_PX = [10, 6.5, 2.75, 1, 0] as const
-export const GRAYSCALE_PCT = [100, 85, 42, 20, 0] as const
+/** Blur-sigma (piksler) og gråtone (%) per nivå. Nivå 0 (første forsøk) skal være vanskeligst
+ *  av alle -- skjerpet igjen etter tilbakemelding, mest konsentrert på nivå 0. */
+export const BLUR_PX = [13, 7.5, 2.75, 1, 0] as const
+export const GRAYSCALE_PCT = [100, 90, 42, 20, 0] as const
 
 export const PUZZLE_SAFE_HEIGHT_FRACTION = 0.7
 export const PUZZLE_OUTPUT_SIZE = 640
