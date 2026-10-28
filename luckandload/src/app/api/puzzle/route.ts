@@ -74,7 +74,10 @@ export async function GET(req: NextRequest) {
     isToday: date === today,
     canGoPrevious: date > FIRST_PUZZLE_DATE,
     canGoNext: date < today,
-    image: game.image,
+    // Peker til et endepunkt som selv regner ut og rendrer riktig utsnitt server-side -- vi
+    // sender aldri den ekte bilde-stien (eller originalbildet) til klienten før spillet er
+    // over, ellers kan "Lagre bilde"/Live Text på mobil avsløre svaret (se app/api/puzzle/image).
+    imageUrl: `/api/puzzle/image?date=${date}&v=${attemptsUsed}-${gameOver ? 1 : 0}`,
     attemptsUsed,
     maxAttempts: PUZZLE_ATTEMPTS,
     guesses,

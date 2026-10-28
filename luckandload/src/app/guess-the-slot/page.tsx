@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession, signIn } from 'next-auth/react'
 import { ChevronLeft, ChevronRight, Search, Sparkles } from 'lucide-react'
 import { WHEEL_GAMES } from '@/lib/slotWheel'
-import { getZoomTransform } from '@/lib/slotPuzzle'
 import { formatDate } from '@/lib/utils'
 
 interface PuzzleState {
@@ -11,7 +10,7 @@ interface PuzzleState {
   isToday: boolean
   canGoPrevious: boolean
   canGoNext: boolean
-  image: string
+  imageUrl: string
   attemptsUsed: number
   maxAttempts: number
   guesses: string[]
@@ -108,7 +107,6 @@ export default function GuessTheSlotPage() {
 
   if (!state) return null
 
-  const zoom = getZoomTransform(state.zoomLevel, state.image)
   const hasExactMatch = !!exactMatch()
 
   return (
@@ -160,28 +158,14 @@ export default function GuessTheSlotPage() {
           </p>
         )}
 
-        {/* Image */}
-        <div className={`relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-surface-800 shadow-xl transition-transform ${shake ? 'animate-shake' : ''}`}>
-          {gameOver ? (
-            <img
-              src={state.image}
-              alt={state.answer?.name ?? 'Slot cover'}
-              className="w-full h-auto"
-            />
-          ) : (
-            <div className="aspect-square w-full overflow-hidden">
-              <img
-                src={state.image}
-                alt="Mystery slot"
-                className="h-full w-full object-cover object-top transition-[filter] duration-300"
-                style={{
-                  transform: `scale(${zoom.scale})`,
-                  transformOrigin: `${zoom.originX}% ${zoom.originY}%`,
-                  filter: zoom.filter,
-                }}
-              />
-            </div>
-          )}
+        {/* Image -- rendret server-side (crop/blur/gråtone bakt inn i selve bildedataene, ikke
+            CSS), slik at "Lagre bilde"/Del/Live Text på mobil ikke kan avsløre svaret. */}
+        <div className={`relative mx-auto w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-surface-800 shadow-xl ${shake ? 'animate-shake' : ''}`}>
+          <img
+            src={state.imageUrl}
+            alt={gameOver ? (state.answer?.name ?? 'Slot cover') : 'Mystery slot'}
+            className="w-full h-auto"
+          />
         </div>
 
         {/* Attempt dots */}

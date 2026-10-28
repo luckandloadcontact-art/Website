@@ -20,17 +20,25 @@ export const PUZZLE_ATTEMPTS = 5
  *  lite sammenlignet med Daily Blackjack, som skal forbli hovedkilden til loads. */
 export const PUZZLE_POINTS = [25, 20, 15, 10, 5] as const
 
-/** Hvor mye av bildet som vises på hvert forsøksnivå (0 = første visning, mest zoomet inn).
- *  Selve beskjæringen (object-position: top på en kvadratisk boks) skjuler alltid den nederste
- *  delen av bildet der spillnavn/leverandør står trykt -- scale() zoomer kun innenfor det
- *  området, så navnet kan aldri vises før spilleren faktisk har løst eller gått tom for forsøk. */
-const ZOOM_SCALE = [2.9, 2.25, 1.75, 1.3, 1.0] as const
+// VIKTIG: all uskarphet/beskjæring/gråtone MÅ skje server-side (se app/api/puzzle/image), ikke
+// som CSS på klienten -- en CSS-transform lar brukeren fortsatt hente ut det originale, skarpe
+// bildet via "Lagre bilde"/"Del"/"Vis tekst" (iOS Live Text leser rett av det underliggende
+// bildet uansett hvordan det vises på skjermen). Disse tallene er derfor input til sharp(),
+// ikke til CSS.
 
-/** Blur (px) og gråtone (%) per nivå -- første visning skal være tydelig vanskelig (svart-hvitt,
- *  uskarp), og blir gradvis skarpere og mer fargerik for hvert bom. Landet midt mellom "for
- *  vanskelig" (3.2/9px/100%) og "for lett" (2.6/6px/85%) etter testing. */
-const BLUR_PX = [7.5, 4.75, 2.75, 1, 0] as const
-const GRAYSCALE_PCT = [92, 70, 42, 20, 0] as const
+/** Hvor mye av bildet som vises på hvert forsøksnivå (0 = første visning, mest zoomet inn) --
+ *  en reell piksel-beskjæring, ikke en visuell CSS-zoom. Beskjæringsboksen holder seg alltid
+ *  innenfor de øverste ~70% av bildet der kunsten er, slik at spillnavn/leverandør trykt
+ *  nederst aldri kan havne i det utsnittet som faktisk sendes til klienten. */
+export const ZOOM_SCALE = [2.9, 2.25, 1.75, 1.3, 1.0] as const
+
+/** Blur-sigma (piksler) og gråtone (%) per nivå. Landet midt mellom "for vanskelig"
+ *  (3.2/9px/100%) og "for lett" (2.6/6px/85%) etter testing på luckandloadtv.com. */
+export const BLUR_PX = [7.5, 4.75, 2.75, 1, 0] as const
+export const GRAYSCALE_PCT = [92, 70, 42, 20, 0] as const
+
+export const PUZZLE_SAFE_HEIGHT_FRACTION = 0.7
+export const PUZZLE_OUTPUT_SIZE = 640
 
 function hashString(s: string): number {
   let h = 0
@@ -38,27 +46,22 @@ function hashString(s: string): number {
   return h
 }
 
-export interface ZoomTransform {
+export interface PuzzleCropConfig {
   scale: number
+  blur: number
+  grayscale: number
   originX: number
   originY: number
-  filter: string
 }
 
-/** Deterministisk zoom-fokuspunkt per spill, slik at startposisjonen varierer fra spill til
- *  spill men er stabil for samme spill på tvers av sidelastinger. `seed` kan være hva som
- *  helst stabilt og unikt for spillet (id eller bilde-URL fungerer begge). */
-export function getZoomTransform(level: number, seed: string): ZoomTransform {
+/** Deterministisk fokuspunkt + nivå-innstillinger per spill, brukt av sharp() til å regne ut
+ *  det faktiske pikselutsnittet. `seed` kan være hva som helst stabilt og unikt for spillet. */
+export function getPuzzleCropConfig(level: number, seed: string): PuzzleCropConfig {
   const h = hashString(seed)
   const originX = 30 + (h % 41) // 30-70%
   const originY = 15 + ((h >> 8) % 41) // 15-55%
   const clamped = Math.max(0, Math.min(level, ZOOM_SCALE.length - 1))
-  return {
-    scale: ZOOM_SCALE[clamped],
-    originX,
-    originY,
-    filter: `blur(${BLUR_PX[clamped]}px) grayscale(${GRAYSCALE_PCT[clamped]}%)`,
-  }
+  return { scale: ZOOM_SCALE[clamped], blur: BLUR_PX[clamped], grayscale: GRAYSCALE_PCT[clamped], originX, originY }
 }
 
 /** Velger dagens spill deterministisk, men unngår spill brukt de siste `avoidCount` dagene

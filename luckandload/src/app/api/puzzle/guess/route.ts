@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     correct: isCorrect,
     guesses: newGuesses,
+    imageUrl: `/api/puzzle/image?date=${date}&v=${attemptsUsed}-${gameOver ? 1 : 0}`,
     attemptsUsed,
     maxAttempts: PUZZLE_ATTEMPTS,
     solved,
