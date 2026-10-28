@@ -35,9 +35,17 @@
   from { transform: translateY(12px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
-.animate-deal { animation: dealCard   0.28s cubic-bezier(0.34,1.56,0.64,1) both; }
-.animate-flip { animation: flipReveal 0.32s ease-out both; }
-.animate-up   { animation: slideUp    0.25s ease-out both; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(5px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(3px); }
+}
+.animate-deal  { animation: dealCard   0.28s cubic-bezier(0.34,1.56,0.64,1) both; }
+.animate-flip  { animation: flipReveal 0.32s ease-out both; }
+.animate-up    { animation: slideUp    0.25s ease-out both; }
+.animate-shake { animation: shake      0.4s ease-in-out; }
 
 @layer utilities {
   .text-gradient {

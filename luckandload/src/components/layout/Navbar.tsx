@@ -8,6 +8,7 @@ import { cn, formatPoints } from '@/lib/utils'
 
 const NAV_LINKS = [
   { href: '/blackjack', label: 'Daily Blackjack' },
+  { href: '/guess-the-slot', label: 'Guess the Slot' },
   { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/slot-wheel', label: 'Slot Wheel' },
   { href: '/events', label: 'Events' },
