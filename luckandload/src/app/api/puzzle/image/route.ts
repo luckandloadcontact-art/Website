@@ -50,9 +50,13 @@ export async function GET(req: NextRequest) {
   const original = await readFile(filePath)
 
   // Løst/ferdig -- trygt å sende hele originalbildet, navnet er uansett avslørt i svaret.
+  // VIKTIG: no-store her også -- URL-en (?date=...&v=forsøk-ferdig) er IKKE unik per spill, så
+  // hvis admin "reroller" dagens spill kan et gammelt cachet svar fra FØR rerollet ellers havne
+  // sammen med riktig svar/navn fra ETTER rerollet (dette var en reell bug: banneren viste
+  // riktig navn, men et cachet cover-bilde fra det forrige spillet).
   if (gameOver) {
     return new NextResponse(new Uint8Array(original), {
-      headers: { 'Content-Type': contentTypeFor(game.image), 'Cache-Control': 'private, max-age=3600' },
+      headers: { 'Content-Type': contentTypeFor(game.image), 'Cache-Control': 'private, no-store' },
     })
   }
 

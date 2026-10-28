@@ -1,17 +1,17 @@
 import { WHEEL_GAMES, type WheelGame } from '@/lib/slotWheel'
-// getBlackjackDay/getPreviousBlackjackDay er egentlig bare "sidens daglige 18:00-Oslo-reset" --
-// ikke noe spesifikt for blackjack. Gjenbrukes her i stedet for å duplisere den DST-sikre
-// tidssone-utregningen. lib/blackjack.ts er bevisst holdt 100% klient-trygg (ingen server-only
-// imports), så dette er trygt å importere fra både API-routes og klient-komponenter.
-import { getBlackjackDay, getPreviousBlackjackDay } from '@/lib/blackjack'
 
-export const getPuzzleDay = getBlackjackDay
-export const getPreviousPuzzleDay = getPreviousBlackjackDay
+/** Dagens kalenderdato i Oslo (vanlig midnatt-til-midnatt, IKKE blackjackens 18:00-reset --
+ *  det førte til at "i dag" viste gårsdagens dato store deler av dagen, som var forvirrende for
+ *  et puslespill folk sjekker når som helst). Intl håndterer sommer-/vintertid automatisk. */
+export function getPuzzleDay(now = new Date()): string {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Oslo', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(now)
+  const get = (type: string) => parts.find(p => p.type === type)?.value ?? '01'
+  return `${get('year')}-${get('month')}-${get('day')}`
+}
 
-/** Første dag puslespillet noensinne eksisterte -- ingenting å navigere til før dette. Satt én
- *  dag før faktisk lansering fordi "i dag" (getPuzzleDay) resettes kl. 18:00 norsk tid -- før
- *  det klokkeslettet på lanseringsdagen ville "i dag" regnes som dagen før, som da havnet
- *  utenfor gyldig intervall og ga en falsk "Invalid date"-feil. */
+/** Første dag puslespillet noensinne eksisterte -- ingenting å navigere til før dette. */
 export const FIRST_PUZZLE_DATE = '2026-10-27'
 
 export const PUZZLE_ATTEMPTS = 5
