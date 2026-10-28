@@ -178,6 +178,15 @@ function AdminPageInner() {
     }
   }
 
+  async function handleRerollPuzzle() {
+    const res = await fetch('/api/admin/puzzle/reroll', { method: 'POST' })
+    if (res.ok) {
+      toast.success("Today's puzzle game swapped — everyone's progress reset")
+    } else {
+      toast.error('Failed to reroll puzzle')
+    }
+  }
+
   async function handleDeleteAnnouncement(id: string) {
     const res = await fetch(`/api/admin/announcements/${id}`, { method: 'DELETE' })
     if (res.ok) { toast.success('Deleted'); fetchData() }
@@ -419,6 +428,13 @@ function AdminPageInner() {
                     Reset
                   </Button>
                 </form>
+                <div className="mt-3 flex items-center justify-between gap-3 border-t border-white/5 pt-3">
+                  <p className="text-sm text-slate-400">Swap today&apos;s game entirely → new random answer, everyone&apos;s progress wiped</p>
+                  <Button type="button" variant="secondary" onClick={handleRerollPuzzle}>
+                    <RefreshCw size={13} />
+                    Reroll
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
