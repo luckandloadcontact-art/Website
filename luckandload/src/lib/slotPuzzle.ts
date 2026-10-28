@@ -8,8 +8,11 @@ import { getBlackjackDay, getPreviousBlackjackDay } from '@/lib/blackjack'
 export const getPuzzleDay = getBlackjackDay
 export const getPreviousPuzzleDay = getPreviousBlackjackDay
 
-/** Første dag puslespillet noensinne eksisterte -- ingenting å navigere til før dette. */
-export const FIRST_PUZZLE_DATE = '2026-10-28'
+/** Første dag puslespillet noensinne eksisterte -- ingenting å navigere til før dette. Satt én
+ *  dag før faktisk lansering fordi "i dag" (getPuzzleDay) resettes kl. 18:00 norsk tid -- før
+ *  det klokkeslettet på lanseringsdagen ville "i dag" regnes som dagen før, som da havnet
+ *  utenfor gyldig intervall og ga en falsk "Invalid date"-feil. */
+export const FIRST_PUZZLE_DATE = '2026-10-27'
 
 export const PUZZLE_ATTEMPTS = 5
 
