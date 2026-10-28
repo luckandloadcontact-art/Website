@@ -173,8 +173,12 @@ export default function GuessTheSlotPage() {
               <img
                 src={state.image}
                 alt="Mystery slot"
-                className="h-full w-full object-cover object-top"
-                style={{ transform: `scale(${zoom.scale})`, transformOrigin: `${zoom.originX}% ${zoom.originY}%` }}
+                className="h-full w-full object-cover object-top transition-[filter] duration-300"
+                style={{
+                  transform: `scale(${zoom.scale})`,
+                  transformOrigin: `${zoom.originX}% ${zoom.originY}%`,
+                  filter: zoom.filter,
+                }}
               />
             </div>
           )}

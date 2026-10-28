@@ -24,7 +24,12 @@ export const PUZZLE_POINTS = [25, 20, 15, 10, 5] as const
  *  Selve beskjæringen (object-position: top på en kvadratisk boks) skjuler alltid den nederste
  *  delen av bildet der spillnavn/leverandør står trykt -- scale() zoomer kun innenfor det
  *  området, så navnet kan aldri vises før spilleren faktisk har løst eller gått tom for forsøk. */
-const ZOOM_SCALE = [2.4, 1.9, 1.5, 1.2, 1.0] as const
+const ZOOM_SCALE = [3.2, 2.4, 1.8, 1.3, 1.0] as const
+
+/** Blur (px) og gråtone (%) per nivå -- første visning skal være tydelig vanskelig (svart-hvitt,
+ *  uskarp), og blir gradvis skarpere og mer fargerik for hvert bom. */
+const BLUR_PX = [9, 5.5, 3, 1, 0] as const
+const GRAYSCALE_PCT = [100, 75, 45, 20, 0] as const
 
 function hashString(s: string): number {
   let h = 0
@@ -36,6 +41,7 @@ export interface ZoomTransform {
   scale: number
   originX: number
   originY: number
+  filter: string
 }
 
 /** Deterministisk zoom-fokuspunkt per spill, slik at startposisjonen varierer fra spill til
@@ -46,7 +52,12 @@ export function getZoomTransform(level: number, seed: string): ZoomTransform {
   const originX = 30 + (h % 41) // 30-70%
   const originY = 15 + ((h >> 8) % 41) // 15-55%
   const clamped = Math.max(0, Math.min(level, ZOOM_SCALE.length - 1))
-  return { scale: ZOOM_SCALE[clamped], originX, originY }
+  return {
+    scale: ZOOM_SCALE[clamped],
+    originX,
+    originY,
+    filter: `blur(${BLUR_PX[clamped]}px) grayscale(${GRAYSCALE_PCT[clamped]}%)`,
+  }
 }
 
 /** Velger dagens spill deterministisk, men unngår spill brukt de siste `avoidCount` dagene
