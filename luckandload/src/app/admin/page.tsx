@@ -57,6 +57,9 @@ function AdminPageInner() {
   // Blackjack hand grant
   const [bjTarget, setBjTarget] = useState('')
 
+  // Guess the Slot reset
+  const [puzzleTarget, setPuzzleTarget] = useState('')
+
   // Instagram token (news feed)
   const [igStatus, setIgStatus] = useState<{ configured: boolean; ig_user_id?: string; expires_at?: string } | null>(null)
   const [igAccessToken, setIgAccessToken] = useState('')
@@ -156,6 +159,22 @@ function AdminPageInner() {
       setBjTarget('')
     } else {
       toast.error('Failed to grant hands')
+    }
+  }
+
+  async function handleResetPuzzle(e: React.FormEvent) {
+    e.preventDefault()
+    if (!puzzleTarget) return
+    const res = await fetch('/api/admin/puzzle/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: puzzleTarget }),
+    })
+    if (res.ok) {
+      toast.success("Today's Guess the Slot progress reset")
+      setPuzzleTarget('')
+    } else {
+      toast.error('Failed to reset puzzle')
     }
   }
 
@@ -370,6 +389,34 @@ function AdminPageInner() {
                   <Button type="submit" disabled={!bjTarget}>
                     <Save size={13} />
                     Grant Hands
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <h2 className="font-semibold text-white flex items-center gap-2">
+                  <RefreshCw size={15} className="text-brand-500" />
+                  Reset Guess the Slot
+                </h2>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleResetPuzzle} className="grid sm:grid-cols-3 gap-3">
+                  <select
+                    value={puzzleTarget}
+                    onChange={e => setPuzzleTarget(e.target.value)}
+                    className="rounded-lg border border-white/10 bg-surface-700 px-3 py-2 text-sm text-white focus:border-brand-500 focus:outline-none"
+                  >
+                    <option value="">Select user…</option>
+                    {users.map(u => (
+                      <option key={u.id} value={u.id}>{u.display_name || u.username}</option>
+                    ))}
+                  </select>
+                  <p className="text-sm text-slate-400 flex items-center">Clears today&apos;s guesses → 5 fresh attempts</p>
+                  <Button type="submit" disabled={!puzzleTarget}>
+                    <Save size={13} />
+                    Reset
                   </Button>
                 </form>
               </CardContent>
