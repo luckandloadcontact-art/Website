@@ -23,18 +23,12 @@ interface PuzzleState {
 export default function GuessTheSlotPage() {
   const { status } = useSession()
   const [state, setState] = useState<PuzzleState | null>(null)
-  // `typedQuery` er det brukeren faktisk har skrevet (styrer filtrering av forslag).
-  // `query` er det som faktisk vises i feltet -- lik typedQuery, bortsett fra når et
-  // markert forslag fyller inn resten av navnet (med den delen markert/valgt).
-  const [typedQuery, setTypedQuery] = useState('')
   const [query, setQuery] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
   const [highlightedIndex, setHighlightedIndex] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [shake, setShake] = useState(false)
   const blurTimeout = useRef<ReturnType<typeof setTimeout>>()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const pendingSelection = useRef<{ start: number; end: number } | null>(null)
 
   const fetchState = useCallback(async (date?: string) => {
     const res = await fetch(date ? `/api/puzzle?date=${date}` : '/api/puzzle')
@@ -48,9 +42,9 @@ export default function GuessTheSlotPage() {
 
   const gameOver = !!state && (state.solved || state.attemptsUsed >= state.maxAttempts)
 
-  const suggestions = state && !gameOver && typedQuery.trim().length > 0
+  const suggestions = state && !gameOver && query.trim().length > 0
     ? WHEEL_GAMES.filter(g =>
-        g.name.toLowerCase().includes(typedQuery.trim().toLowerCase()) &&
+        g.name.toLowerCase().includes(query.trim().toLowerCase()) &&
         !state.guesses.includes(g.name)
       ).slice(0, 6)
     : []
@@ -68,7 +62,6 @@ export default function GuessTheSlotPage() {
       if (!res.ok) return
       const data = await res.json()
       setState(prev => prev ? { ...prev, ...data } : prev)
-      setTypedQuery('')
       setQuery('')
       if (!data.correct) {
         setShake(true)
@@ -86,32 +79,13 @@ export default function GuessTheSlotPage() {
   }
 
   // Det markerte forslaget i nedtrekkslisten (øverste som standard) -- Enter/Guess-knappen
-  // bruker dette fremfor et eksakt tekst-treff når lista faktisk er åpen og har treff.
+  // bruker dette fremfor et eksakt tekst-treff når lista faktisk er åpen og har treff. Fyller
+  // bevisst IKKE inn teksten i feltet selv -- bare markeringen i lista, slik at filtreringen
+  // fortsatt styres av det brukeren faktisk har skrevet (f.eks. "juicy" skal fortsatt bare
+  // matche "Juicy Fruits" i lista, uten at feltet selv blir overskrevet).
   const highlighted = showDropdown && suggestions.length > 0
     ? suggestions[Math.min(highlightedIndex, suggestions.length - 1)]
     : undefined
-
-  // Fyller feltet med hele navnet på det markerte forslaget (resten markert/valgt som tekst),
-  // slik at Enter tydelig viser hva som sendes inn, og videre skriving bare overskriver halen.
-  useEffect(() => {
-    const typed = typedQuery.trim()
-    if (!highlighted || typed.length === 0) return
-    const full = highlighted.name
-    if (full.toLowerCase().startsWith(typed.toLowerCase()) && full.length > typed.length) {
-      pendingSelection.current = { start: typed.length, end: full.length }
-      setQuery(full)
-    } else if (query !== typedQuery) {
-      setQuery(typedQuery)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [highlighted, typedQuery])
-
-  useEffect(() => {
-    if (pendingSelection.current && inputRef.current) {
-      inputRef.current.setSelectionRange(pendingSelection.current.start, pendingSelection.current.end)
-      pendingSelection.current = null
-    }
-  }, [query])
 
   function handleGuessClick() {
     const match = highlighted ?? exactMatch()
@@ -261,12 +235,8 @@ export default function GuessTheSlotPage() {
               <div className="relative flex-1">
                 <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
-                  ref={inputRef}
                   value={query}
-                  onChange={e => {
-                    const v = e.target.value
-                    setTypedQuery(v); setQuery(v); setShowDropdown(true); setHighlightedIndex(0)
-                  }}
+                  onChange={e => { setQuery(e.target.value); setShowDropdown(true); setHighlightedIndex(0) }}
                   onFocus={() => setShowDropdown(true)}
                   onBlur={() => { blurTimeout.current = setTimeout(() => setShowDropdown(false), 120) }}
                   onKeyDown={handleInputKeyDown}
