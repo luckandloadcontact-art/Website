@@ -13,7 +13,6 @@ const NAV_LINKS = [
   { href: '/slot-wheel', label: 'Slot Wheel' },
   { href: '/events', label: 'Events' },
   { href: '/contact', label: 'Contact' },
-  { href: null, label: 'Forum', comingSoon: true },
 ]
 
 export function Navbar() {
