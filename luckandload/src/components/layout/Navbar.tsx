@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Menu, X, Trophy, User, LayoutDashboard, LogOut, LogIn } from 'lucide-react'
 import { cn, formatPoints } from '@/lib/utils'
 
-const NAV_LINKS = [
+const NAV_LINKS: { href: string | null; label: string; comingSoon?: boolean }[] = [
   { href: '/blackjack', label: 'Daily Blackjack' },
   { href: '/guess-the-slot', label: 'Guess the Slot' },
   { href: '/leaderboard', label: 'Leaderboard' },
