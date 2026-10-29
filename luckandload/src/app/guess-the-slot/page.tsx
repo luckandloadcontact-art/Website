@@ -161,7 +161,7 @@ export default function GuessTheSlotPage() {
   const hasExactMatch = !!highlighted || !!exactMatch()
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-16 sm:pt-24">
       {/* Header */}
       <div className="border-b border-white/5 bg-gradient-to-b from-surface-900 to-surface-950">
         <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 text-center">
