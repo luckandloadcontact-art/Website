@@ -25,6 +25,7 @@ export default function GuessTheSlotPage() {
   const [state, setState] = useState<PuzzleState | null>(null)
   const [query, setQuery] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
+  const [highlightedIndex, setHighlightedIndex] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [shake, setShake] = useState(false)
   const blurTimeout = useRef<ReturnType<typeof setTimeout>>()
@@ -77,9 +78,30 @@ export default function GuessTheSlotPage() {
     return WHEEL_GAMES.find(g => g.name.toLowerCase() === normalized && !state.guesses.includes(g.name))
   }
 
+  // Det markerte forslaget i nedtrekkslisten (øverste som standard) -- Enter/Guess-knappen
+  // bruker dette fremfor et eksakt tekst-treff når lista faktisk er åpen og har treff.
+  const highlighted = showDropdown && suggestions.length > 0
+    ? suggestions[Math.min(highlightedIndex, suggestions.length - 1)]
+    : undefined
+
   function handleGuessClick() {
-    const match = exactMatch()
+    const match = highlighted ?? exactMatch()
     if (match) submitGuess(match.name)
+  }
+
+  function handleInputKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setShowDropdown(true)
+      setHighlightedIndex(i => Math.min(i + 1, Math.max(suggestions.length - 1, 0)))
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setHighlightedIndex(i => Math.max(i - 1, 0))
+    } else if (e.key === 'Enter') {
+      handleGuessClick()
+    } else if (e.key === 'Escape') {
+      setShowDropdown(false)
+    }
   }
 
   if (status === 'loading' || (status === 'authenticated' && !state)) {
@@ -107,7 +129,7 @@ export default function GuessTheSlotPage() {
 
   if (!state) return null
 
-  const hasExactMatch = !!exactMatch()
+  const hasExactMatch = !!highlighted || !!exactMatch()
 
   return (
     <div className="min-h-screen">
@@ -211,22 +233,27 @@ export default function GuessTheSlotPage() {
                 <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input
                   value={query}
-                  onChange={e => { setQuery(e.target.value); setShowDropdown(true) }}
+                  onChange={e => { setQuery(e.target.value); setShowDropdown(true); setHighlightedIndex(0) }}
                   onFocus={() => setShowDropdown(true)}
                   onBlur={() => { blurTimeout.current = setTimeout(() => setShowDropdown(false), 120) }}
-                  onKeyDown={e => { if (e.key === 'Enter' && hasExactMatch) handleGuessClick() }}
+                  onKeyDown={handleInputKeyDown}
                   placeholder="Guess the slot…"
                   disabled={submitting}
                   className="w-full rounded-xl border border-white/10 bg-surface-800 py-2.5 pl-9 pr-3 text-sm text-white placeholder:text-slate-500 focus:border-brand-500/50 focus:outline-none disabled:opacity-50"
                 />
                 {showDropdown && suggestions.length > 0 && (
                   <div className="absolute left-0 right-0 top-full z-10 mt-1 overflow-hidden rounded-xl border border-white/10 bg-surface-800 shadow-xl">
-                    {suggestions.map(g => (
+                    {suggestions.map((g, i) => (
                       <button
                         key={g.id}
                         onMouseDown={e => e.preventDefault()}
+                        onMouseEnter={() => setHighlightedIndex(i)}
                         onClick={() => submitGuess(g.name)}
-                        className="flex w-full items-center justify-between px-3 py-2 text-left text-sm text-slate-200 hover:bg-white/5 transition-colors"
+                        className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors ${
+                          i === Math.min(highlightedIndex, suggestions.length - 1)
+                            ? 'bg-brand-500/15 text-white'
+                            : 'text-slate-200 hover:bg-white/5'
+                        }`}
                       >
                         <span>{g.name}</span>
                         <span className="text-xs text-slate-500">{g.provider}</span>
