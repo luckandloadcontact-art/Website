@@ -180,7 +180,8 @@ export function SlotWheel() {
   }
 
   return (
-    <section className="border-t border-white/5 py-16">
+    <section className="relative overflow-hidden border-t border-white/5 py-16">
+      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[360px] rounded-full bg-brand-500/10 blur-3xl" />
       {/*
         Forhåndslaster alle spillbildene i samme størrelse som stripen bruker (usynlig, tar ingen
         plass). next/image lat-laster ellers ikoner som aldri har vært synlige på skjermen, og
@@ -206,19 +207,19 @@ export function SlotWheel() {
           </div>
         ))}
       </div>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-2 flex items-center gap-3">
-          <Dices size={20} className="text-brand-500" />
-          <h2 className="text-xl font-bold text-white">Slot Wheel</h2>
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+        <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-400">
+          <Dices size={13} /> Slot Wheel
         </div>
-        <p className="mb-8 max-w-xl text-sm text-slate-400">
-          Can&apos;t decide what to play? Spin the wheel and let the professionals pick for you.
+        <h2 className="text-2xl sm:text-3xl font-black text-white">Can&apos;t decide what to play?</h2>
+        <p className="mx-auto mb-8 mt-2 max-w-xl text-sm text-slate-400">
+          Spin the wheel and let the professionals pick for you.
         </p>
 
         {/* Reel */}
         <div
           ref={viewportRef}
-          className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-surface-800 py-6"
+          className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-surface-800 py-6 shadow-2xl shadow-black/40"
           style={{
             maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
             WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
