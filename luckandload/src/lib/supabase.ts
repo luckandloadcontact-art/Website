@@ -29,5 +29,10 @@ export function createServerSupabaseClient() {
 export function createAdminClient() {
   return createSupabaseClient(supabaseUrl, supabaseServiceKey, {
     auth: { autoRefreshToken: false, persistSession: false },
+    // Next.js sin Data Cache lagrer fetch()-svar (også supabase-js sine GET-er mot PostgREST) og
+    // beholder dem på tvers av deploys. Leaderboard-siden leste derfor en cachet kopi av
+    // leaderboard_cache-raden fra 2026-10-31 13:38 i over et døgn, selv om selve raden i databasen
+    // ble oppdatert som normalt. Databasen er alltid fasiten -- aldri cache disse kallene.
+    global: { fetch: (input, init) => fetch(input, { ...init, cache: 'no-store' }) },
   })
 }
