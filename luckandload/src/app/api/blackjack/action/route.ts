@@ -27,6 +27,8 @@ async function awardPoints(
   ])
 }
 
+// Kalles først ETTER at hånden er avgjort med en vellykket betinget skriving (se claim i POST),
+// så `pointsEarned` inkluderer allerede eventuell all-hands-bonus.
 async function updateSession(
   supabase: ReturnType<typeof createAdminClient>,
   userId: string,
@@ -36,24 +38,20 @@ async function updateSession(
   const { data: bjSession } = await supabase
     .from('blackjack_sessions').select('*').eq('user_id', userId).eq('play_date', today).maybeSingle()
 
-  const handsPlayedBefore = bjSession?.hands_played ?? 0
-  const handsPlayed = handsPlayedBefore + 1
-  const allHandsBonus = handsPlayed >= DAILY_HANDS ? POINTS.allHandsBonus : 0
+  const handsPlayed = (bjSession?.hands_played ?? 0) + 1
 
   if (bjSession) {
     await supabase.from('blackjack_sessions').update({
       hands_played: handsPlayed,
-      points_earned: bjSession.points_earned + pointsEarned + allHandsBonus,
+      points_earned: bjSession.points_earned + pointsEarned,
     }).eq('user_id', userId).eq('play_date', today)
   } else {
     // Skal i praksis aldri inntreffe -- /deal oppretter alltid økten før noen handling er mulig.
     await supabase.from('blackjack_sessions').insert({
       user_id: userId, play_date: today, streak_days: 1,
-      hands_played: handsPlayed, points_earned: pointsEarned + allHandsBonus,
+      hands_played: handsPlayed, points_earned: pointsEarned,
     })
   }
-
-  return { allHandsBonus }
 }
 
 export async function POST(req: NextRequest) {
@@ -87,6 +85,26 @@ export async function POST(req: NextRequest) {
   const split2Status: string | null = hand.split2_status ?? null
   const playingSplit = hand.playing_split as boolean
   const playingSplit2 = (hand.playing_split2 ?? false) as boolean
+  // hand_number === hands_played + 1 per konstruksjon i /deal, så siste hånd = DAILY_HANDS.
+  const allHandsBonus = hand.hand_number >= DAILY_HANDS ? POINTS.allHandsBonus : 0
+
+  // ALLE skrivinger til hånden går gjennom denne: oppdateringen lykkes kun hvis hånden fortsatt er
+  // nøyaktig i tilstanden vi leste (aktiv, samme deck, samme delhånd i spill). Hver handling endrer
+  // minst ett av disse feltene, så av flere samtidige forespørsler (f.eks. script som sender
+  // "stand" 10 ganger) vinner kun én -- de andre får 409 og ingen loads. Uten dette ble samme hånd
+  // avgjort og betalt ut én gang per forespørsel.
+  const claim = async (patch: Record<string, unknown>) => {
+    const { data, error } = await supabase.from('blackjack_hands').update(patch)
+      .eq('id', hand.id)
+      .eq('status', 'active')
+      .eq('playing_split', playingSplit)
+      .eq('playing_split2', playingSplit2)
+      .eq('deck_state', JSON.stringify(hand.deck_state))
+      .select('id')
+    return !error && (data?.length ?? 0) > 0
+  }
+  const conflict = () =>
+    NextResponse.json({ error: 'Hand was updated elsewhere, please refresh' }, { status: 409 })
 
   // ── SPLIT ──────────────────────────────────────────────────────────────────
   if (action === 'split') {
@@ -98,10 +116,10 @@ export async function POST(req: NextRequest) {
       const newSplit: Card[] = [splitCards[0], newCard1]
       const newSplit2: Card[] = [splitCards[1], newCard2]
 
-      await supabase.from('blackjack_hands').update({
+      if (!(await claim({
         split_cards: newSplit, split2_cards: newSplit2,
         split2_status: 'active', deck_state: deck,
-      }).eq('id', hand.id)
+      }))) return conflict()
 
       return NextResponse.json({
         playerCards, splitCards: newSplit, split2Cards: newSplit2,
@@ -123,10 +141,10 @@ export async function POST(req: NextRequest) {
       const newPlayer: Card[] = [playerCards[0], newCard1]
       const newSplit: Card[] = [playerCards[1], newCard2]
 
-      await supabase.from('blackjack_hands').update({
+      if (!(await claim({
         player_cards: newPlayer, split_cards: newSplit,
         split_status: 'active', deck_state: deck, playing_split: false,
-      }).eq('id', hand.id)
+      }))) return conflict()
 
       return NextResponse.json({
         playerCards: newPlayer, splitCards: newSplit,
@@ -155,9 +173,9 @@ export async function POST(req: NextRequest) {
     const s2Done = s2Bust || action === 'stand' || action === 'double' || s2Value === 21
 
     if (!s2Done) {
-      await supabase.from('blackjack_hands').update({
+      if (!(await claim({
         split2_cards: s2, deck_state: deck, split2_doubled: split2Doubled,
-      }).eq('id', hand.id)
+      }))) return conflict()
       return NextResponse.json({
         playerCards, splitCards, split2Cards: s2,
         dealerCards: maskDealerCards(dealerCards),
@@ -179,15 +197,15 @@ export async function POST(req: NextRequest) {
     const finalSplit2Status = s2Bust ? 'bust' : h3.status
     const combined = h1.pointsAwarded + h2.pointsAwarded + h3.pointsAwarded
 
-    const { allHandsBonus } = await updateSession(supabase, userId, today, combined)
     const total = combined + allHandsBonus
 
-    await supabase.from('blackjack_hands').update({
+    if (!(await claim({
       split2_cards: s2, deck_state: deck, split2_doubled: split2Doubled,
       status: h1.status, split_status: finalSplitStatus,
       split2_status: finalSplit2Status, points_awarded: total,
-    }).eq('id', hand.id)
+    }))) return conflict()
 
+    await updateSession(supabase, userId, today, total)
     await awardPoints(supabase, userId, today, total,
       `Daily Blackjack (h1:${h1.status} s1:${finalSplitStatus} s2:${finalSplit2Status})`)
 
@@ -218,9 +236,9 @@ export async function POST(req: NextRequest) {
     const splitDone = splitBust || action === 'stand' || action === 'double' || splitValue === 21
 
     if (!splitDone) {
-      await supabase.from('blackjack_hands').update({
+      if (!(await claim({
         split_cards: sc, deck_state: deck, split_doubled: splitDoubled,
-      }).eq('id', hand.id)
+      }))) return conflict()
       return NextResponse.json({
         playerCards, splitCards: sc, split2Cards,
         dealerCards: maskDealerCards(dealerCards),
@@ -234,9 +252,9 @@ export async function POST(req: NextRequest) {
 
     // Split1 done — switch to split2 if present
     if (split2Cards && split2Status === 'active') {
-      await supabase.from('blackjack_hands').update({
+      if (!(await claim({
         split_cards: sc, deck_state: deck, split_doubled: splitDoubled, playing_split2: true,
-      }).eq('id', hand.id)
+      }))) return conflict()
       return NextResponse.json({
         playerCards, splitCards: sc, split2Cards,
         dealerCards: maskDealerCards(dealerCards),
@@ -255,14 +273,14 @@ export async function POST(req: NextRequest) {
     const finalSplitStatus = splitBust ? 'bust' : h2.status
     const combined = h1.pointsAwarded + h2.pointsAwarded
 
-    const { allHandsBonus } = await updateSession(supabase, userId, today, combined)
     const total = combined + allHandsBonus
 
-    await supabase.from('blackjack_hands').update({
+    if (!(await claim({
       split_cards: sc, deck_state: deck, split_doubled: splitDoubled,
       status: h1.status, split_status: finalSplitStatus, points_awarded: total,
-    }).eq('id', hand.id)
+    }))) return conflict()
 
+    await updateSession(supabase, userId, today, total)
     await awardPoints(supabase, userId, today, total,
       `Daily Blackjack (hand:${h1.status} split:${finalSplitStatus})`)
 
@@ -288,9 +306,9 @@ export async function POST(req: NextRequest) {
   const hand1Done = isBust || action === 'stand' || action === 'double' || playerValue === 21
 
   if (!hand1Done) {
-    await supabase.from('blackjack_hands').update({
+    if (!(await claim({
       player_cards: playerCards, deck_state: deck, doubled,
-    }).eq('id', hand.id)
+    }))) return conflict()
     return NextResponse.json({
       playerCards, dealerCards: maskDealerCards(dealerCards),
       playerValue, status: 'active', doubled,
@@ -299,9 +317,9 @@ export async function POST(req: NextRequest) {
 
   // Hand 1 done — switch to split1 if active
   if (splitCards && splitStatus === 'active') {
-    await supabase.from('blackjack_hands').update({
+    if (!(await claim({
       player_cards: playerCards, deck_state: deck, doubled, playing_split: true,
-    }).eq('id', hand.id)
+    }))) return conflict()
     return NextResponse.json({
       playerCards, splitCards, dealerCards: maskDealerCards(dealerCards),
       playerValue, splitValue: calculateHandValue(splitCards),
@@ -315,14 +333,14 @@ export async function POST(req: NextRequest) {
   const resolved = resolveHand(playerCards, finalDealer, doubled)
   const finalStatus = isBust ? 'bust' : resolved.status
 
-  const { allHandsBonus } = await updateSession(supabase, userId, today, resolved.pointsAwarded)
   const total = resolved.pointsAwarded + allHandsBonus
 
-  await supabase.from('blackjack_hands').update({
+  if (!(await claim({
     player_cards: playerCards, deck_state: deck, doubled,
     status: finalStatus, points_awarded: total,
-  }).eq('id', hand.id)
+  }))) return conflict()
 
+  await updateSession(supabase, userId, today, total)
   await awardPoints(supabase, userId, today, total, `Daily Blackjack (${finalStatus})`)
 
   return NextResponse.json({

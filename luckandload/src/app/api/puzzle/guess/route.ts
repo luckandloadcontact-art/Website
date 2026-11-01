@@ -49,14 +49,24 @@ export async function POST(req: NextRequest) {
   const isToday = date === today
   const pointsAwarded = isCorrect && isToday ? PUZZLE_POINTS[Math.min(attemptIndex, PUZZLE_POINTS.length - 1)] : 0
 
+  // Skrivingen MÅ være betinget: uten dette kunne mange samtidige forespørsler (script) alle lese
+  // samme "før"-tilstand, så hver gjetning telte som samme forsøk og et riktig svar sendt N ganger
+  // ga N x loads. Kun forespørselen som faktisk vinner skrivingen får fortsette og tildele loads.
+  let wonWrite: boolean
   if (existing) {
-    await supabase.from('puzzle_attempts').update({
+    const { data: updated, error } = await supabase.from('puzzle_attempts').update({
       guesses: newGuesses, solved, points_awarded: pointsAwarded, updated_at: new Date().toISOString(),
-    }).eq('id', existing.id)
+    }).eq('id', existing.id).eq('updated_at', existing.updated_at).eq('solved', false).select('id')
+    wonWrite = !error && (updated?.length ?? 0) > 0
   } else {
-    await supabase.from('puzzle_attempts').insert({
+    // unique(user_id, puzzle_date) gjør at kun én samtidig insert lykkes.
+    const { data: inserted, error } = await supabase.from('puzzle_attempts').insert({
       user_id: userId, puzzle_date: date, guesses: newGuesses, solved, points_awarded: pointsAwarded,
-    })
+    }).select('id')
+    wonWrite = !error && (inserted?.length ?? 0) > 0
+  }
+  if (!wonWrite) {
+    return NextResponse.json({ error: 'Guess already in progress, please try again' }, { status: 409 })
   }
 
   if (pointsAwarded > 0) {

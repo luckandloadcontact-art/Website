@@ -66,12 +66,17 @@ export async function POST() {
   const allHandsBonus = isLastHand ? POINTS.allHandsBonus : 0
   const totalAwarded = pointsAwarded + allHandsBonus
 
-  // Save hand
-  const { data: hand } = await supabase.from('blackjack_hands').insert({
+  // Save hand -- unique(user_id, play_date, hand_number) gjør at kun én av flere samtidige
+  // /deal-forespørsler lykkes. De andre MÅ stoppe her, ellers fikk de tildelt loads for sin egen
+  // (tilfeldige) blackjack selv om hånden aldri ble lagret.
+  const { data: hand, error: insertError } = await supabase.from('blackjack_hands').insert({
     user_id: userId, play_date: today, hand_number: handNumber,
     deck_state: remainingDeck, player_cards: playerCards, dealer_cards: dealerCards,
     status, points_awarded: totalAwarded,
   }).select().single()
+  if (insertError || !hand) {
+    return NextResponse.json({ error: 'Hand already being dealt, please refresh' }, { status: 409 })
+  }
 
   // Upsert session
   if (!bjSession) {
