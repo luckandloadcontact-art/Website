@@ -1,12 +1,14 @@
 name: Snapshot leaderboard at month end
 
-# Pinger snapshot-endepunktet et par ganger mot slutten av hver dag (UTC). Endepunktet gjør selv
-# ingenting med mindre det faktisk er siste dag i måneden, så det er trygt å kjøre denne daglig --
-# den fryser bare leaderboardet ned til historikken rett før månedsskiftet.
+# Pinger snapshot-endepunktet et par ganger mot slutten av hver dag (UTC), og ekstra tidlig den 1.
+# Endepunktet bestemmer selv hva som skal gjøres: siste dag i måneden fryses inneværende måned,
+# dag 1-3 fryses forrige måned på nytt med endelige tall (sikkerhetsnett -- GitHub-cron kan bli
+# forsinket med timer, slik at 23:50-kjøringen havner etter midnatt), ellers ingenting.
 # Se src/app/api/cron/snapshot-leaderboard/route.ts for detaljer.
 on:
   schedule:
     - cron: '50,58 23 * * *'
+    - cron: '17 6 1 * *'
   workflow_dispatch: {}
 
 jobs:

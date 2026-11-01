@@ -236,10 +236,14 @@ function AdminPageInner() {
     }
   }
 
-  async function handleCaptureSnapshot() {
+  async function handleCaptureSnapshot(month?: string) {
     setCapturingSnapshot(true)
     try {
-      const res = await fetch('/api/admin/leaderboard-snapshots', { method: 'POST' })
+      const res = await fetch('/api/admin/leaderboard-snapshots', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(month ? { month } : {}),
+      })
       if (res.ok) {
         toast.success('Leaderboard-snapshot lagret')
         await fetchData()
@@ -671,14 +675,28 @@ function AdminPageInner() {
                 </h2>
                 <p className="text-xs text-slate-500 pt-1">
                   Freezes this month&apos;s leaderboard exactly as it is right now. This also runs
-                  automatically right before every month ends, but you can trigger it manually
-                  here too (e.g. as a backup, or to save a mid-month snapshot).
+                  automatically right before every month ends, and the finished month is saved again
+                  with its final numbers during the first days of the next month. &quot;Save last
+                  month&quot; fetches last month&apos;s final standings, so you can use it if the automatic
+                  run missed.
                 </p>
               </CardHeader>
-              <CardContent>
-                <Button onClick={handleCaptureSnapshot} disabled={capturingSnapshot}>
+              <CardContent className="flex flex-wrap gap-3">
+                <Button onClick={() => handleCaptureSnapshot()} disabled={capturingSnapshot}>
                   <Camera size={13} />
                   {capturingSnapshot ? 'Capturing…' : 'Capture current month now'}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    const now = new Date()
+                    const prev = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1))
+                    handleCaptureSnapshot(prev.toISOString().slice(0, 7))
+                  }}
+                  disabled={capturingSnapshot}
+                >
+                  <History size={13} />
+                  Save last month (final)
                 </Button>
               </CardContent>
             </Card>

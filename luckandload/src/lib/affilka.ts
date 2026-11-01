@@ -48,6 +48,31 @@ function currentMonthRange(now = new Date()) {
   return { from: fmt(from), to: fmt(to) }
 }
 
+/**
+ * Hele perioden for en AVSLUTTET måned ('YYYY-MM'): fra den 1. kl. 00:00 UTC til den 1. i neste
+ * måned kl. 00:00 UTC. Bekreftet 2026-11-01: Affilka svarer med historiske tall for en fri
+ * periode bakover i tid (dateRange i svaret ekko'er nøyaktig 2026-10-01T00:00Z → 2026-11-01T00:00Z),
+ * så en måned kan fryses i etterkant med de endelige tallene -- vi er ikke avhengige av å treffe
+ * siste minuttene før månedsskiftet.
+ */
+export function completedMonthRange(month: string) {
+  const match = /^(\d{4})-(\d{2})$/.exec(month)
+  if (!match) throw new Error(`[affilka] Ugyldig måned "${month}" (forventet YYYY-MM)`)
+  const year = Number(match[1])
+  const monthIndex = Number(match[2]) - 1
+  const from = new Date(Date.UTC(year, monthIndex, 1))
+  const to = new Date(Date.UTC(year, monthIndex + 1, 1))
+  if (to.getTime() > Date.now()) throw new Error(`[affilka] Måneden ${month} er ikke avsluttet ennå`)
+  const fmt = (d: Date) => d.toISOString().slice(0, 10)
+  return { from: fmt(from), to: fmt(to) }
+}
+
+/** Forrige måned som 'YYYY-MM' (UTC). */
+export function previousMonthKey(now = new Date()): string {
+  const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1))
+  return d.toISOString().slice(0, 7)
+}
+
 // Cache-intervallet er satt til 6 min (se REVALIDATE_SECONDS). Affilka-support sa først at
 // tallene deres kun regnes ut hver time -- men vi fant en annen Hype-affiliate (Nordicslots)
 // hvis side poller live hvert 5. min med suksess og får ferske tall, med samme 5-min cooldown
@@ -56,13 +81,13 @@ function currentMonthRange(now = new Date()) {
 //
 // VIKTIG: denne funksjonen må KASTE (throw) ved feil, ikke returnere null -- se getLeaderboardData
 // lenger ned for hvorfor.
-export async function fetchLeaderboardData(): Promise<LeaderboardData> {
+export async function fetchLeaderboardData(range = currentMonthRange()): Promise<LeaderboardData> {
   const apiKey = process.env.AFFILKA_API_KEY
   if (!apiKey) {
     throw new Error('[affilka] AFFILKA_API_KEY er ikke satt')
   }
 
-  const { from, to } = currentMonthRange()
+  const { from, to } = range
 
   const res = await fetch('https://api.hype.bet/wallet/api/v1/affiliate/creator/get-stats', {
     method: 'POST',
@@ -124,9 +149,14 @@ export function isLastDayOfMonthUTC(now = new Date()): boolean {
  * kjøringer samme dag bare overskriver hverandre, så siste (og dermed mest oppdaterte) forsøk
  * før midnatt UTC vinner. Henter alltid FRISKE tall direkte fra Affilka (ikke modul-cachen
  * over), slik at en manuell "capture nå" fra admin-panelet ikke bare lagrer en gammel verdi.
+ *
+ * Med `month` ('YYYY-MM') fryses i stedet en avsluttet måned med de endelige tallene for hele
+ * måneden (se completedMonthRange) -- brukes av cron-jobben de første dagene i ny måned, og som
+ * reparasjon hvis siste-dag-kjøringen bommet (skjedde oktober 2026: GitHub startet jobben ~3 t
+ * for sent, etter midnatt UTC).
  */
-export async function captureLeaderboardSnapshot(): Promise<LeaderboardData> {
-  const data = await fetchLeaderboardData()
+export async function captureLeaderboardSnapshot(month?: string): Promise<LeaderboardData> {
+  const data = await fetchLeaderboardData(month ? completedMonthRange(month) : undefined)
 
   const supabase = createAdminClient()
   const { error } = await supabase.from('leaderboard_month_snapshots').upsert(
