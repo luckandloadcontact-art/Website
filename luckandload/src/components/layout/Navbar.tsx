@@ -25,16 +25,16 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-surface-900/80 backdrop-blur-xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-20 md:h-24 items-center justify-between">
 
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <Image
-              src="/logo-transparent.png"
+              src="/logo-navbar.png"
               alt="LuckAndLoadTV"
-              width={240}
-              height={68}
-              className="h-16 w-auto object-contain transition-opacity group-hover:opacity-90"
+              width={180}
+              height={124}
+              className="h-[4.5rem] md:h-[5.5rem] w-auto object-contain transition-opacity group-hover:opacity-90"
               priority
             />
           </Link>
