@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
+import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import { formatRelativeTime } from '@/lib/utils'
 import type { Announcement } from '@/types'
 import { Users, Zap, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle } from 'lucide-react'
@@ -174,6 +175,7 @@ export function HypeSection() {
                 </Link>
                 {' '}plus a $20 random draw open to everyone who plays under our code.
               </p>
+              <GamblingNotice className="mt-2" />
             </div>
           </div>
 
@@ -299,6 +301,7 @@ export function HypeSection() {
           >
             🎮 Play Together with Friends
           </a>
+          <GamblingNotice className="mt-3" />
         </div>
 
       </div>

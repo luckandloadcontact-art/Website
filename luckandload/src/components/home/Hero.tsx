@@ -4,6 +4,7 @@ import { useSession, signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { ExternalLink, Trophy, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { GamblingNotice } from '@/components/ui/GamblingNotice'
 
 const SOCIALS = [
   {
@@ -206,6 +207,8 @@ export function Hero() {
                 </Button>
               </a>
             </div>
+
+            <GamblingNotice />
 
             <div className="flex flex-wrap justify-center gap-2 mt-2">
               {SOCIALS.map(s => (

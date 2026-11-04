@@ -40,6 +40,17 @@ export function Footer() {
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Home</Link>
             <Link href="/leaderboard" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Leaderboard</Link>
+            <Link href="/responsible-gambling" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Gambling Help</Link>
+            <Link href="/terms" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Terms</Link>
+            <Link href="/privacy" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Privacy</Link>
+          </div>
+
+          <div className="max-w-xl space-y-1 text-center">
+            <p className="text-xs font-semibold text-slate-400">18+ · Gamble responsibly</p>
+            <p className="text-xs leading-relaxed text-slate-600">
+              Gambling can be addictive. Only play with money you can afford to lose. This site contains affiliate
+              links, and we earn commission when you sign up and play through them.
+            </p>
           </div>
 
           <p className="text-xs text-slate-700 text-center">

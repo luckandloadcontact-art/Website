@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { Zap } from 'lucide-react'
 
@@ -27,8 +28,11 @@ export default function SignInPage() {
         </button>
 
         <p className="mt-5 text-xs text-slate-600">
-          By signing in you agree to our community rules.
-          <br />No gambling. No real money. Entertainment only.
+          By signing in you confirm that you are 18 or older and agree to our{' '}
+          <Link href="/terms" className="underline underline-offset-2 hover:text-slate-400 transition-colors">Terms</Link>
+          {' '}and{' '}
+          <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-400 transition-colors">Privacy Policy</Link>.
+          <br />Games on this site are free and use no real money.
         </p>
       </div>
     </div>
