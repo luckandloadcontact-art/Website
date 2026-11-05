@@ -36,7 +36,7 @@ export const GUIDES: Guide[] = [
     authorSlug: 'kristian',
     published: '2026-11-05',
     updated: '2026-11-05',
-    readingMinutes: 4,
+    readingMinutes: 3,
   },
 ]
 

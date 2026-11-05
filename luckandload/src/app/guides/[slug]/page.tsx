@@ -62,7 +62,7 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
           publisher: { '@type': 'Organization', name: 'LuckAndLoadTV', url: SITE_URL },
         }}
       />
-      <article className="mx-auto max-w-2xl">
+      <article className="mx-auto max-w-3xl">
         <Link href="/guides" className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-slate-300">
           <ArrowLeft size={14} />
           All guides
@@ -76,9 +76,6 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
               {author.name}
             </Link>{' '}
             · {formatGuideDate(guide.published)} · {guide.readingMinutes} min read
-          </p>
-          <p className="mt-1 text-xs text-slate-600">
-            This guide contains an affiliate link. We earn commission if you sign up and play through it.
           </p>
         </header>
 

@@ -10,8 +10,21 @@ export function GuideP({ children }: { children: React.ReactNode }) {
 }
 
 export function GuideList({ ordered, children }: { ordered?: boolean; children: React.ReactNode }) {
-  const className = `mb-4 space-y-2 pl-5 leading-relaxed text-slate-300 ${ordered ? 'list-decimal' : 'list-disc'}`
+  const className = `mb-4 last:mb-0 space-y-2 pl-5 leading-relaxed text-slate-300 ${ordered ? 'list-decimal' : 'list-disc'}`
   return ordered ? <ol className={className}>{children}</ol> : <ul className={className}>{children}</ul>
+}
+
+export function GuideColumns({ children }: { children: React.ReactNode }) {
+  return <div className="my-6 grid grid-cols-1 gap-4 md:grid-cols-2">{children}</div>
+}
+
+export function GuideCard({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="rounded-2xl border border-white/8 bg-surface-800 p-5">
+      <h2 className="mb-3 text-lg font-bold text-white">{title}</h2>
+      {children}
+    </section>
+  )
 }
 
 export function GuideSummary({ children }: { children: React.ReactNode }) {
