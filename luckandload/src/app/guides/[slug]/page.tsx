@@ -1,0 +1,98 @@
+import type { ComponentType } from 'react'
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
+import { GuideCta, JsonLd } from '@/components/guides/GuideContent'
+import DepositWithoutWelcomeBonus from '@/content/guides/deposit-without-welcome-bonus'
+import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide } from '@/lib/guides'
+
+const BODIES: Record<string, ComponentType> = {
+  'deposit-without-welcome-bonus': DepositWithoutWelcomeBonus,
+}
+
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return GUIDES.map(guide => ({ slug: guide.slug }))
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const guide = getGuide(params.slug)
+  if (!guide) return {}
+  const url = `${SITE_URL}/guides/${guide.slug}`
+  return {
+    title: `${guide.title} – LuckAndLoadTV`,
+    description: guide.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: guide.title,
+      description: guide.description,
+      type: 'article',
+      url,
+      publishedTime: guide.published,
+      modifiedTime: guide.updated,
+      authors: [`${SITE_URL}/authors/${guide.authorSlug}`],
+      images: [`${SITE_URL}/logo-navbar.png`],
+    },
+  }
+}
+
+export default function GuidePage({ params }: { params: { slug: string } }) {
+  const guide = getGuide(params.slug)
+  const author = guide && getAuthor(guide.authorSlug)
+  const Body = guide && BODIES[guide.slug]
+  if (!guide || !author || !Body) notFound()
+
+  const authorPath = `/authors/${author.slug}`
+
+  return (
+    <div className="min-h-screen py-16 px-4">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: guide.title,
+          description: guide.description,
+          url: `${SITE_URL}/guides/${guide.slug}`,
+          image: `${SITE_URL}/logo-navbar.png`,
+          datePublished: guide.published,
+          dateModified: guide.updated,
+          author: { '@type': 'Person', name: author.name, url: `${SITE_URL}${authorPath}` },
+          publisher: { '@type': 'Organization', name: 'LuckAndLoadTV', url: SITE_URL },
+        }}
+      />
+      <article className="mx-auto max-w-2xl">
+        <Link href="/guides" className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-slate-300">
+          <ArrowLeft size={14} />
+          All guides
+        </Link>
+
+        <header className="mb-8">
+          <h1 className="mb-3 text-3xl font-bold leading-tight text-white sm:text-4xl">{guide.title}</h1>
+          <p className="text-sm text-slate-500">
+            By{' '}
+            <Link href={authorPath} className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
+              {author.name}
+            </Link>{' '}
+            · {formatGuideDate(guide.published)} · {guide.readingMinutes} min read
+          </p>
+          <p className="mt-1 text-xs text-slate-600">
+            This guide contains an affiliate link. We earn commission if you sign up and play through it.
+          </p>
+        </header>
+
+        <Body />
+        <GuideCta />
+
+        <footer className="mt-8 rounded-2xl border border-white/8 bg-surface-800 p-6">
+          <p className="mb-1 text-xs uppercase tracking-widest text-slate-500">Written by</p>
+          <Link href={authorPath} className="font-semibold text-white hover:text-brand-300 transition-colors">
+            {author.name}
+          </Link>
+          <p className="mt-1 text-sm leading-relaxed text-slate-400">{author.bio}</p>
+        </footer>
+      </article>
+    </div>
+  )
+}
