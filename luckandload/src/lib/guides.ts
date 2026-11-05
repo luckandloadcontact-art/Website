@@ -3,8 +3,10 @@ export const SITE_URL = 'https://luckandloadtv.com'
 export type Author = {
   slug: string
   name: string
+  alias: string
   role: string
   bio: string
+  about: string[]
 }
 
 export type Guide = {
@@ -21,8 +23,15 @@ export const AUTHORS: Author[] = [
   {
     slug: 'kristian',
     name: 'Kristian',
-    role: 'Co-host of LuckAndLoadTV',
-    bio: 'Kristian is one of the two hosts of LuckAndLoadTV, together with Simon. They stream on Twitch and Kick and run the community\'s Discord, games and monthly leaderboard.',
+    alias: 'Luck',
+    role: 'Co-founder of LuckAndLoadTV',
+    bio: 'Kristian, better known as "Luck", is the co-founder of LuckAndLoadTV, a Norwegian casino streaming and entertainment brand he runs alongside Simon.',
+    about: [
+      'Kristian, better known as "Luck", is the co-founder of LuckAndLoadTV, a Norwegian casino streaming and entertainment brand he runs alongside Simon.',
+      'What started as a shared passion for online slots, bonus hunts, and multiplayer casino rooms eventually turned into a full-time job. In September 2026, Kristian and Simon decided to go all in, leaving their regular jobs behind to focus on streaming and building the LuckAndLoadTV community.',
+      'Kristian holds a bachelor\'s degree in Digital Marketing and Sales Management and has several years of experience in content creation, website development, and online marketing.',
+      'When he\'s not chasing max wins on stream, Kristian writes about slot games, new releases, bonus features, and everything happening in the online casino world. Expect firsthand experiences, honest opinions, and probably a little too much enthusiasm for a good bonus hunt.',
+    ],
   },
 ]
 

@@ -14,7 +14,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const author = getAuthor(params.slug)
   if (!author) return {}
   return {
-    title: `${author.name}, ${author.role} – LuckAndLoadTV`,
+    title: `${author.name} ("${author.alias}") – ${author.role}`,
     description: author.bio,
     alternates: { canonical: `${SITE_URL}/authors/${author.slug}` },
   }
@@ -35,6 +35,7 @@ export default function AuthorPage({ params }: { params: { slug: string } }) {
           mainEntity: {
             '@type': 'Person',
             name: author.name,
+            alternateName: author.alias,
             jobTitle: author.role,
             description: author.bio,
             url: `${SITE_URL}/authors/${author.slug}`,
@@ -48,12 +49,18 @@ export default function AuthorPage({ params }: { params: { slug: string } }) {
             {author.name.charAt(0)}
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white">{author.name}</h1>
+            <h1 className="text-3xl font-bold text-white">
+              About {author.name} (aka &quot;{author.alias}&quot;)
+            </h1>
             <p className="text-sm text-brand-400">{author.role}</p>
           </div>
         </div>
 
-        <p className="mb-10 leading-relaxed text-slate-300">{author.bio}</p>
+        <div className="mb-10 space-y-4 leading-relaxed text-slate-300">
+          {author.about.map(paragraph => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </div>
 
         <h2 className="mb-4 text-lg font-semibold text-white">Guides by {author.name}</h2>
         <div className="space-y-3">
