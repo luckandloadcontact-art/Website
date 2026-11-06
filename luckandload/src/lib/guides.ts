@@ -46,7 +46,8 @@ export const AUTHORS: Author[] = [
     about: [
       'Simon is the co-founder of LuckAndLoadTV, a Norwegian casino streaming and entertainment brand run together with Kristian.',
       'The two friends first went live in September 2025, after deciding to stop talking about streaming and actually do it. In September 2026, Simon and Kristian left their regular jobs to work on LuckAndLoadTV full-time.',
-      'Today, you can find Simon live on Kick and Twitch, hosting bonus hunts and multiplayer casino rooms, or in the LuckAndLoadTV Discord, where the banter carries on after the stream ends.',
+      'Simon has an education in marketing and writes articles for LuckAndLoadTV about online casinos, bonuses and how the games work.',
+      'When he\'s not writing, you can find Simon live on Kick and Twitch, hosting bonus hunts and multiplayer casino rooms, or in the LuckAndLoadTV Discord, where the banter carries on after the stream ends.',
     ],
   },
 ]
