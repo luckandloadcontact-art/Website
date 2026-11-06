@@ -3,6 +3,7 @@ import './globals.css'
 import { Providers } from '@/components/Providers'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { HypeClickTracker } from '@/components/layout/HypeClickTracker'
 
 export const metadata: Metadata = {
   title: 'LuckAndLoadTV – Community Hub',
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main>{children}</main>
           <Footer />
         </Providers>
+        <HypeClickTracker />
       </body>
     </html>
   )

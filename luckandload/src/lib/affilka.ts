@@ -2,6 +2,7 @@
 // Rangerer spillerne som har spilt under vår affiliate-kode etter hvor mye de har satset (wagered)
 // denne måneden, og setter premie basert på plassering.
 
+import { savePlayerPeriod } from '@/lib/growth'
 import { createAdminClient } from '@/lib/supabase'
 import { LEADERBOARD_REVALIDATE_SECONDS } from '@/lib/utils'
 
@@ -108,8 +109,18 @@ export async function fetchLeaderboardData(range = currentMonthRange()): Promise
   const summarizedBets: Array<{
     user?: { username?: string; avatar?: string | null }
     xpPoints?: number
+    wagered?: number
     bets?: number
   }> = data.summarizedBets ?? []
+
+  // Kun admin-panelet leser hele spillerlisten. Den holdes utenfor LeaderboardData, som ender i
+  // den offentlige leaderboard-cachen.
+  await savePlayerPeriod({
+    from,
+    to,
+    bets: summarizedBets,
+    newRegistrations: data.summary?.totalUsers ?? null,
+  })
 
   // Rangert etter XP, ikke wagered -- XP er vektet av Hype.bet per spill, så det
   // kan ikke "abuses" ved å kjøre store volum på lav-house-edge-spill (f.eks. Hilo).

@@ -17,10 +17,23 @@ import { Bracket } from '@/components/events/Bracket'
 // Kun type-import fra affilka.ts -- se advarselen ved formatXP-re-eksporten der for hvorfor en
 // runtime-import herfra ville feilet bygget (denne fila er en client component).
 import type { LeaderboardSnapshot } from '@/lib/affilka'
+import type { GrowthData } from '@/lib/growth'
 import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 import toast from 'react-hot-toast'
 
-type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard'
+type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard' | 'growth'
+
+function formatUsd(amount: number) {
+  return `$${Math.round(amount).toLocaleString('en-US')}`
+}
+
+function formatMonth(firstOfMonth: string) {
+  return new Date(`${firstOfMonth}T00:00:00Z`).toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
+}
 
 // useSearchParams() krever en Suspense-boundary i App Router (ellers feiler "next build") --
 // selve siden er uansett 100% client-rendered (session-gated), så fallback vises aldri reelt.
@@ -45,6 +58,7 @@ function AdminPageInner() {
   const [snapshots, setSnapshots] = useState<LeaderboardSnapshot[]>([])
   const [capturingSnapshot, setCapturingSnapshot] = useState(false)
   const [expandedSnapshot, setExpandedSnapshot] = useState<string | null>(null)
+  const [growth, setGrowth] = useState<GrowthData | null>(null)
 
   // New announcement form
   const [newAnn, setNewAnn] = useState({ title: '', body: '', type: 'info', pinned: false })
@@ -91,18 +105,20 @@ function AdminPageInner() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [usersRes, annRes, tourneyRes, snapshotsRes, igRes] = await Promise.all([
+      const [usersRes, annRes, tourneyRes, snapshotsRes, igRes, growthRes] = await Promise.all([
         fetch('/api/admin/users'),
         fetch('/api/admin/announcements'),
         fetch('/api/admin/tournament'),
         fetch('/api/admin/leaderboard-snapshots'),
         fetch('/api/admin/instagram-token'),
+        fetch('/api/admin/growth'),
       ])
       if (usersRes.ok) setUsers(await usersRes.json())
       if (annRes.ok) setAnnouncements(await annRes.json())
       if (tourneyRes.ok) setTournamentResults(await tourneyRes.json())
       if (snapshotsRes.ok) setSnapshots(await snapshotsRes.json())
       if (igRes.ok) setIgStatus(await igRes.json())
+      setGrowth(growthRes.ok ? await growthRes.json() : null)
     } catch {
       toast.error('Failed to load data')
     } finally {
@@ -285,7 +301,11 @@ function AdminPageInner() {
     { key: 'announcements', label: 'Announcements', icon: <Megaphone size={15} /> },
     { key: 'events', label: 'Events', icon: <Swords size={15} /> },
     { key: 'leaderboard', label: 'Leaderboard', icon: <History size={15} /> },
+    { key: 'growth', label: 'Growth', icon: <TrendingUp size={15} /> },
   ]
+
+  const currentMonth = growth?.months[0]
+  const totalClicksThisMonth = growth?.clicks.reduce((sum, page) => sum + page.thisMonth, 0) ?? 0
 
   return (
     <div className="min-h-screen">
@@ -307,7 +327,7 @@ function AdminPageInner() {
           </div>
 
           {/* Tab bar */}
-          <div className="flex gap-1 p-1 rounded-xl bg-surface-800 border border-white/5 w-fit">
+          <div className="flex flex-wrap gap-1 p-1 rounded-xl bg-surface-800 border border-white/5 w-fit">
             {TABS.map(t => (
               <button
                 key={t.key}
@@ -765,6 +785,133 @@ function AdminPageInner() {
                     month ends.
                   </p>
                 )}
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* Growth */}
+        {tab === 'growth' && !growth && (
+          <Card>
+            <CardContent className="py-8 text-center text-sm text-slate-400">
+              Growth data could not be loaded. Check that <code>supabase/migrations/010_growth.sql</code> has been run.
+            </CardContent>
+          </Card>
+        )}
+
+        {tab === 'growth' && growth && (
+          <div className="space-y-6">
+            {!growth.hasBaseline && (
+              <p className="rounded-xl border border-gold-500/30 bg-gold-500/10 px-4 py-3 text-sm text-slate-200">
+                Player history has not been loaded yet, so existing players may show up as new.
+              </p>
+            )}
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard
+                label="New players"
+                value={currentMonth?.newPlayers.length ?? 0}
+                sub={currentMonth ? formatMonth(currentMonth.month) : undefined}
+              />
+              <StatCard label="Active players" value={currentMonth?.activePlayers ?? 0} />
+              <StatCard label="Wagered" value={formatUsd(currentMonth?.wagered ?? 0)} />
+              <StatCard label="Hype link clicks this month" value={totalClicksThisMonth} />
+            </div>
+
+            <Card>
+              <CardHeader>
+                <h2 className="font-semibold text-white flex items-center gap-2 pb-0">
+                  <Users size={15} className="text-brand-500" />
+                  Players per month
+                </h2>
+                <p className="text-xs text-slate-500 pt-1">
+                  New means the first month a player has bets under our code. Hype&apos;s FTD count can differ, because
+                  a player can deposit without betting, or start betting long after depositing.
+                  {currentMonth && <> Last updated {formatRelativeTime(currentMonth.capturedAt)}.</>}
+                </p>
+              </CardHeader>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/5 text-xs text-slate-500">
+                      <th scope="col" className="px-5 py-3 text-left font-medium">Month</th>
+                      <th scope="col" className="px-5 py-3 text-right font-medium">Active</th>
+                      <th scope="col" className="px-5 py-3 text-right font-medium">New</th>
+                      <th scope="col" className="px-5 py-3 text-left font-medium">New players</th>
+                      <th scope="col" className="px-5 py-3 text-right font-medium">Wagered</th>
+                      <th scope="col" className="px-5 py-3 text-right font-medium">Wagered by new</th>
+                      <th scope="col" className="px-5 py-3 text-right font-medium">Hype totalUsers*</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5 text-slate-200">
+                    {growth.months.map(month => (
+                      <tr key={month.month}>
+                        <th scope="row" className="whitespace-nowrap px-5 py-3 text-left font-medium text-white">
+                          {formatMonth(month.month)}
+                        </th>
+                        <td className="px-5 py-3 text-right tabular-nums">{month.activePlayers}</td>
+                        <td className="px-5 py-3 text-right font-semibold tabular-nums text-brand-400">
+                          {month.newPlayers.length}
+                        </td>
+                        <td className="min-w-48 px-5 py-3 text-xs text-slate-400">
+                          {month.newPlayers.join(', ') || '–'}
+                        </td>
+                        <td className="px-5 py-3 text-right tabular-nums">{formatUsd(month.wagered)}</td>
+                        <td className="px-5 py-3 text-right tabular-nums">{formatUsd(month.newPlayerWagered)}</td>
+                        <td className="px-5 py-3 text-right tabular-nums">{month.registrations ?? '–'}</td>
+                      </tr>
+                    ))}
+                    {!growth.months.length && (
+                      <tr>
+                        <td colSpan={7} className="px-5 py-8 text-center text-slate-600">
+                          No months saved yet. The current month appears after the next leaderboard refresh.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+              <p className="px-5 py-3 text-xs text-slate-500">
+                *The totalUsers field from the Hype API, shown as reported. Its exact meaning is not confirmed by Hype.
+              </p>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <h2 className="font-semibold text-white flex items-center gap-2 pb-0">
+                  <TrendingUp size={15} className="text-brand-500" />
+                  Clicks on Hype links by page
+                </h2>
+                <p className="text-xs text-slate-500 pt-1">
+                  Counted from November 6, 2026, using UTC months. Right-click &quot;open in new tab&quot; is not counted.
+                </p>
+              </CardHeader>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-white/5 text-xs text-slate-500">
+                      <th scope="col" className="px-5 py-3 text-left font-medium">Page</th>
+                      <th scope="col" className="px-5 py-3 text-right font-medium">This month</th>
+                      <th scope="col" className="px-5 py-3 text-right font-medium">Last month</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5 text-slate-200">
+                    {growth.clicks.map(page => (
+                      <tr key={page.path}>
+                        <th scope="row" className="px-5 py-3 text-left font-medium text-white">
+                          {page.path === '/' ? 'Home' : page.path === 'other' ? 'Other' : page.path}
+                        </th>
+                        <td className="px-5 py-3 text-right tabular-nums">{page.thisMonth}</td>
+                        <td className="px-5 py-3 text-right tabular-nums">{page.lastMonth}</td>
+                      </tr>
+                    ))}
+                    {!growth.clicks.length && (
+                      <tr>
+                        <td colSpan={3} className="px-5 py-8 text-center text-slate-600">No clicks counted yet.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </Card>
           </div>

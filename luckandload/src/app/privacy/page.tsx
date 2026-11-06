@@ -13,7 +13,7 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       intro="What we collect when you use luckandloadtv.com, why we collect it, and what you can do about it."
-      updated="November 4, 2026"
+      updated="November 6, 2026"
     >
       <LegalSection title="Who is responsible">
         <p>
@@ -33,8 +33,14 @@ export default function PrivacyPage() {
             history, and your results in Daily Blackjack and Guess the Slot.
           </li>
           <li>
-            <strong className="text-white">From Hype.bet:</strong> the username, avatar and XP of players under our
-            code. Top players are shown publicly on the leaderboard, and we save the standings for past months.
+            <strong className="text-white">From Hype.bet:</strong> the username, avatar, XP and amount wagered of
+            players under our code. Top players are shown publicly on the leaderboard, without the amount wagered, and
+            we save the standings for past months. We also keep a monthly list of all players and what they wagered,
+            which only our admin team can see.
+          </li>
+          <li>
+            <strong className="text-white">Clicks on Hype.bet links:</strong> we count how many clicks each page gets
+            per day. These counts don&apos;t identify you.
           </li>
         </ul>
       </LegalSection>
@@ -43,6 +49,7 @@ export default function PrivacyPage() {
         <ul className="list-disc space-y-1 pl-5">
           <li>To give you an account and run the games and loads you sign up for (our agreement with you)</li>
           <li>To run the leaderboard, pay out prizes, and prevent cheating (our legitimate interest)</li>
+          <li>To see how many new players we bring to Hype.bet and which pages work best (our legitimate interest)</li>
         </ul>
         <p>We don&apos;t sell your data, and we don&apos;t send you marketing emails.</p>
       </LegalSection>
