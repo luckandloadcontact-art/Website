@@ -47,7 +47,7 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
   const authorPath = `/authors/${author.slug}`
 
   return (
-    <div className="min-h-screen py-16 px-4">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -62,7 +62,7 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
           publisher: { '@type': 'Organization', name: 'LuckAndLoadTV', url: SITE_URL },
         }}
       />
-      <article className="mx-auto max-w-3xl">
+      <article className="mx-auto max-w-6xl">
         <Link href="/guides" className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-slate-300">
           <ArrowLeft size={14} />
           All guides
@@ -82,11 +82,13 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
         <Body />
         <GuideCta />
 
-        <footer className="mt-8 rounded-2xl border border-white/8 bg-surface-800 p-6">
-          <p className="mb-1 text-xs uppercase tracking-widest text-slate-500">Written by</p>
-          <Link href={authorPath} className="font-semibold text-white hover:text-brand-300 transition-colors">
-            {author.name}
-          </Link>
+        <footer className="mt-12 border-t border-white/10 pt-6">
+          <p className="text-sm text-slate-400">
+            Written by{' '}
+            <Link href={authorPath} className="font-semibold text-white hover:text-brand-300 transition-colors">
+              {author.name}
+            </Link>
+          </p>
           <p className="mt-1 text-sm leading-relaxed text-slate-400">{author.bio}</p>
         </footer>
       </article>

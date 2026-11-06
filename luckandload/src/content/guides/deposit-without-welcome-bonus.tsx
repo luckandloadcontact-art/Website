@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { GuideCard, GuideColumns, GuideH2, GuideList, GuideP, GuideSummary } from '@/components/guides/GuideContent'
+import { GuideH2, GuideH3, GuideList, GuideP } from '@/components/guides/GuideContent'
 
 const ROWS = [
   { label: 'Starting balance', noBonus: '$100', bonus: '$200' },
@@ -11,11 +11,11 @@ const ROWS = [
 export default function DepositWithoutWelcomeBonus() {
   return (
     <>
-      <GuideSummary>
+      <GuideP>
         Skip the welcome bonus and you&apos;re playing with your own money, with no wagering to finish and no bonus rules
         to keep track of. You&apos;ll start with less, though, and you might not be offered that bonus again. A lot comes
         down to the terms, so give them a read before you deposit.
-      </GuideSummary>
+      </GuideP>
 
       <GuideH2>What does it actually mean?</GuideH2>
       <GuideP>
@@ -25,72 +25,67 @@ export default function DepositWithoutWelcomeBonus() {
         them, and how you do it varies.
       </GuideP>
 
-      <GuideColumns>
-        <GuideCard title="The pros">
-          <GuideList>
-            <li>
-              <strong className="text-white">Withdrawing is simpler.</strong> You&apos;ve got no bonus wagering to finish.
-              The usual ID checks still apply, and some casinos want a deposit played through once before you can
-              withdraw it.
-            </li>
-            <li>
-              <strong className="text-white">There are no bonus rules to trip over.</strong> Bonus terms often cap your
-              bet size, rule out certain games, set a deadline or limit what you can cash out. Break one and you can lose
-              the bonus and what you won with it.
-            </li>
-            <li>
-              <strong className="text-white">You can play what you like.</strong> Slots often count in full toward
-              wagering, while table games can count for little or nothing. Without a bonus, that doesn&apos;t matter.
-            </li>
-            <li>
-              <strong className="text-white">It&apos;s easier to walk away.</strong> You can see what&apos;s yours, and
-              there&apos;s no locked money tempting you to keep betting.
-            </li>
-          </GuideList>
-        </GuideCard>
+      <GuideH2>The pros</GuideH2>
+      <GuideList>
+        <li>
+          <strong className="text-white">Withdrawing is simpler.</strong> You&apos;ve got no bonus wagering to finish. The
+          usual ID checks still apply, and some casinos want a deposit played through once before you can withdraw it.
+        </li>
+        <li>
+          <strong className="text-white">There are no bonus rules to trip over.</strong> Bonus terms often cap your bet
+          size, rule out certain games, set a deadline or limit what you can cash out. Break one and you can lose the
+          bonus and what you won with it.
+        </li>
+        <li>
+          <strong className="text-white">You can play what you like.</strong> Slots often count in full toward wagering,
+          while table games can count for little or nothing. Without a bonus, that doesn&apos;t matter.
+        </li>
+        <li>
+          <strong className="text-white">It&apos;s easier to walk away.</strong> You can see what&apos;s yours, and
+          there&apos;s no locked money tempting you to keep betting.
+        </li>
+      </GuideList>
 
-        <GuideCard title="The cons">
-          <GuideList>
-            <li>
-              <strong className="text-white">You start with less.</strong> A 100% bonus turns $100 into $200. Without it,
-              you&apos;ve got $100.
-            </li>
-            <li>
-              <strong className="text-white">Your money won&apos;t last as long.</strong> At the same bet size, a smaller
-              balance means fewer spins.
-            </li>
-            <li>
-              <strong className="text-white">You might only get one shot.</strong> Welcome bonuses are usually tied to
-              your first deposit, so check before you pass on one.
-            </li>
-            <li>
-              <strong className="text-white">You could miss a good offer.</strong> Some bonuses have low wagering or none
-              at all, and there&apos;s not much to dislike about those.
-            </li>
-          </GuideList>
-        </GuideCard>
-      </GuideColumns>
+      <GuideH2>The cons</GuideH2>
+      <GuideList>
+        <li>
+          <strong className="text-white">You start with less.</strong> A 100% bonus turns $100 into $200. Without it,
+          you&apos;ve got $100.
+        </li>
+        <li>
+          <strong className="text-white">Your money won&apos;t last as long.</strong> At the same bet size, a smaller
+          balance means fewer spins.
+        </li>
+        <li>
+          <strong className="text-white">You might only get one shot.</strong> Welcome bonuses are usually tied to your
+          first deposit, so check before you pass on one.
+        </li>
+        <li>
+          <strong className="text-white">You could miss a good offer.</strong> Some bonuses have low wagering or none at
+          all, and there&apos;s not much to dislike about those.
+        </li>
+      </GuideList>
 
       <GuideH2>What wagering costs you</GuideH2>
       <GuideP>
         Say you deposit $100 and take a 100% bonus with 35x wagering on the bonus. This is just an example, not a real
         offer from any casino.
       </GuideP>
-      <div className="mb-4 overflow-x-auto rounded-2xl border border-white/8">
+      <div className="mb-5 max-w-3xl overflow-x-auto">
         <table className="w-full min-w-[28rem] text-left text-sm">
-          <thead className="bg-surface-700 text-white">
+          <thead className="border-b border-white/20 text-white">
             <tr>
-              <th scope="col" className="px-4 py-3 font-semibold">$100 deposit</th>
-              <th scope="col" className="px-4 py-3 font-semibold">No bonus</th>
-              <th scope="col" className="px-4 py-3 font-semibold">100% bonus, 35x</th>
+              <th scope="col" className="py-3 pr-4 font-semibold">$100 deposit</th>
+              <th scope="col" className="py-3 pr-4 font-semibold">No bonus</th>
+              <th scope="col" className="py-3 font-semibold">100% bonus, 35x</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/8 bg-surface-800 text-slate-300">
+          <tbody className="divide-y divide-white/10 text-slate-200">
             {ROWS.map(row => (
               <tr key={row.label}>
-                <th scope="row" className="px-4 py-3 font-normal text-slate-400">{row.label}</th>
-                <td className="px-4 py-3">{row.noBonus}</td>
-                <td className="px-4 py-3">{row.bonus}</td>
+                <th scope="row" className="py-3 pr-4 font-normal text-slate-400">{row.label}</th>
+                <td className="py-3 pr-4">{row.noBonus}</td>
+                <td className="py-3">{row.bonus}</td>
               </tr>
             ))}
           </tbody>
@@ -104,22 +99,18 @@ export default function DepositWithoutWelcomeBonus() {
       </GuideP>
 
       <GuideH2>So, should you take the bonus?</GuideH2>
-      <GuideColumns>
-        <GuideCard title="Skip it if">
-          <GuideList>
-            <li>the wagering is high</li>
-            <li>you want to withdraw without any bonus conditions</li>
-            <li>the games you like barely count or aren&apos;t allowed</li>
-          </GuideList>
-        </GuideCard>
-        <GuideCard title="Consider it if">
-          <GuideList>
-            <li>the wagering is low and the other terms look fair</li>
-            <li>you&apos;d play those games at those stakes anyway</li>
-            <li>you&apos;ve read the full terms and they make sense to you</li>
-          </GuideList>
-        </GuideCard>
-      </GuideColumns>
+      <GuideH3>Skip it if</GuideH3>
+      <GuideList>
+        <li>the wagering is high</li>
+        <li>you want to withdraw without any bonus conditions</li>
+        <li>the games you like barely count or aren&apos;t allowed</li>
+      </GuideList>
+      <GuideH3>Consider it if</GuideH3>
+      <GuideList>
+        <li>the wagering is low and the other terms look fair</li>
+        <li>you&apos;d play those games at those stakes anyway</li>
+        <li>you&apos;ve read the full terms and they make sense to you</li>
+      </GuideList>
       <GuideP>Either way, don&apos;t let a bonus talk you into depositing more than you&apos;re fine with losing.</GuideP>
 
       <GuideH2>How to deposit without a bonus</GuideH2>
