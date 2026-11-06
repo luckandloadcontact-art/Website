@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
@@ -58,7 +59,7 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
           image: `${SITE_URL}/logo-navbar.png`,
           datePublished: guide.published,
           dateModified: guide.updated,
-          author: { '@type': 'Person', name: author.name, url: `${SITE_URL}${authorPath}` },
+          author: { '@type': 'Person', name: author.name, url: `${SITE_URL}${authorPath}`, image: `${SITE_URL}${author.image}` },
           publisher: { '@type': 'Organization', name: 'LuckAndLoadTV', url: SITE_URL },
         }}
       />
@@ -82,14 +83,23 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
         <Body />
         <GuideCta />
 
-        <footer className="mt-12 border-t border-white/10 pt-6">
-          <p className="text-sm text-slate-400">
-            Written by{' '}
-            <Link href={authorPath} className="font-semibold text-white hover:text-brand-300 transition-colors">
-              {author.name}
-            </Link>
-          </p>
-          <p className="mt-1 text-sm leading-relaxed text-slate-400">{author.bio}</p>
+        <footer className="mt-12 flex items-start gap-4 border-t border-white/10 pt-6">
+          <Image
+            src={author.image}
+            alt={author.name}
+            width={56}
+            height={56}
+            className="h-14 w-14 shrink-0 rounded-full object-cover"
+          />
+          <div>
+            <p className="text-sm text-slate-400">
+              Written by{' '}
+              <Link href={authorPath} className="font-semibold text-white hover:text-brand-300 transition-colors">
+                {author.name}
+              </Link>
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-slate-400">{author.bio}</p>
+          </div>
         </footer>
       </article>
     </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { JsonLd } from '@/components/guides/GuideContent'
@@ -36,6 +37,7 @@ export default function AuthorPage({ params }: { params: { slug: string } }) {
             '@type': 'Person',
             name: author.name,
             alternateName: author.alias,
+            image: `${SITE_URL}${author.image}`,
             jobTitle: author.role,
             description: author.bio,
             url: `${SITE_URL}/authors/${author.slug}`,
@@ -45,9 +47,14 @@ export default function AuthorPage({ params }: { params: { slug: string } }) {
       />
       <div className="mx-auto max-w-2xl">
         <div className="mb-10 flex items-center gap-5">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-brand-500/20 text-3xl font-black text-brand-300">
-            {author.name.charAt(0)}
-          </div>
+          <Image
+            src={author.image}
+            alt={author.name}
+            width={112}
+            height={112}
+            className="h-28 w-28 shrink-0 rounded-full object-cover"
+            priority
+          />
           <div>
             <h1 className="text-3xl font-bold text-white">About {author.name}</h1>
             <p className="text-sm text-brand-400">{author.role}</p>

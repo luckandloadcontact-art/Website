@@ -4,6 +4,7 @@ export type Author = {
   slug: string
   name: string
   alias: string
+  image: string
   role: string
   bio: string
   about: string[]
@@ -24,6 +25,7 @@ export const AUTHORS: Author[] = [
     slug: 'kristian',
     name: 'Kristian',
     alias: 'Luck',
+    image: '/authors/kristian.jpg',
     role: 'Co-founder of LuckAndLoadTV',
     bio: 'Kristian, better known as "Luck", is the co-founder of LuckAndLoadTV, a Norwegian casino streaming and entertainment brand he runs alongside Simon.',
     about: [
