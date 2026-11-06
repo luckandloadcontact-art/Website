@@ -65,23 +65,32 @@ export default function AuthorPage({ params }: { params: { slug: string } }) {
           {author.about.map(paragraph => (
             <p key={paragraph}>{paragraph}</p>
           ))}
+          {author.funFact && (
+            <p>
+              <strong className="text-white">Fun fact:</strong> {author.funFact}
+            </p>
+          )}
         </div>
 
-        <h2 className="mb-4 text-lg font-semibold text-white">Guides by {author.name}</h2>
-        <div className="space-y-3">
-          {guides.map(guide => (
-            <Link
-              key={guide.slug}
-              href={`/guides/${guide.slug}`}
-              className="block rounded-2xl border border-white/8 bg-surface-800 p-5 transition-colors hover:border-brand-500/40"
-            >
-              <p className="font-semibold text-white">{guide.title}</p>
-              <p className="mt-1 text-xs text-slate-500">
-                {formatGuideDate(guide.published)} · {guide.readingMinutes} min read
-              </p>
-            </Link>
-          ))}
-        </div>
+        {guides.length > 0 && (
+          <>
+            <h2 className="mb-4 text-lg font-semibold text-white">Guides by {author.name}</h2>
+            <div className="space-y-3">
+              {guides.map(guide => (
+                <Link
+                  key={guide.slug}
+                  href={`/guides/${guide.slug}`}
+                  className="block rounded-2xl border border-white/8 bg-surface-800 p-5 transition-colors hover:border-brand-500/40"
+                >
+                  <p className="font-semibold text-white">{guide.title}</p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {formatGuideDate(guide.published)} · {guide.readingMinutes} min read
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
