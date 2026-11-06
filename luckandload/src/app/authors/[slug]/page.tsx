@@ -21,6 +21,31 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   }
 }
 
+// Turns the names of the other authors into links to their profiles.
+function LinkedAuthorNames({ text, currentSlug }: { text: string; currentSlug: string }) {
+  const others = AUTHORS.filter(author => author.slug !== currentSlug)
+  const names = new RegExp(`\\b(${others.map(author => author.name).join('|')})\\b`)
+
+  return (
+    <>
+      {text.split(names).map((part, index) => {
+        const linked = others.find(author => author.name === part)
+        return linked ? (
+          <Link
+            key={index}
+            href={`/authors/${linked.slug}`}
+            className="text-brand-400 hover:text-brand-300 underline underline-offset-2"
+          >
+            {part}
+          </Link>
+        ) : (
+          part
+        )
+      })}
+    </>
+  )
+}
+
 export default function AuthorPage({ params }: { params: { slug: string } }) {
   const author = getAuthor(params.slug)
   if (!author) notFound()
@@ -63,7 +88,9 @@ export default function AuthorPage({ params }: { params: { slug: string } }) {
 
         <div className="mb-10 space-y-4 leading-relaxed text-slate-300">
           {author.about.map(paragraph => (
-            <p key={paragraph}>{paragraph}</p>
+            <p key={paragraph}>
+              <LinkedAuthorNames text={paragraph} currentSlug={author.slug} />
+            </p>
           ))}
           {author.funFact && (
             <p>
