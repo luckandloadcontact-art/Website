@@ -14,7 +14,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const author = getAuthor(params.slug)
   if (!author) return {}
   return {
-    title: `${author.name} ("${author.alias}") – ${author.role}`,
+    title: `${author.name} – ${author.role}`,
     description: author.bio,
     alternates: { canonical: `${SITE_URL}/authors/${author.slug}` },
   }
@@ -49,9 +49,7 @@ export default function AuthorPage({ params }: { params: { slug: string } }) {
             {author.name.charAt(0)}
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white">
-              About {author.name} (aka &quot;{author.alias}&quot;)
-            </h1>
+            <h1 className="text-3xl font-bold text-white">About {author.name}</h1>
             <p className="text-sm text-brand-400">{author.role}</p>
           </div>
         </div>
