@@ -807,12 +807,13 @@ function AdminPageInner() {
               </p>
             )}
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
               <StatCard
-                label="New players"
-                value={currentMonth?.newPlayers.length ?? 0}
+                label="New registrations"
+                value={currentMonth?.registrations ?? 0}
                 sub={currentMonth ? formatMonth(currentMonth.month) : undefined}
               />
+              <StatCard label="New players" value={currentMonth?.newPlayers.length ?? 0} />
               <StatCard label="Active players" value={currentMonth?.activePlayers ?? 0} />
               <StatCard label="Wagered" value={formatUsd(currentMonth?.wagered ?? 0)} />
               <StatCard label="Hype link clicks this month" value={totalClicksThisMonth} />
@@ -840,7 +841,7 @@ function AdminPageInner() {
                       <th scope="col" className="px-5 py-3 text-left font-medium">New players</th>
                       <th scope="col" className="px-5 py-3 text-right font-medium">Wagered</th>
                       <th scope="col" className="px-5 py-3 text-right font-medium">Wagered by new</th>
-                      <th scope="col" className="px-5 py-3 text-right font-medium">Hype totalUsers*</th>
+                      <th scope="col" className="px-5 py-3 text-right font-medium">Registrations*</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5 text-slate-200">
@@ -872,7 +873,7 @@ function AdminPageInner() {
                 </table>
               </div>
               <p className="px-5 py-3 text-xs text-slate-500">
-                *The totalUsers field from the Hype API, shown as reported. Its exact meaning is not confirmed by Hype.
+                *New signups under our code, from the Hype API. This counts signups, not deposits.
               </p>
             </Card>
 
