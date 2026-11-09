@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { ArrowRight, ArrowUp, Users } from 'lucide-react'
 import type { LeaderboardEntry } from '@/lib/affilka'
 import { hypeTimeEnd } from '@/lib/stream'
 import { cn, formatXP } from '@/lib/utils'
+import { ScaledFrame } from '@/components/overlay/ScaledFrame'
 
 // Designed at 480x320 and scaled to whatever size OBS gives the browser source.
 const WIDTH = 480
@@ -98,6 +100,36 @@ function RolexSlide() {
   )
 }
 
+// Sits right under the room's player list on stream, so the arrow points up at the names.
+function RoomSlide() {
+  return (
+    <div className="flex h-full flex-col items-center text-center">
+      <ArrowUp size={34} strokeWidth={3} className="animate-bounce text-indigo-300" />
+      <Label className="mt-1 flex items-center gap-1.5 bg-indigo-400/15 text-indigo-200">
+        <Users size={14} strokeWidth={3} />
+        Who&apos;s above?
+      </Label>
+      <p className="mt-3 text-[30px] font-black leading-[1.05] text-white">
+        THIS IS A{' '}
+        <span className="bg-gradient-to-r from-indigo-300 to-hype bg-clip-text text-transparent">LIVE MULTIPLAYER</span>{' '}
+        ROOM.
+      </p>
+      <p className="mt-3 text-[17px] font-semibold leading-snug text-slate-300">
+        Every name above is a real player in this room right now.
+      </p>
+      <p className="mt-auto flex items-center gap-2 text-[15px] font-black uppercase tracking-wider text-white">
+        <span className="flex -space-x-2">
+          {['bg-hype', 'bg-indigo-400', 'bg-yellow-400'].map(color => (
+            <span key={color} className={cn('h-5 w-5 rounded-full border-2 border-[#12152f]', color)} />
+          ))}
+        </span>
+        <ArrowRight size={16} strokeWidth={3} className="text-hype" />
+        One shared room
+      </p>
+    </div>
+  )
+}
+
 function JoinSlide() {
   return (
     <div className="flex h-full flex-col items-center justify-center text-center">
@@ -138,22 +170,15 @@ export function StreamWidget({
   offer: { headline: string; banner: string | null } | null
 }) {
   const router = useRouter()
-  const [scale, setScale] = useState(1)
   const [active, setActive] = useState(0)
 
   const slides = [
     <LeaderboardSlide key="leaderboard" entries={entries} periodFrom={periodFrom} />,
     <RolexSlide key="rolex" />,
+    <RoomSlide key="room" />,
     <JoinSlide key="join" />,
     ...(offer ? [<OfferSlide key="offer" headline={offer.headline} banner={offer.banner} />] : []),
   ]
-
-  useEffect(() => {
-    const resize = () => setScale(Math.min(window.innerWidth / WIDTH, window.innerHeight / HEIGHT))
-    resize()
-    window.addEventListener('resize', resize)
-    return () => window.removeEventListener('resize', resize)
-  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => setActive(index => (index + 1) % slides.length), SLIDE_MS)
@@ -168,12 +193,9 @@ export function StreamWidget({
   const current = active % slides.length
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden">
+    <ScaledFrame width={WIDTH} height={HEIGHT}>
       <style>{'@keyframes overlay-progress{from{width:0}to{width:100%}}'}</style>
-      <div
-        style={{ width: WIDTH, height: HEIGHT, transform: `scale(${scale})` }}
-        className="relative shrink-0 overflow-hidden rounded-[22px] border-2 border-indigo-400/40 bg-gradient-to-br from-[#161a3a] to-[#0a0c1d] font-sans"
-      >
+      <div className="relative h-full w-full overflow-hidden rounded-[22px] border-2 border-indigo-400/40 bg-gradient-to-br from-[#161a3a] to-[#0a0c1d]">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -199,6 +221,6 @@ export function StreamWidget({
           ))}
         </div>
       </div>
-    </div>
+    </ScaledFrame>
   )
 }

@@ -18,14 +18,10 @@ export default async function StreamOverlayPage() {
   const offer = hype ? activeOffer(hype) : null
 
   return (
-    <>
-      {/* OBS shows the page on top of the stream, so everything outside the widget is transparent. */}
-      <style>{'html,body{background:transparent!important;overflow:hidden}'}</style>
-      <StreamWidget
-        entries={(leaderboard?.entries ?? []).slice(0, 5)}
-        periodFrom={leaderboard?.periodFrom ?? null}
-        offer={offer ? { headline: offer.headline, banner: offer.banner?.src ?? null } : null}
-      />
-    </>
+    <StreamWidget
+      entries={(leaderboard?.entries ?? []).slice(0, 5)}
+      periodFrom={leaderboard?.periodFrom ?? null}
+      offer={offer ? { headline: offer.headline, banner: offer.banner?.src ?? null } : null}
+    />
   )
 }
