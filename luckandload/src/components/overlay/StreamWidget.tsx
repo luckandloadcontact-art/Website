@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, ArrowUp, Users } from 'lucide-react'
+import { ArrowRight, ArrowUp, MessageSquare, Send, Users, Zap } from 'lucide-react'
 import type { LeaderboardEntry } from '@/lib/affilka'
 import { hypeTimeEnd } from '@/lib/stream'
 import { cn, formatXP } from '@/lib/utils'
@@ -130,16 +130,96 @@ function RoomSlide() {
   )
 }
 
+const JOIN_KEYFRAMES = `
+@keyframes join-glow{0%,100%{opacity:.35;transform:translate(-50%,-50%) scale(.85)}50%{opacity:.75;transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes join-shine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes join-type{0%,8%{width:0}45%,100%{width:5ch}}
+@keyframes join-caret{50%{opacity:0}}
+@keyframes join-ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.7);opacity:0}}
+@keyframes join-float{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.9}100%{transform:translateY(-300px) scale(1);opacity:0}}
+@keyframes join-pop{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+`
+
+// Small dots drifting up behind the content: [left %, delay s, duration s, colour]
+const PARTICLES: [number, number, number, string][] = [
+  [8, 0, 5.5, 'bg-hype'],
+  [22, 2.2, 6.5, 'bg-indigo-300'],
+  [38, 1.1, 5, 'bg-hype'],
+  [61, 3.1, 6, 'bg-yellow-300'],
+  [77, 0.6, 5.8, 'bg-indigo-300'],
+  [91, 2.7, 6.2, 'bg-hype'],
+]
+
 function JoinSlide() {
   return (
-    <div className="flex h-full flex-col items-center justify-center text-center">
-      <Label className="bg-hype/15 text-hype">Multiplayer room</Label>
-      <p className="mt-4 text-[34px] font-black leading-none text-white">JOIN THE ACTION</p>
-      <p className="mt-4 text-[18px] font-semibold text-slate-300">Type in chat</p>
-      <p className="mt-2 rounded-xl bg-hype px-6 py-2 text-[40px] font-black leading-none text-black">!hype</p>
-      <p className="mt-4 text-[16px] font-semibold text-slate-300">
-        Play with us in our room · <span className="text-hype">2x XP on slots</span>
-      </p>
+    <div className="relative flex h-full flex-col items-center justify-center text-center">
+      <style>{JOIN_KEYFRAMES}</style>
+
+      {/* Background: pulsing glow and rising particles, edge to edge behind the slide */}
+      <div className="pointer-events-none absolute -inset-x-5 -bottom-7 -top-5 overflow-hidden">
+        <div
+          className="absolute left-1/2 top-[58%] h-64 w-64 rounded-full bg-hype/30 blur-3xl"
+          style={{ animation: 'join-glow 3s ease-in-out infinite' }}
+        />
+        {PARTICLES.map(([left, delay, duration, color]) => (
+          <span
+            key={left}
+            className={cn('absolute bottom-0 h-1.5 w-1.5 rounded-full', color)}
+            style={{ left: `${left}%`, animation: `join-float ${duration}s ease-out ${delay}s infinite`, opacity: 0 }}
+          />
+        ))}
+      </div>
+
+      <div className="relative flex flex-col items-center">
+        <Label className="flex items-center gap-2 bg-hype/15 text-hype">
+          <span className="h-2 w-2 rounded-full bg-hype" style={{ animation: 'join-caret 1.2s steps(1) infinite' }} />
+          Multiplayer room
+        </Label>
+
+        <p
+          className="mt-3 bg-[linear-gradient(110deg,#ffffff_35%,#1ce479_50%,#ffffff_65%)] bg-[length:200%_100%] bg-clip-text text-[38px] font-black leading-none text-transparent"
+          style={{ animation: 'join-shine 3.5s linear infinite' }}
+        >
+          JOIN THE ACTION
+        </p>
+
+        <p className="mt-4 text-[12px] font-bold uppercase tracking-[0.2em] text-slate-400">Type in chat</p>
+        <div className="mt-1.5 flex w-[300px] items-center gap-3 rounded-2xl border border-hype/40 bg-black/40 py-2.5 pl-4 pr-2.5 shadow-[0_0_24px_rgba(28,228,121,0.18)]">
+          <MessageSquare size={20} className="shrink-0 text-slate-500" />
+          <span className="flex flex-1 items-center">
+            <span
+              className="inline-block overflow-hidden whitespace-nowrap font-mono text-[34px] font-black leading-none text-hype"
+              style={{ animation: 'join-type 3.2s steps(5) infinite' }}
+            >
+              !hype
+            </span>
+            <span
+              className="ml-0.5 inline-block h-8 w-[3px] rounded bg-hype"
+              style={{ animation: 'join-caret 0.8s steps(1) infinite' }}
+            />
+          </span>
+          <span className="relative flex h-10 w-10 shrink-0 items-center justify-center">
+            <span className="absolute inset-0 rounded-xl bg-hype" style={{ animation: 'join-ring 1.6s ease-out infinite' }} />
+            <span className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-hype text-black">
+              <Send size={18} strokeWidth={2.5} />
+            </span>
+          </span>
+        </div>
+
+        <div className="mt-4 flex gap-2">
+          <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[14px] font-bold text-white">
+            <Users size={15} className="text-indigo-300" />
+            Play in our room
+          </span>
+          <span
+            className="flex items-center gap-1.5 rounded-full border border-hype/30 bg-hype/10 px-3 py-1.5 text-[14px] font-bold text-hype"
+            style={{ animation: 'join-pop 2s ease-in-out infinite' }}
+          >
+            <Zap size={15} className="fill-hype" />
+            2x XP on slots
+          </span>
+        </div>
+      </div>
     </div>
   )
 }
