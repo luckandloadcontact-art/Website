@@ -10,7 +10,22 @@ const TWITCH_CHANNEL = 'luckandloadtv'
 const KICK_CHANNEL = 'luckandloadtv'
 const DISCORD_URL = 'https://discord.gg/yagZVjqqbr'
 
-type StreamSlot = { title: string; day: string; time: string; localTime: string | null }
+type StreamSlot = { title: string; day: string; time: string; zone: string; localTime: string | null }
+
+// "CET (UTC+1)" in winter, "CEST (UTC+2)" in summer, worked out from the stream date itself.
+function zoneLabel(date: Date): string {
+  let offset = '+1'
+  try {
+    const part = new Intl.DateTimeFormat('en-US', { timeZone: STREAM_TIME_ZONE, timeZoneName: 'shortOffset' })
+      .formatToParts(date)
+      .find(p => p.type === 'timeZoneName')
+    const parsed = part?.value.replace('GMT', '')
+    if (parsed) offset = parsed
+  } catch {
+    // Older browsers without shortOffset fall back to standard time.
+  }
+  return `${offset === '+2' ? 'CEST' : 'CET'} (UTC${offset})`
+}
 
 function describeUpcoming(): StreamSlot[] {
   return upcomingStreams().map(stream => {
@@ -23,7 +38,7 @@ function describeUpcoming(): StreamSlot[] {
         : stream.daysAway === 1
           ? 'Tomorrow'
           : stream.start.toLocaleDateString('en-US', { timeZone: STREAM_TIME_ZONE, weekday: 'long' })
-    return { title: stream.title, day, time, localTime: localTime === time ? null : localTime }
+    return { title: stream.title, day, time, zone: zoneLabel(stream.start), localTime: localTime === time ? null : localTime }
   })
 }
 
@@ -104,7 +119,7 @@ export function LiveSection() {
                 <>
                   <p className="text-3xl font-bold text-white">{upcoming[0].day}</p>
                   <p className="mt-0.5 text-sm text-slate-300">
-                    {upcoming[0].time} Norwegian time
+                    {upcoming[0].time} {upcoming[0].zone}
                     {upcoming[0].localTime && <span className="text-slate-500"> · {upcoming[0].localTime} yours</span>}
                   </p>
                   <p className="mt-3 inline-flex w-fit rounded-lg bg-brand-500/10 px-2.5 py-1 text-sm font-semibold text-brand-300">
