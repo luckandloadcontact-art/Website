@@ -5,7 +5,18 @@ import { Badge } from '@/components/ui/Badge'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import { formatRelativeTime } from '@/lib/utils'
 import type { Announcement } from '@/types'
-import { Users, Zap, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle } from 'lucide-react'
+import { Users, Zap, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle, BookOpen } from 'lucide-react'
+
+// One row in Latest Updates: an announcement from the admin panel, or a published guide.
+export type UpdateItem = {
+  id: string
+  title: string
+  body: string
+  type: Announcement['type'] | 'article'
+  pinned: boolean
+  date: string
+  href?: string
+}
 
 // ─── About section ────────────────────────────────────────
 export function AboutSection() {
@@ -317,6 +328,7 @@ const typeIcon: Record<string, React.ReactNode> = {
   success: <CheckCircle size={14} className="text-green-400" />,
   warning: <AlertTriangle size={14} className="text-yellow-400" />,
   event:   <Calendar size={14} className="text-brand-400" />,
+  article: <BookOpen size={14} className="text-brand-400" />,
 }
 
 const typeBorder: Record<string, string> = {
@@ -324,9 +336,10 @@ const typeBorder: Record<string, string> = {
   success: 'border-green-500/20',
   warning: 'border-yellow-500/20',
   event:   'border-brand-500/20',
+  article: 'border-brand-500/20',
 }
 
-export function AnnouncementsSection({ announcements }: { announcements: Announcement[] }) {
+export function AnnouncementsSection({ announcements }: { announcements: UpdateItem[] }) {
   if (!announcements.length) return null
 
   return (
@@ -351,7 +364,14 @@ export function AnnouncementsSection({ announcements }: { announcements: Announc
                     {ann.pinned && <Badge variant="brand" className="text-[10px]">Pinned</Badge>}
                   </div>
                   <p className="text-slate-400 text-sm leading-relaxed">{ann.body}</p>
-                  <p className="text-xs text-slate-600 mt-2">{formatRelativeTime(ann.created_at)}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
+                    <p className="text-xs text-slate-600">{formatRelativeTime(ann.date)}</p>
+                    {ann.href && (
+                      <Link href={ann.href} className="text-xs font-semibold text-brand-400 hover:text-brand-300">
+                        Read the guide →
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
