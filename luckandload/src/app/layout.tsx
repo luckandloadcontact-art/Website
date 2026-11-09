@@ -4,6 +4,7 @@ import { Providers } from '@/components/Providers'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { HypeClickTracker } from '@/components/layout/HypeClickTracker'
+import { SITE_URL } from '@/lib/guides'
 
 export const metadata: Metadata = {
   title: 'LuckAndLoadTV – Community Hub',
@@ -13,7 +14,12 @@ export const metadata: Metadata = {
     title: 'LuckAndLoadTV',
     description: 'Join the community. Watch the streams. Climb the leaderboard.',
     type: 'website',
+    siteName: 'LuckAndLoadTV',
+    // Share image for every page without its own. A page that sets openGraph replaces this whole
+    // object, so it has to list its images too (see guides and casinos).
+    images: [{ url: `${SITE_URL}/og/default.png`, width: 1200, height: 630, alt: 'LuckAndLoadTV' }],
   },
+  twitter: { card: 'summary_large_image' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

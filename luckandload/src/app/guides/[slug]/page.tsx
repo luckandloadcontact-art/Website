@@ -34,7 +34,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       publishedTime: guide.published,
       modifiedTime: guide.updated,
       authors: [`${SITE_URL}/authors/${guide.authorSlug}`],
-      images: [`${SITE_URL}/logo-navbar.png`],
+      images: [{ url: `${SITE_URL}/og/default.png`, width: 1200, height: 630, alt: 'LuckAndLoadTV' }],
     },
   }
 }

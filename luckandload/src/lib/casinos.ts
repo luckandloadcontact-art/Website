@@ -27,6 +27,7 @@ export type Casino = {
   pros: string[]
   cons: string[]
   faq: CasinoFaq[]
+  shareImage: string // 1200x630 preview when the review page is shared (Discord, X, Kick)
   description: string // Meta description for the review page
   reviewTitle: string
   authorSlug: string
@@ -109,6 +110,7 @@ export const CASINOS: Casino[] = [
           'Yes. Hype.bet is run by BlackSands B.V. in Curaçao and licensed by the Curaçao Gaming Authority under license number OGL/2024/985/0430. Check that it’s legal and available where you live before you sign up.',
       },
     ],
+    shareImage: '/og/hype-bet.jpg',
     description:
       'The Hype.bet welcome bonus and LuckAndLoad code explained: 100% RakeBoost, free spins, the monthly Rolex draw, double XP in multiplayer rooms, RTP and license.',
     reviewTitle: 'Hype.bet Bonus Code and Review 2026',

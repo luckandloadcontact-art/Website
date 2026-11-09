@@ -87,31 +87,8 @@ export function LiveSection() {
           </div>
         </div>
 
-        <div className="mx-auto aspect-video max-w-4xl overflow-hidden rounded-2xl border border-white/8 bg-black">
-          {!parentHost ? (
-            <div className="flex h-full items-center justify-center text-sm text-slate-500">Loading stream…</div>
-          ) : platform === 'twitch' ? (
-            <iframe
-              key="twitch"
-              title="LuckAndLoadTV on Twitch"
-              src={`https://player.twitch.tv/?channel=${TWITCH_CHANNEL}&parent=${parentHost}&muted=true`}
-              className="h-full w-full"
-              allowFullScreen
-            />
-          ) : (
-            <iframe
-              key="kick"
-              title="LuckAndLoadTV on Kick"
-              src={`https://player.kick.com/${KICK_CHANNEL}`}
-              className="h-full w-full"
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            />
-          )}
-        </div>
-
         {!live && (
-          <div className="mx-auto mt-6 grid max-w-4xl gap-6 md:grid-cols-[15rem_1fr]">
+          <div className="mx-auto mb-6 grid max-w-4xl gap-6 md:grid-cols-[15rem_1fr]">
             <div className="rounded-2xl border border-white/10 bg-surface-800 p-5">
               <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-400">
                 <CalendarClock size={14} />
@@ -202,6 +179,29 @@ export function LiveSection() {
             </div>
           </div>
         )}
+
+        <div className="mx-auto aspect-video max-w-4xl overflow-hidden rounded-2xl border border-white/8 bg-black">
+          {!parentHost ? (
+            <div className="flex h-full items-center justify-center text-sm text-slate-500">Loading stream…</div>
+          ) : platform === 'twitch' ? (
+            <iframe
+              key="twitch"
+              title="LuckAndLoadTV on Twitch"
+              src={`https://player.twitch.tv/?channel=${TWITCH_CHANNEL}&parent=${parentHost}&muted=true`}
+              className="h-full w-full"
+              allowFullScreen
+            />
+          ) : (
+            <iframe
+              key="kick"
+              title="LuckAndLoadTV on Kick"
+              src={`https://player.kick.com/${KICK_CHANNEL}`}
+              className="h-full w-full"
+              allow="autoplay; fullscreen"
+              allowFullScreen
+            />
+          )}
+        </div>
       </div>
     </section>
   )

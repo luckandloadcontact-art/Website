@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { GuideDetails, GuideDetailsGroup, GuideH2, GuideH3, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
+import { StickyClaimBar } from '@/components/casinos/StickyClaimBar'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import HypeBetReview from '@/content/casinos/hype-bet'
 import { CASINOS, activeOffer, formatOfferEnd, getCasino } from '@/lib/casinos'
@@ -32,7 +33,13 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
     title: `${title} – LuckAndLoadTV`,
     description: casino.description,
     alternates: { canonical: url },
-    openGraph: { title, description: casino.description, type: 'article', url },
+    openGraph: {
+      title,
+      description: casino.description,
+      type: 'article',
+      url,
+      images: [{ url: `${SITE_URL}${casino.shareImage}`, width: 1200, height: 630, alt: title }],
+    },
   }
 }
 
@@ -46,7 +53,7 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
   const Body = BODIES[casino.slug]
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen px-4 pt-12 pb-28 sm:px-6 md:pb-12 lg:px-8">
       <JsonLd
         data={{
           '@context': 'https://schema.org',
@@ -93,7 +100,7 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
           </div>
         </header>
 
-        <aside className="mb-10 rounded-2xl border border-hype/40 bg-hype/5 p-5 sm:p-6">
+        <aside id="offer-box" className="mb-10 rounded-2xl border border-hype/40 bg-hype/5 p-5 sm:p-6">
           <div className="flex flex-col gap-6 md:flex-row md:items-center">
             {offer?.banner && (
               <a href={casino.playUrl} target="_blank" rel="sponsored noopener noreferrer" className="shrink-0 md:w-80">
@@ -203,7 +210,33 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
             .
           </GuideP>
         </div>
+
+        <footer className="mt-12 flex max-w-3xl items-start gap-4 border-t border-white/10 pt-6">
+          <Image
+            src={author.image}
+            alt={author.name}
+            width={56}
+            height={56}
+            className="h-14 w-14 shrink-0 rounded-full object-cover"
+          />
+          <div>
+            <p className="text-sm text-slate-400">
+              Written by{' '}
+              <Link href={`/authors/${author.slug}`} className="font-semibold text-white hover:text-brand-300 transition-colors">
+                {author.name}
+              </Link>
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-slate-400">{author.bio}</p>
+          </div>
+        </footer>
       </article>
+
+      <StickyClaimBar
+        targetId="offer-box"
+        href={casino.playUrl}
+        headline={offer ? offer.headline : `Play on ${casino.name}`}
+        label={offer ? 'Claim' : 'Play'}
+      />
     </div>
   )
 }
