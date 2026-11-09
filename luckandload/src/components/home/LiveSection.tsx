@@ -41,9 +41,11 @@ export function LiveSection() {
     setParentHost(window.location.hostname)
     // Klokkeslett regnes ut i nettleseren, så besøkende også ser sendetiden i sin egen tidssone.
     setNextStream(describeNextStream())
-    fetch('/api/live-status')
+    // Kick blokkerer kall fra Vercel sine servere, men tillater kall fra nettleseren på vårt domene
+    // (CORS). Feiler kallet, vises offline-visningen som før.
+    fetch(`https://kick.com/api/v2/channels/${KICK_CHANNEL}`, { headers: { Accept: 'application/json' } })
       .then(res => (res.ok ? res.json() : null))
-      .then(data => setLive(data?.live ?? null))
+      .then(data => setLive(data ? Boolean(data.livestream?.is_live) : null))
       .catch(() => setLive(null))
   }, [])
 
