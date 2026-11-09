@@ -33,19 +33,23 @@ export function LiveSection() {
   // "cannot be embedded"). Hentes fra window i stedet for å hardkodes, slik at embeden også
   // virker på Vercel sine preview-URL-er og lokalt under utvikling, ikke bare på luckandloadtv.com.
   const [parentHost, setParentHost] = useState<string | null>(null)
-  const [live, setLive] = useState<boolean | null>(null)
+  // 'unknown' = Kick couldn't be reached. Then both the player and the schedule are shown, so a
+  // live stream is never hidden by a failed check.
+  const [status, setStatus] = useState<'checking' | 'live' | 'offline' | 'unknown'>('checking')
   const [upcoming, setUpcoming] = useState<StreamSlot[]>([])
+  const showPlayer = status === 'live' || status === 'unknown'
+  const showSchedule = status !== 'live'
 
   useEffect(() => {
     setParentHost(window.location.hostname)
     // Klokkeslett regnes ut i nettleseren, så besøkende også ser sendetiden i sin egen tidssone.
     setUpcoming(describeUpcoming())
     // Kick blokkerer kall fra Vercel sine servere, men tillater kall fra nettleseren på vårt domene
-    // (CORS). Feiler kallet, vises offline-visningen som før.
+    // (CORS). Offline vises neste sending og klipp i stedet for spilleren, live vises spilleren.
     fetch(`https://kick.com/api/v2/channels/${KICK_CHANNEL}`, { headers: { Accept: 'application/json' } })
       .then(res => (res.ok ? res.json() : null))
-      .then(data => setLive(data ? Boolean(data.livestream?.is_live) : null))
-      .catch(() => setLive(null))
+      .then(data => setStatus(data ? (data.livestream?.is_live ? 'live' : 'offline') : 'unknown'))
+      .catch(() => setStatus('unknown'))
   }, [])
 
   return (
@@ -54,8 +58,8 @@ export function LiveSection() {
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Tv size={20} className="text-brand-500" />
-            <h2 className="text-xl font-bold text-white">Live Stream</h2>
-            {live && (
+            <h2 className="text-xl font-bold text-white">{status === 'offline' ? 'Stream Schedule' : 'Live Stream'}</h2>
+            {status === 'live' && (
               <span className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-red-300">
                 <span className="live-dot" />
                 Live now
@@ -63,6 +67,7 @@ export function LiveSection() {
             )}
           </div>
 
+          {showPlayer && (
           <div className="flex rounded-full border border-white/10 bg-surface-800 p-1 text-sm font-semibold">
             <button
               type="button"
@@ -85,10 +90,11 @@ export function LiveSection() {
               Kick
             </button>
           </div>
+          )}
         </div>
 
-        {!live && (
-          <div className="mx-auto mb-6 grid max-w-4xl gap-6 md:grid-cols-[15rem_1fr]">
+        {showSchedule && (
+          <div className={cn('mx-auto grid max-w-4xl gap-6 md:grid-cols-[15rem_1fr]', showPlayer && 'mb-6')}>
             <div className="rounded-2xl border border-white/10 bg-surface-800 p-5">
               <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-400">
                 <CalendarClock size={14} />
@@ -180,6 +186,7 @@ export function LiveSection() {
           </div>
         )}
 
+        {showPlayer && (
         <div className="mx-auto aspect-video max-w-4xl overflow-hidden rounded-2xl border border-white/8 bg-black">
           {!parentHost ? (
             <div className="flex h-full items-center justify-center text-sm text-slate-500">Loading stream…</div>
@@ -202,6 +209,7 @@ export function LiveSection() {
             />
           )}
         </div>
+        )}
       </div>
     </section>
   )
