@@ -1,0 +1,204 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import type { LeaderboardEntry } from '@/lib/affilka'
+import { hypeTimeEnd } from '@/lib/stream'
+import { cn, formatXP } from '@/lib/utils'
+
+// Designed at 480x320 and scaled to whatever size OBS gives the browser source.
+const WIDTH = 480
+const HEIGHT = 320
+const SLIDE_MS = 8_000
+const REFRESH_MS = 5 * 60_000 // New leaderboard numbers every 5 minutes
+
+const RANK_COLORS = ['bg-yellow-400 text-black', 'bg-slate-300 text-black', 'bg-amber-600 text-black']
+
+function useCountdown(end: Date) {
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30_000)
+    return () => clearInterval(timer)
+  }, [])
+  const minutes = Math.max(0, Math.floor((end.getTime() - now) / 60_000))
+  return { days: Math.floor(minutes / 1440), hours: Math.floor((minutes % 1440) / 60), minutes: minutes % 60 }
+}
+
+function Label({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <span className={cn('inline-block rounded-full px-3 py-1 text-[13px] font-black uppercase tracking-wider', className)}>
+      {children}
+    </span>
+  )
+}
+
+function LeaderboardSlide({ entries, periodFrom }: { entries: LeaderboardEntry[]; periodFrom: string | null }) {
+  const month = periodFrom
+    ? new Date(`${periodFrom}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', timeZone: 'UTC' })
+    : 'Monthly'
+  return (
+    <div className="flex h-full flex-col">
+      <div className="mb-3 flex items-center justify-between">
+        <Label className="bg-brand-500/20 text-brand-300">{month} leaderboard</Label>
+        <span className="text-[15px] font-black text-hype">$1,000 prizes</span>
+      </div>
+      {entries.length > 0 ? (
+        <ol className="flex flex-1 flex-col justify-between">
+          {entries.map(entry => (
+            <li key={entry.rank} className="flex items-center gap-3 rounded-lg bg-white/[0.04] px-3 py-1.5">
+              <span
+                className={cn(
+                  'flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[14px] font-black',
+                  RANK_COLORS[entry.rank - 1] ?? 'bg-white/10 text-white'
+                )}
+              >
+                {entry.rank}
+              </span>
+              <span className="min-w-0 flex-1 truncate text-[17px] font-bold text-white">{entry.username}</span>
+              <span className="text-[14px] tabular-nums text-slate-400">{formatXP(entry.xpPoints)} XP</span>
+              <span className="w-14 text-right text-[17px] font-black tabular-nums text-hype">
+                {entry.prize ? `$${entry.prize}` : ''}
+              </span>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="flex flex-1 items-center text-[20px] font-bold text-white">
+          Play under code LuckAndLoad to get on the board!
+        </p>
+      )}
+    </div>
+  )
+}
+
+function RolexSlide() {
+  const left = useCountdown(hypeTimeEnd())
+  return (
+    <div className="flex h-full items-center gap-2">
+      <div className="flex-1">
+        <Label className="bg-yellow-400/20 text-yellow-300">Hype Time</Label>
+        <p className="mt-3 text-[34px] font-black leading-none text-white">
+          WIN A <span className="text-yellow-400">ROLEX</span>
+        </p>
+        <p className="mt-1 text-[26px] font-black leading-tight text-white">+ $25,000 CASH</p>
+        <ul className="mt-3 space-y-1 text-[16px] font-semibold text-slate-200">
+          <li>🎟️ 1,000 XP = 1 ticket</li>
+          <li>⚡ 2x XP in multiplayer rooms</li>
+        </ul>
+        <p className="mt-3 text-[15px] font-bold text-slate-400">
+          Ends in{' '}
+          <span className="text-white" suppressHydrationWarning>
+            {left.days}d {left.hours}h {left.minutes}m
+          </span>
+        </p>
+      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/overlay/rolex-watch.png" alt="" className="h-[250px] w-auto shrink-0 rounded-2xl object-cover" />
+    </div>
+  )
+}
+
+function JoinSlide() {
+  return (
+    <div className="flex h-full flex-col items-center justify-center text-center">
+      <Label className="bg-hype/15 text-hype">Multiplayer room</Label>
+      <p className="mt-4 text-[34px] font-black leading-none text-white">JOIN THE ACTION</p>
+      <p className="mt-4 text-[18px] font-semibold text-slate-300">Type in chat</p>
+      <p className="mt-2 rounded-xl bg-hype px-6 py-2 text-[40px] font-black leading-none text-black">!hype</p>
+      <p className="mt-4 text-[16px] font-semibold text-slate-300">
+        Play with us in our room · <span className="text-hype">2x XP on slots</span>
+      </p>
+    </div>
+  )
+}
+
+function OfferSlide({ headline, banner }: { headline: string; banner: string | null }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center text-center">
+      {banner ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={banner} alt="" className="w-full rounded-xl" />
+      ) : (
+        <p className="text-[34px] font-black text-white">{headline}</p>
+      )}
+      <p className="mt-3 text-[17px] font-bold text-white">
+        Code <span className="text-hype">LuckAndLoad</span> · type <span className="text-hype">!hype</span> · 18+
+      </p>
+    </div>
+  )
+}
+
+export function StreamWidget({
+  entries,
+  periodFrom,
+  offer,
+}: {
+  entries: LeaderboardEntry[]
+  periodFrom: string | null
+  offer: { headline: string; banner: string | null } | null
+}) {
+  const router = useRouter()
+  const [scale, setScale] = useState(1)
+  const [active, setActive] = useState(0)
+
+  const slides = [
+    <LeaderboardSlide key="leaderboard" entries={entries} periodFrom={periodFrom} />,
+    <RolexSlide key="rolex" />,
+    <JoinSlide key="join" />,
+    ...(offer ? [<OfferSlide key="offer" headline={offer.headline} banner={offer.banner} />] : []),
+  ]
+
+  useEffect(() => {
+    const resize = () => setScale(Math.min(window.innerWidth / WIDTH, window.innerHeight / HEIGHT))
+    resize()
+    window.addEventListener('resize', resize)
+    return () => window.removeEventListener('resize', resize)
+  }, [])
+
+  useEffect(() => {
+    const timer = setInterval(() => setActive(index => (index + 1) % slides.length), SLIDE_MS)
+    return () => clearInterval(timer)
+  }, [slides.length])
+
+  useEffect(() => {
+    const timer = setInterval(() => router.refresh(), REFRESH_MS)
+    return () => clearInterval(timer)
+  }, [router])
+
+  const current = active % slides.length
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden">
+      <style>{'@keyframes overlay-progress{from{width:0}to{width:100%}}'}</style>
+      <div
+        style={{ width: WIDTH, height: HEIGHT, transform: `scale(${scale})` }}
+        className="relative shrink-0 overflow-hidden rounded-[22px] border-2 border-indigo-400/40 bg-gradient-to-br from-[#161a3a] to-[#0a0c1d] font-sans"
+      >
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className={cn(
+              'absolute inset-0 px-5 pb-7 pt-5 transition-opacity duration-700',
+              index === current ? 'opacity-100' : 'opacity-0'
+            )}
+          >
+            {slide}
+          </div>
+        ))}
+        <div className="absolute inset-x-5 bottom-3 flex gap-1.5">
+          {slides.map((_, index) => (
+            <div key={index} className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
+              {index === current && (
+                <div
+                  key={`${current}-${active}`}
+                  className="h-full rounded-full bg-hype"
+                  style={{ animation: `overlay-progress ${SLIDE_MS}ms linear forwards` }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}

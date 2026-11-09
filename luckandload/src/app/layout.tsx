@@ -4,6 +4,7 @@ import { Providers } from '@/components/Providers'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { HypeClickTracker } from '@/components/layout/HypeClickTracker'
+import { HideOnOverlay } from '@/components/layout/HideOnOverlay'
 import { SITE_URL } from '@/lib/guides'
 
 export const metadata: Metadata = {
@@ -35,9 +36,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen bg-surface-900 text-slate-200">
         <Providers>
-          <Navbar />
+          <HideOnOverlay>
+            <Navbar />
+          </HideOnOverlay>
           <main>{children}</main>
-          <Footer />
+          <HideOnOverlay>
+            <Footer />
+          </HideOnOverlay>
         </Providers>
         <HypeClickTracker />
       </body>

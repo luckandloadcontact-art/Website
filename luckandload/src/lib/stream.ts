@@ -65,6 +65,15 @@ function zonedTime(date: string, time: string, timeZone: string) {
   return new Date(guess - offset)
 }
 
+/** When this month's Hype Time ends: the last day of the month at 23:59 New York time. */
+export function hypeTimeEnd(now = new Date()) {
+  const timeZone = 'America/New_York'
+  const p = partsInZone(now, timeZone)
+  const lastDay = new Date(Date.UTC(p.year, p.month, 0)).getUTCDate()
+  const date = `${p.year}-${String(p.month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`
+  return new Date(zonedTime(date, '23:59', timeZone).getTime() + 59_000)
+}
+
 export type UpcomingStream = {
   title: string
   start: Date
