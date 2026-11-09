@@ -40,7 +40,7 @@ export function Footer() {
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Home</Link>
             <Link href="/leaderboard" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Leaderboard</Link>
-            <Link href="/casinos" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Casinos</Link>
+            <Link href="/casinos/hype-bet" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Hype.bet Bonus</Link>
             <Link href="/guides" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Guides</Link>
             <Link href="/contact" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Contact</Link>
             <Link href="/responsible-gambling" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Gambling Help</Link>

@@ -6,11 +6,11 @@ import { useState } from 'react'
 import { Menu, X, Trophy, User, LayoutDashboard, LogOut, LogIn } from 'lucide-react'
 import { cn, formatPoints } from '@/lib/utils'
 
-const NAV_LINKS: { href: string | null; label: string; comingSoon?: boolean }[] = [
+const NAV_LINKS: { href: string | null; label: string; comingSoon?: boolean; highlight?: boolean }[] = [
+  { href: '/casinos/hype-bet', label: 'Hype.bet Bonus', highlight: true },
   { href: '/blackjack', label: 'Daily Blackjack' },
   { href: '/guess-the-slot', label: 'Guess the Slot' },
   { href: '/leaderboard', label: 'Leaderboard' },
-  { href: '/casinos', label: 'Casinos' },
   { href: '/guides', label: 'Guides' },
   { href: '/slot-wheel', label: 'Slot Wheel' },
   { href: '/events', label: 'Events' },
@@ -57,7 +57,10 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href!}
-                  className="px-4 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                  className={cn(
+                    'px-4 py-2 rounded-lg text-sm transition-colors hover:bg-white/5',
+                    link.highlight ? 'font-semibold text-hype hover:text-hype/80' : 'text-slate-400 hover:text-white'
+                  )}
                 >
                   {link.label}
                 </Link>
@@ -186,7 +189,10 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href!}
-                  className="block px-4 py-2.5 rounded-lg text-sm text-slate-300 hover:text-white hover:bg-white/5"
+                  className={cn(
+                    'block px-4 py-2.5 rounded-lg text-sm hover:bg-white/5',
+                    link.highlight ? 'font-semibold text-hype' : 'text-slate-300 hover:text-white'
+                  )}
                   onClick={() => setMenuOpen(false)}
                 >
                   {link.label}

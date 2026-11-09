@@ -90,7 +90,7 @@ export default function HypeBetReview({ playUrl }: { playUrl: string }) {
         <li>Crypto deposits are converted to USD at the live rate when the transaction is confirmed.</li>
       </GuideList>
 
-      <GuideH2>Hype Time: win a Rolex and $25,000 in cash</GuideH2>
+      <GuideH2>Hype Time: a Rolex and $25,000 every month</GuideH2>
       <div className="mb-5 flex flex-col gap-6 sm:flex-row sm:items-start">
         <a href={playUrl} target="_blank" rel="sponsored noopener noreferrer" className="shrink-0">
           <Image
@@ -103,12 +103,40 @@ export default function HypeBetReview({ playUrl }: { playUrl: string }) {
         </a>
         <div>
           <GuideP>
-            New players who deposit at least $20 and claim all the welcome bonuses also get 10 tickets for Hype.bet&apos;s
-            draw for a Rolex and $25,000 in cash, on top of the 100% RakeBoost and the 100 free spins.
+            Hype Time runs every month and ends on the last day of the month at 23:59 EST. There are two ways to win:
           </GuideP>
-          <GuideP>Check Hype.bet for the draw date and the full terms.</GuideP>
+          <GuideList>
+            <li>
+              <strong className="text-white">The Rolex draw.</strong> Every 1,000 XP you earn gives you a ticket, and
+              every ticket is an entry. It&apos;s pure luck, so anyone can win. The more tickets players collect during
+              the month, the more valuable the Rolex gets, across three prize tiers.
+            </li>
+            <li>
+              <strong className="text-white">$25,000 in cash.</strong> The top 10 players at the end of the month share a
+              guaranteed $25,000.
+            </li>
+          </GuideList>
+          <GuideP>
+            New players also get 10 draw tickets when they deposit at least $20 and claim all the welcome bonuses.
+          </GuideP>
         </div>
       </div>
+
+      <GuideH3>Double XP in our multiplayer rooms</GuideH3>
+      <GuideP>
+        During the campaign, slots played inside a multiplayer room earn 2 XP for every $1 instead of 1 XP on your own.
+        Same game, same stake, twice the tickets. Join our room when we&apos;re live and you&apos;ll collect tickets twice
+        as fast.
+      </GuideP>
+      <a href={playUrl} target="_blank" rel="sponsored noopener noreferrer" className="mb-5 block">
+        <Image
+          src="/casinos/hype-double-xp-rooms.png"
+          alt="Campaign offer: double XP in multiplayer rooms. Every $1 on slots earns 2 XP in a room and 1 XP on your own."
+          width={1184}
+          height={286}
+          className="w-full rounded-2xl"
+        />
+      </a>
 
       <GuideH2>Highest RTP on the games</GuideH2>
       <GuideP>

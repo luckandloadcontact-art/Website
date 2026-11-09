@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import { CASINOS, activeOffer, formatOfferEnd } from '@/lib/casinos'
 import { SITE_URL } from '@/lib/guides'
@@ -20,6 +21,9 @@ const UPDATED = new Date(
 ).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
 
 export default function CasinosPage() {
+  // The list only makes sense with several casinos. Until then, send visitors straight to the one.
+  if (CASINOS.length === 1) redirect(`/casinos/${CASINOS[0].slug}`)
+
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-4xl">

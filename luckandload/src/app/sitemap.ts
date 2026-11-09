@@ -5,7 +5,8 @@ import { AUTHORS, GUIDES, SITE_URL } from '@/lib/guides'
 const ROUTES = [
   '',
   '/leaderboard',
-  '/casinos',
+  // /casinos redirects to the single casino until there are several.
+  ...(CASINOS.length > 1 ? ['/casinos'] : []),
   '/guides',
   '/blackjack',
   '/guess-the-slot',

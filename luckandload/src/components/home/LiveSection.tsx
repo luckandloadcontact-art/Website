@@ -4,28 +4,27 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { CalendarClock, ExternalLink, Tv } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { BEST_CLIPS, KICK_URL, STREAM_SCHEDULE, nextScheduledStream } from '@/lib/stream'
+import { BEST_CLIPS, KICK_URL, STREAM_TIME_ZONE, upcomingStreams } from '@/lib/stream'
 
 const TWITCH_CHANNEL = 'luckandloadtv'
 const KICK_CHANNEL = 'luckandloadtv'
 const DISCORD_URL = 'https://discord.gg/yagZVjqqbr'
 
-type NextStream = { day: string; time: string; localTime: string | null }
+type StreamSlot = { title: string; day: string; time: string; localTime: string | null }
 
-function describeNextStream(): NextStream | null {
-  const next = nextScheduledStream()
-  if (!next) return null
-  const { timeZone } = STREAM_SCHEDULE
-  const time = next.start.toLocaleTimeString('en-GB', { timeZone, hour: '2-digit', minute: '2-digit' })
-  const localTime = next.start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-  const day = next.started
-    ? 'Starting soon'
-    : next.daysAway === 0
-      ? 'Today'
-      : next.daysAway === 1
-        ? 'Tomorrow'
-        : next.start.toLocaleDateString('en-US', { timeZone, weekday: 'long' })
-  return { day, time, localTime: localTime === time ? null : localTime }
+function describeUpcoming(): StreamSlot[] {
+  return upcomingStreams().map(stream => {
+    const time = stream.start.toLocaleTimeString('en-GB', { timeZone: STREAM_TIME_ZONE, hour: '2-digit', minute: '2-digit' })
+    const localTime = stream.start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+    const day = stream.started
+      ? 'Starting soon'
+      : stream.daysAway === 0
+        ? 'Today'
+        : stream.daysAway === 1
+          ? 'Tomorrow'
+          : stream.start.toLocaleDateString('en-US', { timeZone: STREAM_TIME_ZONE, weekday: 'long' })
+    return { title: stream.title, day, time, localTime: localTime === time ? null : localTime }
+  })
 }
 
 export function LiveSection() {
@@ -35,12 +34,12 @@ export function LiveSection() {
   // virker på Vercel sine preview-URL-er og lokalt under utvikling, ikke bare på luckandloadtv.com.
   const [parentHost, setParentHost] = useState<string | null>(null)
   const [live, setLive] = useState<boolean | null>(null)
-  const [nextStream, setNextStream] = useState<NextStream | null>(null)
+  const [upcoming, setUpcoming] = useState<StreamSlot[]>([])
 
   useEffect(() => {
     setParentHost(window.location.hostname)
     // Klokkeslett regnes ut i nettleseren, så besøkende også ser sendetiden i sin egen tidssone.
-    setNextStream(describeNextStream())
+    setUpcoming(describeUpcoming())
     // Kick blokkerer kall fra Vercel sine servere, men tillater kall fra nettleseren på vårt domene
     // (CORS). Feiler kallet, vises offline-visningen som før.
     fetch(`https://kick.com/api/v2/channels/${KICK_CHANNEL}`, { headers: { Accept: 'application/json' } })
@@ -118,14 +117,27 @@ export function LiveSection() {
                 <CalendarClock size={14} />
                 Next stream
               </p>
-              {nextStream ? (
+              {upcoming.length > 0 ? (
                 <>
-                  <p className="text-2xl font-bold text-white">{nextStream.day}</p>
-                  <p className="text-sm text-slate-300">{nextStream.time} Norwegian time</p>
-                  {nextStream.localTime && <p className="text-xs text-slate-500">{nextStream.localTime} your time</p>}
+                  <p className="text-2xl font-bold text-white">{upcoming[0].day}</p>
+                  <p className="text-sm text-slate-300">{upcoming[0].time} Norwegian time</p>
+                  {upcoming[0].localTime && <p className="text-xs text-slate-500">{upcoming[0].localTime} your time</p>}
+                  <p className="mt-2 text-sm font-semibold text-white">{upcoming[0].title}</p>
+                  {upcoming.length > 1 && (
+                    <ul className="mt-4 space-y-1.5 border-t border-white/10 pt-3 text-xs">
+                      {upcoming.slice(1, 4).map(slot => (
+                        <li key={`${slot.day}-${slot.time}-${slot.title}`} className="flex justify-between gap-3">
+                          <span className="text-slate-300">{slot.title}</span>
+                          <span className="shrink-0 text-slate-500">
+                            {slot.day} {slot.time}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </>
               ) : (
-                <p className="text-sm text-slate-400">Follow us to hear when we go live.</p>
+                <p className="text-sm text-slate-400">The next schedule is coming soon. Follow us to hear when we go live.</p>
               )}
               <a
                 href={KICK_URL}

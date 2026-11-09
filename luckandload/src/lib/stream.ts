@@ -1,14 +1,18 @@
 // Stream schedule and highlights for the offline view on the home page. Safe to import from client
 // components (no server-only imports).
 
-// When we usually go live, in Norwegian time. 0 = Sunday, 1 = Monday ... 6 = Saturday.
-export const STREAM_SCHEDULE = {
-  timeZone: 'Europe/Oslo',
-  days: [0, 1, 2, 4, 5],
-  hour: 18,
-  minute: 0,
-  durationHours: 3,
-}
+export const STREAM_TIME_ZONE = 'Europe/Oslo'
+const STREAM_HOURS = 3 // How long a stream counts as "on" after its start time
+
+// This week's streams, copied from the events in our Discord. Update every week. Dates and times
+// are Norwegian time. Once the last one is over, the home page asks people to follow us instead.
+export const SCHEDULED_STREAMS = [
+  { date: '2026-11-09', time: '18:00', title: 'Classic Bonushunt' },
+  { date: '2026-11-11', time: '18:00', title: 'No Ante Bonushunt' },
+  { date: '2026-11-12', time: '18:00', title: 'Classic Bonushunt' },
+  { date: '2026-11-14', time: '18:00', title: 'Supers Only Bonushunt' },
+  { date: '2026-11-15', time: '18:00', title: 'Guest Stream & Bonushunt' },
+]
 
 export const KICK_URL = 'https://kick.com/luckandloadtv'
 
@@ -36,8 +40,6 @@ export const BEST_CLIPS = [
   },
 ]
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-
 function partsInZone(date: Date, timeZone: string) {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone,
@@ -47,43 +49,43 @@ function partsInZone(date: Date, timeZone: string) {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',
-    weekday: 'short',
     hourCycle: 'h23',
   }).formatToParts(date)
-  const get = (type: string) => parts.find(part => part.type === type)?.value ?? '0'
-  return {
-    year: Number(get('year')),
-    month: Number(get('month')),
-    day: Number(get('day')),
-    hour: Number(get('hour')),
-    minute: Number(get('minute')),
-    second: Number(get('second')),
-    weekday: WEEKDAYS.indexOf(get('weekday')),
-  }
+  const get = (type: string) => Number(parts.find(part => part.type === type)?.value ?? 0)
+  return { year: get('year'), month: get('month'), day: get('day'), hour: get('hour'), minute: get('minute'), second: get('second') }
 }
 
-/** The UTC instant of a wall-clock time in the given time zone. */
-function zonedTime(year: number, month: number, day: number, hour: number, minute: number, timeZone: string) {
+/** The UTC instant of a wall-clock time ('YYYY-MM-DD', 'HH:MM') in the given time zone. */
+function zonedTime(date: string, time: string, timeZone: string) {
+  const [year, month, day] = date.split('-').map(Number)
+  const [hour, minute] = time.split(':').map(Number)
   const guess = Date.UTC(year, month - 1, day, hour, minute)
   const p = partsInZone(new Date(guess), timeZone)
   const offset = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - guess
   return new Date(guess - offset)
 }
 
-/**
- * The next scheduled stream that hasn't finished yet. daysAway counts calendar days in Norwegian
- * time (0 = today, 1 = tomorrow). started is true while we're inside a scheduled slot.
- */
-export function nextScheduledStream(now = new Date()) {
-  const { timeZone, days, hour, minute, durationHours } = STREAM_SCHEDULE
-  const today = partsInZone(now, timeZone)
-  for (let daysAway = 0; daysAway <= 7; daysAway++) {
-    const date = new Date(Date.UTC(today.year, today.month - 1, today.day + daysAway))
-    if (!days.includes(date.getUTCDay())) continue
-    const start = zonedTime(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), hour, minute, timeZone)
-    if (start.getTime() + durationHours * 3_600_000 > now.getTime()) {
-      return { start, daysAway, started: start.getTime() <= now.getTime() }
+export type UpcomingStream = {
+  title: string
+  start: Date
+  daysAway: number // Calendar days from today in Norwegian time: 0 = today, 1 = tomorrow
+  started: boolean // Inside the scheduled slot but not (yet) detected as live
+}
+
+/** Scheduled streams that haven't finished yet, soonest first. */
+export function upcomingStreams(now = new Date()): UpcomingStream[] {
+  const today = partsInZone(now, STREAM_TIME_ZONE)
+  const todayUtc = Date.UTC(today.year, today.month - 1, today.day)
+  return SCHEDULED_STREAMS.map(stream => {
+    const start = zonedTime(stream.date, stream.time, STREAM_TIME_ZONE)
+    const [year, month, day] = stream.date.split('-').map(Number)
+    return {
+      title: stream.title,
+      start,
+      daysAway: Math.round((Date.UTC(year, month - 1, day) - todayUtc) / 86_400_000),
+      started: start.getTime() <= now.getTime(),
     }
-  }
-  return null
+  })
+    .filter(stream => stream.start.getTime() + STREAM_HOURS * 3_600_000 > now.getTime())
+    .sort((a, b) => a.start.getTime() - b.start.getTime())
 }

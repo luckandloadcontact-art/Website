@@ -40,7 +40,7 @@ export const CASINOS: Casino[] = [
     logo: '/casinos/hype-bet.png',
     playUrl: 'https://hype.bet/LuckAndLoad',
     code: 'LuckAndLoad',
-    tags: ['Multiplayer rooms', 'Highest RTP', 'Where we stream'],
+    tags: ['Multiplayer rooms', 'Highest RTP', 'Monthly Rolex draw'],
     highlights: [
       'Play in shared multiplayer rooms with us and other viewers, live on stream',
       'Slots run on the highest RTP settings available',
@@ -73,6 +73,7 @@ export const CASINOS: Casino[] = [
       'Multiplayer rooms. You can play in a shared room with friends or a streamer in real time, and Hype.bet calls itself the world’s only multiplayer online casino.',
       'Slots run on the highest RTP settings available, so you get the best possible odds on the games.',
       'A welcome bonus that unlocks as you play. Every part you unlock can be withdrawn straight away, with no wagering on it.',
+      'Hype Time every month: a Rolex draw where every 1,000 XP is a ticket, and a guaranteed $25,000 for the top 10.',
       'A loyalty program where points can be swapped for bonuses, weekly rakeback and free withdrawals.',
       'We’ve played at Hype.bet for more than a year, and neither we nor our players have run into any significant problems.',
     ],
@@ -93,6 +94,11 @@ export const CASINOS: Casino[] = [
           'Your first deposit is matched 100%, up to $500, but the bonus isn’t paid out all at once. It unlocks in four equal parts as you earn XP. Every $1 you bet on slots or sports earns 1 XP, and the total XP you need is 50 times your bonus. Each part can be withdrawn as soon as it unlocks.',
       },
       {
+        question: 'How does the Hype.bet Rolex draw work?',
+        answer:
+          'Hype Time runs every month and ends on the last day of the month at 23:59 EST. Every 1,000 XP you earn gives you a ticket for the Rolex draw, and the top 10 players at the end of the month share a guaranteed $25,000. Slots played in a multiplayer room earn double XP during the campaign, so you collect tickets twice as fast.',
+      },
+      {
         question: 'How do Hype.bet multiplayer rooms work?',
         answer:
           'A host opens a room and picks the games and bet size. Players can watch for free or add money to a shared pool. Every win or loss is split by each player’s share of the pool, and you can leave at any time. Rooms are for casino games only, not sports betting.',
@@ -104,8 +110,8 @@ export const CASINOS: Casino[] = [
       },
     ],
     description:
-      'Our Hype.bet review: the 100% RakeBoost welcome bonus and free spins, how multiplayer rooms work, the LuckAndLoad code, RTP and license details.',
-    reviewTitle: 'Hype.bet Review 2026: Welcome Bonus, Multiplayer Rooms and Code',
+      'The Hype.bet welcome bonus and LuckAndLoad code explained: 100% RakeBoost, free spins, the monthly Rolex draw, double XP in multiplayer rooms, RTP and license.',
+    reviewTitle: 'Hype.bet Bonus Code and Review 2026',
     authorSlug: 'kristian',
     updated: '2026-11-09',
   },
