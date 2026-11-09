@@ -1,3 +1,4 @@
+import type { ComponentType } from 'react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -5,10 +6,17 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { GuideH2, GuideH3, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
-import { CASINOS, getCasino } from '@/lib/casinos'
+import HypeBetReview from '@/content/casinos/hype-bet'
+import { CASINOS, activeOffer, formatOfferEnd, getCasino } from '@/lib/casinos'
 import { SITE_URL, formatGuideDate, getAuthor } from '@/lib/guides'
 
+const BODIES: Record<string, ComponentType<{ playUrl: string }>> = {
+  'hype-bet': HypeBetReview,
+}
+
 export const dynamicParams = false
+// Rebuilt hourly so a welcome offer disappears by itself once its end date has passed.
+export const revalidate = 3600
 
 export function generateStaticParams() {
   return CASINOS.map(casino => ({ slug: casino.slug }))
@@ -32,6 +40,8 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
   if (!casino || !author) notFound()
 
   const url = `${SITE_URL}/casinos/${casino.slug}`
+  const offer = activeOffer(casino)
+  const Body = BODIES[casino.slug]
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
@@ -79,28 +89,43 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
           </div>
         </header>
 
-        <aside className="mb-10 rounded-2xl border border-hype/40 bg-hype/5 p-6 sm:p-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-hype">Welcome offer</p>
-              <p className="text-2xl font-bold text-white">
-                {casino.welcomeOffer ?? `See ${casino.name}'s current welcome offer`}
+        <aside className="mb-10 rounded-2xl border border-hype/40 bg-hype/5 p-5 sm:p-6">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center">
+            {offer?.banner && (
+              <a href={casino.playUrl} target="_blank" rel="sponsored noopener noreferrer" className="shrink-0 md:w-80">
+                <Image
+                  src={offer.banner.src}
+                  alt={offer.banner.alt}
+                  width={offer.banner.width}
+                  height={offer.banner.height}
+                  className="w-full rounded-xl"
+                  priority
+                />
+              </a>
+            )}
+            <div className="flex-1">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-hype">
+                Welcome offer{offer?.ends && <> · Ends {formatOfferEnd(offer.ends)}</>}
               </p>
+              <p className="text-2xl font-bold text-white">
+                {offer ? offer.headline : `See ${casino.name}'s current welcome offer`}
+              </p>
+              {offer && <p className="mt-1 text-sm text-slate-400">First deposit only. New players.</p>}
               {casino.code && (
                 <p className="mt-2 text-sm text-slate-300">
                   Our code: <span className="font-bold text-white">{casino.code}</span>. Signing up through our link
                   connects your account to it.
                 </p>
               )}
+              <a
+                href={casino.playUrl}
+                target="_blank"
+                rel="sponsored noopener noreferrer"
+                className="mt-4 inline-flex items-center justify-center rounded-lg bg-hype px-8 py-3.5 text-base font-black uppercase tracking-wide text-black transition-colors hover:bg-hype/90"
+              >
+                {offer ? 'Claim bonus' : `Play on ${casino.name}`}
+              </a>
             </div>
-            <a
-              href={casino.playUrl}
-              target="_blank"
-              rel="sponsored noopener noreferrer"
-              className="inline-flex shrink-0 items-center justify-center rounded-lg bg-hype px-10 py-4 text-base font-black uppercase tracking-wide text-black transition-colors hover:bg-hype/90"
-            >
-              Play on {casino.name}
-            </a>
           </div>
           <p className="mt-5 text-xs text-slate-500">
             18+ · T&amp;Cs apply · Affiliate link: we earn commission if you sign up and play through it.
@@ -123,6 +148,8 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
             .
           </GuideP>
 
+          {Body && <Body playUrl={casino.playUrl} />}
+
           <GuideH2>Pros and cons</GuideH2>
           <GuideH3>What we like</GuideH3>
           <GuideList>
@@ -140,6 +167,12 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
           <GuideH2>{casino.name} at a glance</GuideH2>
           <table className="mb-5 w-full text-left text-sm">
             <tbody className="divide-y divide-white/10 text-slate-200">
+              {offer && (
+                <tr>
+                  <th scope="row" className="w-44 py-3 pr-4 font-normal text-slate-400">Welcome offer</th>
+                  <td className="py-3">{offer.headline}</td>
+                </tr>
+              )}
               {casino.details.map(detail => (
                 <tr key={detail.label}>
                   <th scope="row" className="w-44 py-3 pr-4 font-normal text-slate-400">{detail.label}</th>

@@ -1,10 +1,17 @@
 // Casinos listed on /casinos. Add a new entry here to get a card on the list and its own review
 // page at /casinos/<slug>. Only state facts we have checked: the casino's own site, its help
-// centre, or the casino in writing.
+// centre, or the casino in writing. Longer casino-specific sections (bonus mechanics and the like)
+// go in src/content/casinos/<slug>.tsx and are registered in app/casinos/[slug]/page.tsx.
 
 export type CasinoDetail = { label: string; value: string }
 
 export type CasinoFaq = { question: string; answer: string }
+
+export type CasinoOffer = {
+  headline: string
+  ends: string | null // YYYY-MM-DD, the last day of the offer. Hidden automatically after that day.
+  banner: { src: string; width: number; height: number; alt: string } | null
+}
 
 export type Casino = {
   slug: string
@@ -13,10 +20,10 @@ export type Casino = {
   playUrl: string
   code: string | null
   tags: string[]
-  highlights: string[] // Two short lines for the card
-  welcomeOffer: string | null // null until confirmed; the page then points to the casino's own offer
+  highlights: string[]
+  welcomeOffer: CasinoOffer | null
   ourPerks: string[]
-  details: CasinoDetail[]
+  details: CasinoDetail[] // Shown on the review page. The list card skips Operator and Multiplayer rooms.
   pros: string[]
   cons: string[]
   faq: CasinoFaq[]
@@ -33,12 +40,22 @@ export const CASINOS: Casino[] = [
     logo: '/casinos/hype-bet.png',
     playUrl: 'https://hype.bet/LuckAndLoad',
     code: 'LuckAndLoad',
-    tags: ['Multiplayer rooms', 'Crypto', 'Where we stream'],
+    tags: ['Multiplayer rooms', 'Highest RTP', 'Where we stream'],
     highlights: [
       'Play in shared multiplayer rooms with us and other viewers, live on stream',
+      'Slots run on the highest RTP settings available',
       'Players under our code compete for $1,000 in prizes every month',
     ],
-    welcomeOffer: null,
+    welcomeOffer: {
+      headline: '100% up to $500 + 100 free spins',
+      ends: '2026-12-01',
+      banner: {
+        src: '/casinos/hype-welcome-banner.png',
+        width: 485,
+        height: 240,
+        alt: 'Hype.bet welcome offer: 100% bonus and 100 free spins on your first deposit',
+      },
+    },
     ourPerks: [
       'A spot on our monthly leaderboard, with $1,000 in prizes: ranked prizes for the top 6 and a $20 random draw among everyone who plays under our code',
       'Our multiplayer rooms during streams, where you can join a session with us and leave whenever you want',
@@ -47,26 +64,33 @@ export const CASINOS: Casino[] = [
     details: [
       { label: 'Operator', value: 'BlackSands B.V.' },
       { label: 'License', value: 'Curaçao Gaming Authority, OGL/2024/985/0430' },
+      { label: 'RTP', value: 'Highest available settings' },
       { label: 'Payments', value: 'Crypto and Interac' },
       { label: 'Multiplayer rooms', value: 'Yes, for casino games' },
       { label: 'Our code', value: 'LuckAndLoad' },
     ],
     pros: [
       'Multiplayer rooms. You can play in a shared room with friends or a streamer in real time, and Hype.bet calls itself the world’s only multiplayer online casino.',
+      'Slots run on the highest RTP settings available, so you get the best possible odds on the games.',
+      'A welcome bonus that unlocks as you play. Every part you unlock can be withdrawn straight away, with no wagering on it.',
       'A loyalty program where points can be swapped for bonuses, weekly rakeback and free withdrawals.',
-      'You can watch us play the games and run the rooms on stream before you decide to sign up.',
+      'We’ve played at Hype.bet for more than a year, and neither we nor our players have run into any significant problems.',
     ],
     cons: [
-      'A Curaçao license is generally seen as less strict than licenses from EU regulators such as the Malta Gaming Authority, with fewer ways to escalate a complaint.',
-      'It’s a young casino. Hype.bet marked its first year of multiplayer gaming in March 2026.',
-      'Player reviews are mixed, and some players report slow withdrawals.',
-      'Bonuses come with conditions, so read the terms before you opt in.',
+      'It’s licensed in Curaçao rather than by an EU regulator.',
+      'Table games, live casino and crash earn XP 20 times slower than slots, so the welcome bonus unlocks much faster on slots.',
+      'Bonus money you haven’t unlocked expires 30 days after you activate it.',
     ],
     faq: [
       {
         question: 'Is there a Hype.bet bonus code?',
         answer:
-          'Our referral code is LuckAndLoad. Signing up through our link connects your account to it, which puts you on our monthly leaderboard. Hype.bet’s own welcome offers are shown on its site and can change, so check them before you deposit.',
+          'Our referral code is LuckAndLoad. Signing up through our link connects your account to it, which puts you on our monthly leaderboard. New players can also claim Hype.bet’s first-deposit welcome offer, shown at the top of this page.',
+      },
+      {
+        question: 'How does the Hype.bet RakeBoost bonus work?',
+        answer:
+          'Your first deposit is matched 100%, up to $500, but the bonus isn’t paid out all at once. It unlocks in four equal parts as you earn XP. Every $1 you bet on slots or sports earns 1 XP, and the total XP you need is 50 times your bonus. Each part can be withdrawn as soon as it unlocks.',
       },
       {
         question: 'How do Hype.bet multiplayer rooms work?',
@@ -80,8 +104,8 @@ export const CASINOS: Casino[] = [
       },
     ],
     description:
-      'Our Hype.bet review: how the multiplayer rooms work, the LuckAndLoad referral code, license details, and the pros and cons from streamers who play there.',
-    reviewTitle: 'Hype.bet Review 2026: Multiplayer Rooms, Bonus Code and More',
+      'Our Hype.bet review: the 100% RakeBoost welcome bonus and free spins, how multiplayer rooms work, the LuckAndLoad code, RTP and license details.',
+    reviewTitle: 'Hype.bet Review 2026: Welcome Bonus, Multiplayer Rooms and Code',
     authorSlug: 'kristian',
     updated: '2026-11-09',
   },
@@ -89,4 +113,21 @@ export const CASINOS: Casino[] = [
 
 export function getCasino(slug: string) {
   return CASINOS.find(casino => casino.slug === slug)
+}
+
+/** The welcome offer, or null once its last day has passed (UTC). */
+export function activeOffer(casino: Casino, now = new Date()): CasinoOffer | null {
+  const offer = casino.welcomeOffer
+  if (!offer) return null
+  if (offer.ends && now.toISOString().slice(0, 10) > offer.ends) return null
+  return offer
+}
+
+export function formatOfferEnd(date: string) {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
-import { CASINOS } from '@/lib/casinos'
+import { CASINOS, activeOffer, formatOfferEnd } from '@/lib/casinos'
 import { SITE_URL } from '@/lib/guides'
 
 export const metadata: Metadata = {
@@ -11,6 +11,9 @@ export const metadata: Metadata = {
     'The online casinos the LuckAndLoadTV team plays at on stream, with what you get through our link, license details and honest pros and cons.',
   alternates: { canonical: `${SITE_URL}/casinos` },
 }
+
+// Rebuilt hourly so a welcome offer disappears by itself once its end date has passed.
+export const revalidate = 3600
 
 const UPDATED = new Date(
   CASINOS.reduce((latest, casino) => (casino.updated > latest ? casino.updated : latest), '')
@@ -30,7 +33,9 @@ export default function CasinosPage() {
         </header>
 
         <ol className="space-y-5">
-          {CASINOS.map((casino, index) => (
+          {CASINOS.map((casino, index) => {
+            const offer = activeOffer(casino)
+            return (
             <li key={casino.slug} className="rounded-2xl border border-white/10 bg-surface-800 p-5 sm:p-6">
               <div className="flex flex-col gap-6 md:flex-row md:items-start">
                 <div className="flex items-start gap-4 md:w-72 md:shrink-0">
@@ -68,11 +73,17 @@ export default function CasinosPage() {
                       </li>
                     ))}
                   </ul>
+                  {offer && (
+                    <p className="mb-3 text-lg font-bold text-white">
+                      {offer.headline}
+                      {offer.ends && (
+                        <span className="ml-2 align-middle text-xs font-semibold uppercase tracking-wide text-gold-400">
+                          Ends {formatOfferEnd(offer.ends)}
+                        </span>
+                      )}
+                    </p>
+                  )}
                   <dl className="grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-                    <div className="flex gap-2">
-                      <dt className="text-slate-500">Welcome offer:</dt>
-                      <dd className="text-slate-200">{casino.welcomeOffer ?? 'See current offer on site'}</dd>
-                    </div>
                     {casino.details
                       .filter(detail => detail.label !== 'Operator' && detail.label !== 'Multiplayer rooms')
                       .map(detail => (
@@ -91,7 +102,7 @@ export default function CasinosPage() {
                     rel="sponsored noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg bg-hype px-5 py-3 text-sm font-black uppercase tracking-wide text-black transition-colors hover:bg-hype/90"
                   >
-                    Play now
+                    {offer ? 'Claim bonus' : 'Play now'}
                   </a>
                   <Link
                     href={`/casinos/${casino.slug}`}
@@ -103,7 +114,8 @@ export default function CasinosPage() {
               </div>
               <p className="mt-4 border-t border-white/5 pt-3 text-xs text-slate-500">18+ · Gamble responsibly · T&amp;Cs apply</p>
             </li>
-          ))}
+            )
+          })}
         </ol>
 
         <section className="mt-14 max-w-2xl">

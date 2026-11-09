@@ -1,11 +1,32 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Tv } from 'lucide-react'
+import Image from 'next/image'
+import { CalendarClock, ExternalLink, Tv } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { BEST_CLIPS, KICK_URL, STREAM_SCHEDULE, nextScheduledStream } from '@/lib/stream'
 
 const TWITCH_CHANNEL = 'luckandloadtv'
 const KICK_CHANNEL = 'luckandloadtv'
+const DISCORD_URL = 'https://discord.gg/yagZVjqqbr'
+
+type NextStream = { day: string; time: string; localTime: string | null }
+
+function describeNextStream(): NextStream | null {
+  const next = nextScheduledStream()
+  if (!next) return null
+  const { timeZone } = STREAM_SCHEDULE
+  const time = next.start.toLocaleTimeString('en-GB', { timeZone, hour: '2-digit', minute: '2-digit' })
+  const localTime = next.start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+  const day = next.started
+    ? 'Starting soon'
+    : next.daysAway === 0
+      ? 'Today'
+      : next.daysAway === 1
+        ? 'Tomorrow'
+        : next.start.toLocaleDateString('en-US', { timeZone, weekday: 'long' })
+  return { day, time, localTime: localTime === time ? null : localTime }
+}
 
 export function LiveSection() {
   const [platform, setPlatform] = useState<'twitch' | 'kick'>('twitch')
@@ -13,9 +34,17 @@ export function LiveSection() {
   // "cannot be embedded"). Hentes fra window i stedet for å hardkodes, slik at embeden også
   // virker på Vercel sine preview-URL-er og lokalt under utvikling, ikke bare på luckandloadtv.com.
   const [parentHost, setParentHost] = useState<string | null>(null)
+  const [live, setLive] = useState<boolean | null>(null)
+  const [nextStream, setNextStream] = useState<NextStream | null>(null)
 
   useEffect(() => {
     setParentHost(window.location.hostname)
+    // Klokkeslett regnes ut i nettleseren, så besøkende også ser sendetiden i sin egen tidssone.
+    setNextStream(describeNextStream())
+    fetch('/api/live-status')
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => setLive(data?.live ?? null))
+      .catch(() => setLive(null))
   }, [])
 
   return (
@@ -25,6 +54,12 @@ export function LiveSection() {
           <div className="flex items-center gap-3">
             <Tv size={20} className="text-brand-500" />
             <h2 className="text-xl font-bold text-white">Live Stream</h2>
+            {live && (
+              <span className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-red-300">
+                <span className="live-dot" />
+                Live now
+              </span>
+            )}
           </div>
 
           <div className="flex rounded-full border border-white/10 bg-surface-800 p-1 text-sm font-semibold">
@@ -74,9 +109,85 @@ export function LiveSection() {
           )}
         </div>
 
-        <p className="mx-auto mt-3 max-w-4xl text-center text-xs text-slate-500">
-          Shows an offline screen automatically when we&apos;re not live.
-        </p>
+        {!live && (
+          <div className="mx-auto mt-6 grid max-w-4xl gap-6 md:grid-cols-[15rem_1fr]">
+            <div className="rounded-2xl border border-white/10 bg-surface-800 p-5">
+              <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-400">
+                <CalendarClock size={14} />
+                Next stream
+              </p>
+              {nextStream ? (
+                <>
+                  <p className="text-2xl font-bold text-white">{nextStream.day}</p>
+                  <p className="text-sm text-slate-300">{nextStream.time} Norwegian time</p>
+                  {nextStream.localTime && <p className="text-xs text-slate-500">{nextStream.localTime} your time</p>}
+                </>
+              ) : (
+                <p className="text-sm text-slate-400">Follow us to hear when we go live.</p>
+              )}
+              <a
+                href={KICK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-green-500 px-4 py-2.5 text-sm font-bold text-black transition-colors hover:bg-green-400"
+              >
+                Follow on Kick
+              </a>
+              <a
+                href={DISCORD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 block text-center text-xs text-slate-400 underline underline-offset-2 hover:text-white"
+              >
+                Get notified in our Discord
+              </a>
+            </div>
+
+            <div>
+              <p className="mb-3 text-sm font-semibold text-white">Missed a stream? Our best moments</p>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {BEST_CLIPS.map(clip => (
+                  <a
+                    key={clip.url}
+                    href={clip.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block"
+                  >
+                    <div className="aspect-video overflow-hidden rounded-xl border border-white/10 bg-surface-800">
+                      <Image
+                        src={clip.image}
+                        alt={clip.title}
+                        width={360}
+                        height={203}
+                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                      />
+                    </div>
+                    <p className="mt-1.5 text-xs leading-snug text-slate-300 group-hover:text-white">{clip.title}</p>
+                  </a>
+                ))}
+              </div>
+              <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                <a
+                  href={`${KICK_URL}/videos`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-brand-400 hover:text-brand-300"
+                >
+                  Watch past streams <ExternalLink size={13} />
+                </a>
+                <a
+                  href={`${KICK_URL}/clips`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-brand-400 hover:text-brand-300"
+                >
+                  All clips <ExternalLink size={13} />
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   )
