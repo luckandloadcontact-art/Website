@@ -12,6 +12,7 @@ import { ScaledFrame } from '@/components/overlay/ScaledFrame'
 const WIDTH = 480
 const HEIGHT = 320
 const SLIDE_MS = 8_000
+const ROOM_SLIDE_MS = 11_000 // The room explainer has more text to read
 const REFRESH_MS = 5 * 60_000 // New leaderboard numbers every 5 minutes
 
 const RANK_COLORS = ['bg-yellow-400 text-black', 'bg-slate-300 text-black', 'bg-amber-600 text-black']
@@ -107,15 +108,14 @@ function RoomSlide() {
       <ArrowUp size={34} strokeWidth={3} className="animate-bounce text-indigo-300" />
       <Label className="mt-1 flex items-center gap-1.5 bg-indigo-400/15 text-indigo-200">
         <Users size={14} strokeWidth={3} />
-        Who&apos;s above?
+        Who are these players?
       </Label>
       <p className="mt-3 text-[30px] font-black leading-[1.05] text-white">
-        THIS IS A{' '}
-        <span className="bg-gradient-to-r from-indigo-300 to-hype bg-clip-text text-transparent">LIVE MULTIPLAYER</span>{' '}
-        ROOM.
+        THEY&apos;RE PLAYING{' '}
+        <span className="bg-gradient-to-r from-indigo-300 to-hype bg-clip-text text-transparent">WITH US</span>. LIVE.
       </p>
       <p className="mt-3 text-[17px] font-semibold leading-snug text-slate-300">
-        Every name above is a real player in this room right now.
+        Everyone above is in our live multiplayer room. Join or leave between spins.
       </p>
       <p className="mt-auto flex items-center gap-2 text-[15px] font-black uppercase tracking-wider text-white">
         <span className="flex -space-x-2">
@@ -124,7 +124,7 @@ function RoomSlide() {
           ))}
         </span>
         <ArrowRight size={16} strokeWidth={3} className="text-hype" />
-        One shared room
+        One room. Every spin shared.
       </p>
     </div>
   )
@@ -172,25 +172,26 @@ export function StreamWidget({
   const router = useRouter()
   const [active, setActive] = useState(0)
 
-  const slides = [
-    <LeaderboardSlide key="leaderboard" entries={entries} periodFrom={periodFrom} />,
-    <RolexSlide key="rolex" />,
-    <RoomSlide key="room" />,
-    <JoinSlide key="join" />,
-    ...(offer ? [<OfferSlide key="offer" headline={offer.headline} banner={offer.banner} />] : []),
+  const slides: { node: React.ReactNode; ms: number }[] = [
+    { node: <LeaderboardSlide entries={entries} periodFrom={periodFrom} />, ms: SLIDE_MS },
+    { node: <RolexSlide />, ms: SLIDE_MS },
+    { node: <RoomSlide />, ms: ROOM_SLIDE_MS },
+    { node: <JoinSlide />, ms: SLIDE_MS },
+    ...(offer ? [{ node: <OfferSlide headline={offer.headline} banner={offer.banner} />, ms: SLIDE_MS }] : []),
   ]
 
+  const current = active % slides.length
+  const currentMs = slides[current].ms
+
   useEffect(() => {
-    const timer = setInterval(() => setActive(index => (index + 1) % slides.length), SLIDE_MS)
-    return () => clearInterval(timer)
-  }, [slides.length])
+    const timer = setTimeout(() => setActive(index => (index + 1) % slides.length), currentMs)
+    return () => clearTimeout(timer)
+  }, [active, currentMs, slides.length])
 
   useEffect(() => {
     const timer = setInterval(() => router.refresh(), REFRESH_MS)
     return () => clearInterval(timer)
   }, [router])
-
-  const current = active % slides.length
 
   return (
     <ScaledFrame width={WIDTH} height={HEIGHT}>
@@ -204,7 +205,7 @@ export function StreamWidget({
               index === current ? 'opacity-100' : 'opacity-0'
             )}
           >
-            {slide}
+            {slide.node}
           </div>
         ))}
         <div className="absolute inset-x-5 bottom-3 flex gap-1.5">
@@ -214,7 +215,7 @@ export function StreamWidget({
                 <div
                   key={`${current}-${active}`}
                   className="h-full rounded-full bg-hype"
-                  style={{ animation: `overlay-progress ${SLIDE_MS}ms linear forwards` }}
+                  style={{ animation: `overlay-progress ${currentMs}ms linear forwards` }}
                 />
               )}
             </div>
