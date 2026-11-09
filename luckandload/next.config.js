@@ -9,6 +9,10 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['@supabase/supabase-js'],
   },
+  // Short address to say or show on stream, e.g. in the overlay and the !hype chat command.
+  async redirects() {
+    return [{ source: '/hype', destination: '/casinos/hype-bet', permanent: false }]
+  },
 }
 
 module.exports = nextConfig
