@@ -29,7 +29,7 @@ const SOCIALS = [
   },
   {
     label: 'Discord',
-    href: 'https://discord.gg/9dUxXK4f',
+    href: 'https://discord.gg/yagZVjqqbr',
     color: 'border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 hover:border-indigo-500/60',
     icon: (
       <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">

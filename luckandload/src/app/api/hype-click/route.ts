@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { CASINOS } from '@/lib/casinos'
 import { GUIDES } from '@/lib/guides'
 import { recordHypeClick } from '@/lib/growth'
 
@@ -7,6 +8,8 @@ import { recordHypeClick } from '@/lib/growth'
 const TRACKED_PATHS = new Set([
   '/',
   '/blackjack',
+  '/casinos',
+  ...CASINOS.map(casino => `/casinos/${casino.slug}`),
   '/events',
   '/guess-the-slot',
   '/guides',

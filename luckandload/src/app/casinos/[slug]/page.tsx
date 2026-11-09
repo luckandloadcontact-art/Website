@@ -1,0 +1,171 @@
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
+import { GuideH2, GuideH3, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
+import { GamblingNotice } from '@/components/ui/GamblingNotice'
+import { CASINOS, getCasino } from '@/lib/casinos'
+import { SITE_URL, formatGuideDate, getAuthor } from '@/lib/guides'
+
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return CASINOS.map(casino => ({ slug: casino.slug }))
+}
+
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const casino = getCasino(params.slug)
+  if (!casino) return {}
+  const url = `${SITE_URL}/casinos/${casino.slug}`
+  return {
+    title: `${casino.reviewTitle} – LuckAndLoadTV`,
+    description: casino.description,
+    alternates: { canonical: url },
+    openGraph: { title: casino.reviewTitle, description: casino.description, type: 'article', url },
+  }
+}
+
+export default function CasinoReviewPage({ params }: { params: { slug: string } }) {
+  const casino = getCasino(params.slug)
+  const author = casino && getAuthor(casino.authorSlug)
+  if (!casino || !author) notFound()
+
+  const url = `${SITE_URL}/casinos/${casino.slug}`
+
+  return (
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: casino.reviewTitle,
+          description: casino.description,
+          url,
+          dateModified: casino.updated,
+          author: { '@type': 'Person', name: author.name, url: `${SITE_URL}/authors/${author.slug}` },
+          publisher: { '@type': 'Organization', name: 'LuckAndLoadTV', url: SITE_URL },
+        }}
+      />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: casino.faq.map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          })),
+        }}
+      />
+
+      <article className="mx-auto max-w-4xl">
+        <Link href="/casinos" className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-slate-300">
+          <ArrowLeft size={14} />
+          All casinos
+        </Link>
+
+        <header className="mb-8 flex items-start gap-5">
+          <Image src={casino.logo} alt={`${casino.name} logo`} width={72} height={72} className="h-[72px] w-[72px] shrink-0 rounded-2xl" priority />
+          <div>
+            <h1 className="mb-3 text-3xl font-bold leading-tight text-white sm:text-4xl">{casino.name} Review</h1>
+            <p className="text-sm text-slate-500">
+              By{' '}
+              <Link href={`/authors/${author.slug}`} className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
+                {author.name}
+              </Link>{' '}
+              · Updated {formatGuideDate(casino.updated)}
+            </p>
+          </div>
+        </header>
+
+        <aside className="mb-10 rounded-2xl border border-hype/40 bg-hype/5 p-6 sm:p-8">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-hype">Welcome offer</p>
+              <p className="text-2xl font-bold text-white">
+                {casino.welcomeOffer ?? `See ${casino.name}'s current welcome offer`}
+              </p>
+              {casino.code && (
+                <p className="mt-2 text-sm text-slate-300">
+                  Our code: <span className="font-bold text-white">{casino.code}</span>. Signing up through our link
+                  connects your account to it.
+                </p>
+              )}
+            </div>
+            <a
+              href={casino.playUrl}
+              target="_blank"
+              rel="sponsored noopener noreferrer"
+              className="inline-flex shrink-0 items-center justify-center rounded-lg bg-hype px-10 py-4 text-base font-black uppercase tracking-wide text-black transition-colors hover:bg-hype/90"
+            >
+              Play on {casino.name}
+            </a>
+          </div>
+          <p className="mt-5 text-xs text-slate-500">
+            18+ · T&amp;Cs apply · Affiliate link: we earn commission if you sign up and play through it.
+          </p>
+          <GamblingNotice className="mt-1" />
+        </aside>
+
+        <div className="max-w-3xl">
+          <GuideH2>What you get when you sign up through us</GuideH2>
+          <GuideList>
+            {casino.ourPerks.map(perk => (
+              <li key={perk}>{perk}</li>
+            ))}
+          </GuideList>
+          <GuideP>
+            See who&apos;s leading this month on our{' '}
+            <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
+              leaderboard
+            </Link>
+            .
+          </GuideP>
+
+          <GuideH2>Pros and cons</GuideH2>
+          <GuideH3>What we like</GuideH3>
+          <GuideList>
+            {casino.pros.map(pro => (
+              <li key={pro}>{pro}</li>
+            ))}
+          </GuideList>
+          <GuideH3>What to keep in mind</GuideH3>
+          <GuideList>
+            {casino.cons.map(con => (
+              <li key={con}>{con}</li>
+            ))}
+          </GuideList>
+
+          <GuideH2>{casino.name} at a glance</GuideH2>
+          <table className="mb-5 w-full text-left text-sm">
+            <tbody className="divide-y divide-white/10 text-slate-200">
+              {casino.details.map(detail => (
+                <tr key={detail.label}>
+                  <th scope="row" className="w-44 py-3 pr-4 font-normal text-slate-400">{detail.label}</th>
+                  <td className="py-3">{detail.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <GuideH2>Questions people ask</GuideH2>
+          {casino.faq.map(item => (
+            <div key={item.question}>
+              <GuideH3>{item.question}</GuideH3>
+              <GuideP>{item.answer}</GuideP>
+            </div>
+          ))}
+
+          <GuideP>
+            Set a budget before you play and stop when you reach it. If gambling stops being fun,{' '}
+            <Link href="/responsible-gambling" className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
+              there&apos;s free help available
+            </Link>
+            .
+          </GuideP>
+        </div>
+      </article>
+    </div>
+  )
+}

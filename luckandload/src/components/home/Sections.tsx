@@ -96,7 +96,7 @@ export function CommunitySection() {
             <p className="text-sm text-slate-400">The hub of the community. Chat, memes, giveaways, and direct access to the team.</p>
           </div>
           <a
-            href="https://discord.gg/9dUxXK4f"
+            href="https://discord.gg/yagZVjqqbr"
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-500 transition-colors"
@@ -173,7 +173,11 @@ export function HypeSection() {
                 <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold">
                   top 6 on the leaderboard
                 </Link>
-                {' '}plus a $20 random draw open to everyone who plays under our code.
+                {' '}plus a $20 random draw open to everyone who plays under our code.{' '}
+                <Link href="/casinos/hype-bet" className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold">
+                  Read our Hype.bet review
+                </Link>
+                .
               </p>
               <GamblingNotice className="mt-2" />
             </div>

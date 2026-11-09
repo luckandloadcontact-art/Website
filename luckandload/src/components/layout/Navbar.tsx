@@ -10,6 +10,7 @@ const NAV_LINKS: { href: string | null; label: string; comingSoon?: boolean }[] 
   { href: '/blackjack', label: 'Daily Blackjack' },
   { href: '/guess-the-slot', label: 'Guess the Slot' },
   { href: '/leaderboard', label: 'Leaderboard' },
+  { href: '/casinos', label: 'Casinos' },
   { href: '/guides', label: 'Guides' },
   { href: '/slot-wheel', label: 'Slot Wheel' },
   { href: '/events', label: 'Events' },

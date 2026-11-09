@@ -4,7 +4,7 @@ import { Zap } from 'lucide-react'
 const SOCIAL_LINKS = [
   { label: 'Twitch', href: 'https://twitch.tv/luckandloadtv', color: 'hover:text-purple-400' },
   { label: 'Kick', href: 'https://kick.com/luckandloadtv', color: 'hover:text-green-400' },
-  { label: 'Discord', href: 'https://discord.gg/9dUxXK4f', color: 'hover:text-indigo-400' },
+  { label: 'Discord', href: 'https://discord.gg/yagZVjqqbr', color: 'hover:text-indigo-400' },
   { label: 'TikTok', href: 'https://tiktok.com/@luckandloadtv', color: 'hover:text-pink-400' },
   { label: 'YouTube', href: 'https://youtube.com/@LuckAndLoad', color: 'hover:text-red-400' },
 ]
@@ -40,6 +40,7 @@ export function Footer() {
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             <Link href="/" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Home</Link>
             <Link href="/leaderboard" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Leaderboard</Link>
+            <Link href="/casinos" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Casinos</Link>
             <Link href="/guides" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Guides</Link>
             <Link href="/contact" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Contact</Link>
             <Link href="/responsible-gambling" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Gambling Help</Link>
