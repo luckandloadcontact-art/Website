@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
-import { GuideH2, GuideH3, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
+import { GuideDetails, GuideDetailsGroup, GuideH2, GuideH3, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import HypeBetReview from '@/content/casinos/hype-bet'
 import { CASINOS, activeOffer, formatOfferEnd, getCasino } from '@/lib/casinos'
@@ -168,31 +168,32 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
             ))}
           </GuideList>
 
-          <GuideH2>{casino.name} at a glance</GuideH2>
-          <table className="mb-5 w-full text-left text-sm">
-            <tbody className="divide-y divide-white/10 text-slate-200">
-              {offer && (
-                <tr>
-                  <th scope="row" className="w-44 py-3 pr-4 font-normal text-slate-400">Welcome offer</th>
-                  <td className="py-3">{offer.headline}</td>
-                </tr>
-              )}
-              {casino.details.map(detail => (
-                <tr key={detail.label}>
-                  <th scope="row" className="w-44 py-3 pr-4 font-normal text-slate-400">{detail.label}</th>
-                  <td className="py-3">{detail.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <GuideH2>Questions people ask</GuideH2>
-          {casino.faq.map(item => (
-            <div key={item.question}>
-              <GuideH3>{item.question}</GuideH3>
-              <GuideP>{item.answer}</GuideP>
-            </div>
-          ))}
+          <GuideH2>Details and questions</GuideH2>
+          <GuideDetailsGroup>
+            <GuideDetails summary={`${casino.name} at a glance`}>
+              <table className="mb-2 w-full text-left text-sm">
+                <tbody className="divide-y divide-white/10 text-slate-200">
+                  {offer && (
+                    <tr>
+                      <th scope="row" className="w-44 py-3 pr-4 font-normal text-slate-400">Welcome offer</th>
+                      <td className="py-3">{offer.headline}</td>
+                    </tr>
+                  )}
+                  {casino.details.map(detail => (
+                    <tr key={detail.label}>
+                      <th scope="row" className="w-44 py-3 pr-4 font-normal text-slate-400">{detail.label}</th>
+                      <td className="py-3">{detail.value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </GuideDetails>
+            {casino.faq.map(item => (
+              <GuideDetails key={item.question} summary={item.question}>
+                <GuideP>{item.answer}</GuideP>
+              </GuideDetails>
+            ))}
+          </GuideDetailsGroup>
 
           <GuideP>
             Set a budget before you play and stop when you reach it. If gambling stops being fun,{' '}

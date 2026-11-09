@@ -1,5 +1,24 @@
 import Link from 'next/link'
+import { ChevronDown } from 'lucide-react'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
+
+// Fold-out sections for terms and other details. Built on <details>, so it works without
+// JavaScript and the text stays in the page for search engines while it's closed.
+export function GuideDetailsGroup({ children }: { children: React.ReactNode }) {
+  return <div className="mb-6 border-t border-white/10">{children}</div>
+}
+
+export function GuideDetails({ summary, children }: { summary: string; children: React.ReactNode }) {
+  return (
+    <details className="group border-b border-white/10">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-semibold text-white transition-colors hover:text-brand-300 [&::-webkit-details-marker]:hidden">
+        {summary}
+        <ChevronDown size={18} className="shrink-0 text-slate-400 transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="pb-3">{children}</div>
+    </details>
+  )
+}
 
 export function GuideH2({ children }: { children: React.ReactNode }) {
   return <h2 className="mt-12 mb-4 text-2xl font-bold text-white">{children}</h2>
