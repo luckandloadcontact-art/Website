@@ -13,8 +13,9 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/casinos` },
 }
 
-// Rebuilt hourly so a welcome offer disappears by itself once its end date has passed.
-export const revalidate = 3600
+// Rendered per request: the single-casino redirect below then gets a real Location header (a
+// prerendered redirect only works with JavaScript), and expired offers disappear by themselves.
+export const dynamic = 'force-dynamic'
 
 const UPDATED = new Date(
   CASINOS.reduce((latest, casino) => (casino.updated > latest ? casino.updated : latest), '')
