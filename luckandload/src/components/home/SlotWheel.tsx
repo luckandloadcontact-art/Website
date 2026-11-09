@@ -180,8 +180,12 @@ export function SlotWheel() {
   }
 
   return (
-    <section className="relative overflow-hidden border-t border-white/5 py-16">
-      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[360px] rounded-full bg-brand-500/10 blur-3xl" />
+    <section className="relative border-t border-white/5 py-16">
+      {/* Only the glow is clipped, not the section: clipping the section cut off the provider filter
+          dropdown whenever no spin result below made the section tall enough. */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[360px] rounded-full bg-brand-500/10 blur-3xl" />
+      </div>
       {/*
         Forhåndslaster alle spillbildene i samme størrelse som stripen bruker (usynlig, tar ingen
         plass). next/image lat-laster ellers ikoner som aldri har vært synlige på skjermen, og
