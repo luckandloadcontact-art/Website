@@ -199,8 +199,8 @@ export function Hero() {
             <StreamBadge />
 
             <h1 className="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-white">
-              Bonus hunts, banter{' '}
-              <span className="text-brand-400">and multiplayer rooms</span>
+              More Than Just a Stream.{' '}
+              <span className="block text-brand-400">You&apos;re Part of the Action.</span>
             </h1>
 
             <p className="text-lg text-slate-400 max-w-xl leading-relaxed">
