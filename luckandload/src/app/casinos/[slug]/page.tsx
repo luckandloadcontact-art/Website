@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
-import { GuideDetails, GuideDetailsGroup, GuideH2, GuideH3, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
+import { ArrowLeft, Check, Gift, Info, Trophy, Users } from 'lucide-react'
+import { GuideDetails, GuideDetailsGroup, GuideH2, GuideP, JsonLd } from '@/components/guides/GuideContent'
 import { StickyClaimBar } from '@/components/casinos/StickyClaimBar'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import HypeBetReview from '@/content/casinos/hype-bet'
@@ -14,6 +14,8 @@ import { SITE_URL, formatGuideDate, getAuthor } from '@/lib/guides'
 const BODIES: Record<string, ComponentType<{ playUrl: string }>> = {
   'hype-bet': HypeBetReview,
 }
+
+const PERK_ICONS = { trophy: Trophy, users: Users, gift: Gift }
 
 export const dynamicParams = false
 // Rebuilt hourly so a welcome offer disappears by itself once its end date has passed.
@@ -148,11 +150,20 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
           {Body && <Body playUrl={casino.playUrl} />}
 
           <GuideH2>What you get when you sign up through us</GuideH2>
-          <GuideList>
-            {casino.ourPerks.map(perk => (
-              <li key={perk}>{perk}</li>
-            ))}
-          </GuideList>
+          <div className="mb-5 grid gap-4 sm:grid-cols-3">
+            {casino.ourPerks.map(perk => {
+              const Icon = PERK_ICONS[perk.icon]
+              return (
+                <div key={perk.title} className="rounded-xl border border-white/10 bg-surface-800 p-5">
+                  <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-hype/10 text-hype">
+                    <Icon size={20} />
+                  </span>
+                  <p className="mb-1.5 font-bold text-white">{perk.title}</p>
+                  <p className="text-sm leading-6 text-slate-300">{perk.text}</p>
+                </div>
+              )
+            })}
+          </div>
           <GuideP>
             See who&apos;s leading this month on our{' '}
             <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
@@ -160,20 +171,35 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
             </Link>
             .
           </GuideP>
+        </div>
 
-          <GuideH2>Pros and cons</GuideH2>
-          <GuideH3>What we like</GuideH3>
-          <GuideList>
-            {casino.pros.map(pro => (
-              <li key={pro}>{pro}</li>
-            ))}
-          </GuideList>
-          <GuideH3>What to keep in mind</GuideH3>
-          <GuideList>
-            {casino.cons.map(con => (
-              <li key={con}>{con}</li>
-            ))}
-          </GuideList>
+        <GuideH2>Pros and cons</GuideH2>
+        <div className="mb-6 grid gap-4 md:grid-cols-[3fr_2fr]">
+          <div className="rounded-xl border border-hype/25 bg-hype/[0.04] p-5 sm:p-6">
+            <h3 className="mb-4 text-lg font-bold text-white">What we like</h3>
+            <ul className="space-y-3 text-sm leading-6 text-slate-200">
+              {casino.pros.map(pro => (
+                <li key={pro} className="flex gap-3">
+                  <Check size={18} className="mt-0.5 shrink-0 text-hype" />
+                  <span>{pro}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-surface-800 p-5 sm:p-6">
+            <h3 className="mb-4 text-lg font-bold text-white">What to keep in mind</h3>
+            <ul className="space-y-3 text-sm leading-6 text-slate-200">
+              {casino.cons.map(con => (
+                <li key={con} className="flex gap-3">
+                  <Info size={18} className="mt-0.5 shrink-0 text-amber-300" />
+                  <span>{con}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="max-w-3xl">
 
           <GuideH2>Details and questions</GuideH2>
           <GuideDetailsGroup>

@@ -2,6 +2,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { GuideDetails, GuideDetailsGroup, GuideH2, GuideH3, GuideList, GuideP } from '@/components/guides/GuideContent'
 
+// Bar widths are the cost relative to the lowest version ($115.80 = 100%).
+const RTP_BARS = [
+  { rtp: '96.38%', label: 'Top version', cost: '$36', width: 31, color: 'bg-hype' },
+  { rtp: '92.33%', label: 'Lower version', cost: '$77', width: 66, color: 'bg-amber-400' },
+  { rtp: '88.42%', label: 'Lowest version', cost: '$116', width: 100, color: 'bg-red-400' },
+]
+
 const XP_RATES = [
   { games: 'Slots and sportsbook', xp: '1 XP' },
   { games: 'Roulette, live casino, crash and other games', xp: '0.05 XP' },
@@ -153,6 +160,29 @@ export default function HypeBetReview({ playUrl }: { playUrl: string }) {
         </Link>
         .
       </GuideP>
+      <figure className="mb-6 rounded-xl border border-white/10 bg-surface-800 p-5">
+        <p className="mb-4 text-sm font-semibold text-white">
+          Wanted Dead or a Wild: average cost of 1,000 spins at $1
+        </p>
+        <div className="space-y-3">
+          {RTP_BARS.map(bar => (
+            <div key={bar.rtp} className="grid grid-cols-[6.5rem_1fr_3.5rem] items-center gap-3 text-sm">
+              <span className="text-slate-300">
+                {bar.rtp}
+                <span className="block text-xs text-slate-500">{bar.label}</span>
+              </span>
+              <span className="h-3 overflow-hidden rounded-full bg-white/5">
+                <span className={`block h-full rounded-full ${bar.color}`} style={{ width: `${bar.width}%` }} />
+              </span>
+              <span className="text-right font-semibold text-white">{bar.cost}</span>
+            </div>
+          ))}
+        </div>
+        <figcaption className="mt-4 text-xs text-slate-500">
+          Same game, same bets. The casino picks the version. RTP versions from SlotCatalog; long-run averages, not a
+          guarantee for any session.
+        </figcaption>
+      </figure>
     </>
   )
 }

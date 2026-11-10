@@ -22,7 +22,7 @@ export type Casino = {
   tags: string[]
   highlights: string[]
   welcomeOffer: CasinoOffer | null
-  ourPerks: string[]
+  ourPerks: CasinoPerk[]
   details: CasinoDetail[] // Shown on the review page. The list card skips Operator and Multiplayer rooms.
   pros: string[]
   cons: string[]
@@ -33,6 +33,9 @@ export type Casino = {
   authorSlug: string
   updated: string
 }
+
+// Icon names are mapped to lucide icons on the review page.
+export type CasinoPerk = { icon: 'trophy' | 'users' | 'gift'; title: string; text: string }
 
 export const CASINOS: Casino[] = [
   {
@@ -58,9 +61,21 @@ export const CASINOS: Casino[] = [
       },
     },
     ourPerks: [
-      'A spot on our monthly leaderboard, with $1,000 in prizes: ranked prizes for the top 6 and a $20 random draw among everyone who plays under our code',
-      'Our multiplayer rooms during streams, where you can join a session with us and leave whenever you want',
-      'Giveaways on stream and in our Discord',
+      {
+        icon: 'trophy',
+        title: 'Monthly leaderboard',
+        text: '$1,000 in prizes every month: ranked prizes for the top 6 and a $20 random draw among everyone who plays under our code.',
+      },
+      {
+        icon: 'users',
+        title: 'Multiplayer rooms',
+        text: 'Join our room during streams and play a session with us. Leave whenever you want.',
+      },
+      {
+        icon: 'gift',
+        title: 'Giveaways',
+        text: 'Regular giveaways on stream and in our Discord.',
+      },
     ],
     details: [
       { label: 'Operator', value: 'BlackSands B.V.' },
