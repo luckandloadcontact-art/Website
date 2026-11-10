@@ -283,6 +283,15 @@ export function HypeSection() {
           </div>
         </div>
 
+        {/* Divider */}
+        <div className="flex items-center gap-4 mb-10">
+          <div className="flex-1 h-px bg-white/5" />
+          <p className="text-brand-400 font-black text-sm tracking-widest uppercase flex items-center gap-2">
+            <span>🪙</span> Play Together, Win Together <span>🪙</span>
+          </p>
+          <div className="flex-1 h-px bg-white/5" />
+        </div>
+
         {/* CTA */}
         <div className="text-center">
           <a
@@ -291,7 +300,7 @@ export function HypeSection() {
             rel="sponsored noopener noreferrer"
             className="inline-flex items-center gap-3 rounded-xl bg-hype px-10 py-4 text-base font-black text-black hover:bg-hype/90 transition-colors uppercase tracking-wide"
           >
-            Play Together with Friends
+            🎮 Play Together with Friends
           </a>
           <GamblingNotice className="mt-3" />
         </div>
