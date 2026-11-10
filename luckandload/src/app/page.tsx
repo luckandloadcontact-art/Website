@@ -59,8 +59,8 @@ export default async function HomePage() {
       <Hero />
       <HypeSection />
       <AboutSection />
-      <LiveSection />
       <CommunitySection />
+      <LiveSection />
       <SlotWheel />
       <NewsSection />
       {announcements.length > 0 && <AnnouncementsSection announcements={announcements} />}
