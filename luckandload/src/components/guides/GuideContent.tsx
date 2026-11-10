@@ -45,13 +45,39 @@ export function JsonLd({ data }: { data: Record<string, unknown> }) {
   )
 }
 
-export function GuideCta() {
+// Short call to action placed inside an article body, between sections.
+export function GuideInlineCta({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <aside className="my-8 max-w-3xl rounded-xl border border-hype/40 bg-hype/5 p-5">
+      <p className="mb-1.5 text-lg font-bold text-white">{title}</p>
+      <p className="mb-4 leading-7 text-slate-200">{children}</p>
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+        <a
+          href="https://hype.bet/LuckAndLoad"
+          target="_blank"
+          rel="sponsored noopener noreferrer"
+          className="inline-flex items-center justify-center rounded-lg bg-hype px-6 py-2.5 text-sm font-black uppercase tracking-wide text-black transition-colors hover:bg-hype/90"
+        >
+          Play on Hype.bet
+        </a>
+        <Link href="/casinos/hype-bet" className="text-sm text-brand-400 underline underline-offset-2 hover:text-brand-300">
+          Read our Hype.bet review
+        </Link>
+      </div>
+      <p className="mt-3 text-xs text-slate-500">18+. Affiliate link: we earn commission if you sign up and play through it.</p>
+    </aside>
+  )
+}
+
+// `lead` is an optional first sentence, so an article can tie the closing box to its own topic.
+export function GuideCta({ lead }: { lead?: string }) {
   return (
     <aside className="mt-12 rounded-2xl border border-hype/40 bg-hype/5 p-6 sm:p-8">
       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="max-w-2xl">
           <h2 className="mb-2 text-2xl font-bold text-white">Play with us on Hype.bet</h2>
           <p className="leading-7 text-slate-200">
+            {lead && <>{lead} </>}
             Players under our code compete on our{' '}
             <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
               monthly leaderboard

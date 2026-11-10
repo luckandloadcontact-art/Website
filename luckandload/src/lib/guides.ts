@@ -19,6 +19,8 @@ export type Guide = {
   published: string
   updated: string
   readingMinutes: number
+  // Optional opening sentence for the Hype.bet box at the end of the article.
+  ctaLead?: string
 }
 
 export const AUTHORS: Author[] = [
@@ -54,6 +56,17 @@ export const AUTHORS: Author[] = [
 
 // Newest first. Each guide's body is registered in app/guides/[slug]/page.tsx.
 export const GUIDES: Guide[] = [
+  {
+    slug: 'does-rtp-matter',
+    title: 'Does RTP Matter? Why the Same Slot Can Pay Back Less',
+    description:
+      'RTP matters more than most players think. See how casinos choose between RTP versions of the same slot, what it costs you, and how to check it.',
+    authorSlug: 'simon',
+    published: '2026-11-10',
+    updated: '2026-11-10',
+    readingMinutes: 4,
+    ctaLead: 'Hype.bet runs the highest RTP versions of its games.',
+  },
   {
     slug: 'deposit-without-welcome-bonus',
     title: 'Depositing Without a Welcome Bonus: Pros and Cons',

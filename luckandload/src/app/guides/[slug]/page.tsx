@@ -6,10 +6,12 @@ import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { GuideCta, JsonLd } from '@/components/guides/GuideContent'
 import DepositWithoutWelcomeBonus from '@/content/guides/deposit-without-welcome-bonus'
+import DoesRtpMatter from '@/content/guides/does-rtp-matter'
 import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType> = {
   'deposit-without-welcome-bonus': DepositWithoutWelcomeBonus,
+  'does-rtp-matter': DoesRtpMatter,
 }
 
 export const dynamicParams = false
@@ -81,7 +83,7 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
         </header>
 
         <Body />
-        <GuideCta />
+        <GuideCta lead={guide.ctaLead} />
 
         <footer className="mt-12 flex items-start gap-4 border-t border-white/10 pt-6">
           <Image
