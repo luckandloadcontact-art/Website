@@ -34,8 +34,7 @@ export type Casino = {
   updated: string
 }
 
-// Icon names are mapped to lucide icons on the review page.
-export type CasinoPerk = { icon: 'trophy' | 'users' | 'gift'; title: string; text: string }
+export type CasinoPerk = { title: string; text: string }
 
 export const CASINOS: Casino[] = [
   {
@@ -62,17 +61,14 @@ export const CASINOS: Casino[] = [
     },
     ourPerks: [
       {
-        icon: 'trophy',
         title: 'Monthly leaderboard',
         text: '$1,000 in prizes every month: ranked prizes for the top 6 and a $20 random draw among everyone who plays under our code.',
       },
       {
-        icon: 'users',
         title: 'Multiplayer rooms',
         text: 'Join our room during streams and play a session with us. Leave whenever you want.',
       },
       {
-        icon: 'gift',
         title: 'Giveaways',
         text: 'Regular giveaways on stream and in our Discord.',
       },

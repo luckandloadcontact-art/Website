@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowLeft, Check, Gift, Info, Trophy, Users } from 'lucide-react'
-import { GuideDetails, GuideDetailsGroup, GuideH2, GuideP, JsonLd } from '@/components/guides/GuideContent'
+import { ArrowLeft, Check, Info } from 'lucide-react'
+import { GuideDetails, GuideDetailsGroup, GuideH2, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
 import { StickyClaimBar } from '@/components/casinos/StickyClaimBar'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import HypeBetReview from '@/content/casinos/hype-bet'
@@ -14,8 +14,6 @@ import { SITE_URL, formatGuideDate, getAuthor } from '@/lib/guides'
 const BODIES: Record<string, ComponentType<{ playUrl: string }>> = {
   'hype-bet': HypeBetReview,
 }
-
-const PERK_ICONS = { trophy: Trophy, users: Users, gift: Gift }
 
 export const dynamicParams = false
 // Rebuilt hourly so a welcome offer disappears by itself once its end date has passed.
@@ -150,20 +148,13 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
           {Body && <Body playUrl={casino.playUrl} />}
 
           <GuideH2>What you get when you sign up through us</GuideH2>
-          <div className="mb-5 grid gap-4 sm:grid-cols-3">
-            {casino.ourPerks.map(perk => {
-              const Icon = PERK_ICONS[perk.icon]
-              return (
-                <div key={perk.title} className="rounded-xl border border-white/10 bg-surface-800 p-5">
-                  <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-hype/10 text-hype">
-                    <Icon size={20} />
-                  </span>
-                  <p className="mb-1.5 font-bold text-white">{perk.title}</p>
-                  <p className="text-sm leading-6 text-slate-300">{perk.text}</p>
-                </div>
-              )
-            })}
-          </div>
+          <GuideList>
+            {casino.ourPerks.map(perk => (
+              <li key={perk.title}>
+                <strong className="text-white">{perk.title}.</strong> {perk.text}
+              </li>
+            ))}
+          </GuideList>
           <GuideP>
             See who&apos;s leading this month on our{' '}
             <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
