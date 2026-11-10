@@ -11,8 +11,8 @@ import { useEffect, useRef, useState } from 'react'
 // chart, so it reads fine without JavaScript and for people who prefer reduced motion.
 export type RtpCostRow = { rtp: string; label?: string; cost: number }
 
-const BAR_MS = 1000
-const STAGGER_MS = 140
+const BAR_MS = 1800
+const STAGGER_MS = 250
 
 function formatCost(value: number, decimals: number) {
   return `$${value.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}`

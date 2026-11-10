@@ -8,11 +8,11 @@ import { cn, formatPoints } from '@/lib/utils'
 
 const NAV_LINKS: { href: string | null; label: string; comingSoon?: boolean; highlight?: boolean }[] = [
   { href: '/casinos/hype-bet', label: 'Hype.bet Bonus', highlight: true },
-  { href: '/blackjack', label: 'Daily Blackjack' },
+  { href: '/slot-wheel', label: 'Slot Wheel' },
   { href: '/guess-the-slot', label: 'Guess the Slot' },
   { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/guides', label: 'Guides' },
-  { href: '/slot-wheel', label: 'Slot Wheel' },
+  { href: '/blackjack', label: 'Daily Blackjack' },
 ]
 
 export function Navbar() {

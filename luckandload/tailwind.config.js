@@ -28,6 +28,8 @@ module.exports = {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
+      // border-white/8 and bg-white/8 are used across the site; 8 isn't in Tailwind's default scale.
+      opacity: { 8: '0.08' },
       animation: {
         'pulse-slow': 'pulse 3s ease-in-out infinite',
         'fade-in': 'fadeIn 0.4s ease-out',

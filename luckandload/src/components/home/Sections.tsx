@@ -64,10 +64,10 @@ export function AboutSection() {
 export function CommunitySection() {
   // `count` numbers count up when scrolled into view. The year is shown as is.
   const stats = [
-    { label: 'Given away in the last 12 months', count: 15000, prefix: '$', suffix: '+' },
-    { label: 'Bonus hunts in the last 12 months', count: 100, suffix: '+' },
-    { label: 'In leaderboard prizes every month', count: 1000, prefix: '$' },
-    { label: 'Live since September', text: '2025' },
+    { label: 'Given away in the last 12 months', count: 15000, prefix: '$', suffix: '+', color: 'text-green-400' },
+    { label: 'Bonus hunts in the last 12 months', count: 100, suffix: '+', color: 'text-brand-400' },
+    { label: 'In leaderboard prizes every month', count: 1000, prefix: '$', color: 'text-yellow-400' },
+    { label: 'Live since September', text: '2025', color: 'text-indigo-400' },
   ]
 
   return (
@@ -78,7 +78,7 @@ export function CommunitySection() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map(s => (
             <div key={s.label} className="rounded-2xl border border-white/8 bg-surface-800 p-6 text-center">
-              <p className="mb-1 text-3xl font-bold text-white sm:text-4xl">
+              <p className={`mb-1 text-3xl font-bold sm:text-4xl ${s.color}`}>
                 {s.count !== undefined ? <CountUp value={s.count} prefix={s.prefix} suffix={s.suffix} /> : s.text}
               </p>
               <p className="text-sm text-slate-400">{s.label}</p>
