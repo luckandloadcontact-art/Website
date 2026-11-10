@@ -76,3 +76,12 @@
     box-shadow: 0 0 8px #22c55e;
   }
 }
+
+/* RevealGroup: items fade up one after another once the group is in view. */
+[data-reveal] .reveal-item {
+  transition: opacity 500ms ease-out, transform 500ms ease-out;
+}
+[data-reveal='pending'] .reveal-item {
+  opacity: 0;
+  transform: translateY(10px);
+}

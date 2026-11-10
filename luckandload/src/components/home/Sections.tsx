@@ -5,7 +5,9 @@ import { Badge } from '@/components/ui/Badge'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import { formatRelativeTime } from '@/lib/utils'
 import type { Announcement } from '@/types'
-import { Users, Zap, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle, BookOpen } from 'lucide-react'
+import { Users, LogIn, Wallet, PieChart, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle, BookOpen } from 'lucide-react'
+import { CountUp } from '@/components/ui/CountUp'
+import { RevealGroup } from '@/components/ui/RevealGroup'
 
 // One row in Latest Updates: an announcement from the admin panel, or a published guide.
 export type UpdateItem = {
@@ -20,22 +22,14 @@ export type UpdateItem = {
 
 // ─── About section ────────────────────────────────────────
 export function AboutSection() {
-  const features = [
-    { icon: Zap, title: 'Bonus Hunts', desc: 'Live bonus opens with real reactions — the good, the bad, and the ugly.' },
-    { icon: Users, title: 'Community First', desc: 'A relaxed, welcoming space where everyone is part of the show.' },
-    { icon: MessageSquare, title: 'Discord Hub', desc: 'Daily chat, memes, giveaways, and direct access to Kristian & Simon.' },
-    { icon: Calendar, title: 'Regular Streams', desc: 'Consistent schedule across Kick and Twitch. Never miss a session.' },
-  ]
-
   return (
     <section className="py-16 border-t border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <Badge variant="brand" className="mb-4">About us</Badge>
             <h2 className="text-3xl font-bold text-white mb-4 leading-tight">
               Two mates, great minds,<br />
-              <span className="text-gradient">one stream</span>
+              <span className="text-brand-400">one stream</span>
             </h2>
             <p className="text-slate-400 leading-relaxed mb-4">
               LuckAndLoadTV started in September 2025 when two mates from Norway, both 24 at the time, decided to stop talking about streaming and actually hit the "Go Live" button. We've both enjoyed gambling for years, but the stream quickly became about much more than slots and bonus hunts.
@@ -68,29 +62,26 @@ export function AboutSection() {
 
 // ─── Community stats ──────────────────────────────────────
 export function CommunitySection() {
+  // `count` numbers count up when scrolled into view. The year is shown as is.
   const stats = [
-    { label: 'Given away last 12 months', value: '💸 $15,000+', color: 'text-green-400' },
-    { label: 'Bonus Hunts last 12 months', value: '🎯 100+', color: 'text-brand-400' },
-    { label: 'In leaderboard prizes every month', value: '🏆 $1,000', color: 'text-yellow-400' },
-    { label: 'Live since September', value: '📅 2025', color: 'text-indigo-400' },
+    { label: 'Given away in the last 12 months', count: 15000, prefix: '$', suffix: '+' },
+    { label: 'Bonus hunts in the last 12 months', count: 100, suffix: '+' },
+    { label: 'In leaderboard prizes every month', count: 1000, prefix: '$' },
+    { label: 'Live since September', text: '2025' },
   ]
 
   return (
     <section className="py-16 border-t border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <Badge variant="brand" className="mb-3">Community</Badge>
-          <h2 className="text-3xl font-bold text-white">Our first year in numbers</h2>
-        </div>
+        <h2 className="mb-10 text-center text-3xl font-bold text-white">Our first year in numbers</h2>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map(s => (
-            <div
-              key={s.label}
-              className="rounded-2xl border border-white/8 bg-surface-800 p-6 text-center hover:border-white/15 transition-colors"
-            >
-              <p className={`text-3xl font-bold mb-1 ${s.color}`}>{s.value}</p>
-              <p className="text-sm text-slate-500">{s.label}</p>
+            <div key={s.label} className="rounded-2xl border border-white/8 bg-surface-800 p-6 text-center">
+              <p className="mb-1 text-3xl font-bold text-white sm:text-4xl">
+                {s.count !== undefined ? <CountUp value={s.count} prefix={s.prefix} suffix={s.suffix} /> : s.text}
+              </p>
+              <p className="text-sm text-slate-400">{s.label}</p>
             </div>
           ))}
         </div>
@@ -138,7 +129,8 @@ export function HypeSection() {
             How does Hype.bet work?
           </h2>
           <p className="text-slate-400 text-base max-w-2xl mx-auto leading-relaxed">
-            We understand you might have questions. Hype.bet is the first casino offering this revolutionary multiplayer feature — and we use it on every stream!
+            Hype.bet lets us open a room on stream that anyone can join. We play in one on every stream, and
+            here&apos;s how it works.
           </p>
         </div>
 
@@ -148,32 +140,28 @@ export function HypeSection() {
           {/* Left: bullet points */}
           <div className="space-y-6">
             {[
-              { icon: '👥', text: <>A host can create a virtual room where <strong className="text-white">hundreds of players</strong> can join and play together</> },
-              { icon: '🎮', text: <>While LuckAndLoadTV manages the game, anyone can <strong className="text-white">join in and leave at any time</strong></> },
-              { icon: '💰', text: <><strong className="text-white">Each player contributes</strong> to the room by depositing money into a shared pool</> },
-              { icon: '📊', text: <>With every bet, players in the room will either win or lose based on <strong className="text-white">their share</strong> of the pool</> },
-            ].map((item, i) => (
+              { Icon: Users, text: <>A host can create a virtual room where <strong className="text-white">hundreds of players</strong> can join and play together</> },
+              { Icon: LogIn, text: <>While LuckAndLoadTV manages the game, anyone can <strong className="text-white">join in and leave at any time</strong></> },
+              { Icon: Wallet, text: <><strong className="text-white">Each player contributes</strong> to the room by depositing money into a shared pool</> },
+              { Icon: PieChart, text: <>With every bet, players in the room will either win or lose based on <strong className="text-white">their share</strong> of the pool</> },
+            ].map(({ Icon, text }, i) => (
               <div key={i} className="flex items-start gap-4">
-                <span className="text-2xl shrink-0 mt-0.5">{item.icon}</span>
-                <p className="text-slate-300 text-base leading-relaxed">{item.text}</p>
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-500/10 text-brand-400">
+                  <Icon size={18} />
+                </span>
+                <p className="text-slate-300 text-base leading-relaxed">{text}</p>
               </div>
             ))}
 
-            <p className="text-slate-500 text-sm pt-2">
-              <span className="hidden lg:inline">To the right</span>
-              <span className="lg:hidden">Below</span>
-              {' '}you can find a visual breakdown of how the Hype Multiplayer System works from start to finish.
-            </p>
-
             {/* Affiliate callout */}
             <div className="rounded-xl border border-gold-500/30 bg-gold-500/5 p-4 mt-2">
-              <p className="text-gold-400 font-bold text-sm mb-1">❤️ Support us — and get rewarded</p>
+              <p className="text-gold-400 font-bold text-sm mb-1">Support us, and get rewarded</p>
               <p className="text-slate-300 text-sm leading-relaxed">
                 Sign up at Hype.bet using{' '}
                 <a
                   href="https://hype.bet/LuckAndLoad"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="sponsored noopener noreferrer"
                   className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold"
                 >
                   our link
@@ -197,10 +185,10 @@ export function HypeSection() {
           <div className="rounded-2xl border border-white/8 bg-surface-800 p-6">
             <p className="text-slate-500 text-xs text-right mb-5">All players get their % share</p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-[1fr_48px_1fr] gap-4 sm:gap-x-0 sm:gap-y-0">
+            <RevealGroup className="grid grid-cols-1 sm:grid-cols-[1fr_48px_1fr] gap-4 sm:gap-x-0 sm:gap-y-0">
 
               {/* TOP-LEFT: Players deposit */}
-              <div className="rounded-2xl border border-brand-500/30 bg-surface-700 p-5">
+              <div className="reveal-item rounded-xl border border-brand-500/30 bg-surface-700 p-5">
                 <p className="text-brand-400 text-[11px] font-bold uppercase tracking-widest mb-4">Players deposit</p>
                 <div className="space-y-3">
                   {ROOM_PLAYERS.map((p, i) => (
@@ -222,7 +210,7 @@ export function HypeSection() {
               </div>
 
               {/* Arrow → */}
-              <div className="hidden sm:flex items-center justify-center">
+              <div className="reveal-item hidden sm:flex items-center justify-center" style={{ transitionDelay: '200ms' }}>
                 <div className="flex flex-col items-center gap-1">
                   <div className="w-8 h-0.5 bg-slate-600 rounded" />
                   <div className="text-slate-500 text-lg">›</div>
@@ -230,7 +218,7 @@ export function HypeSection() {
               </div>
 
               {/* TOP-RIGHT: Total balance */}
-              <div className="rounded-2xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-surface-700 p-5 flex flex-col items-center justify-center text-center gap-2">
+              <div style={{ transitionDelay: '350ms' }} className="reveal-item rounded-xl border border-brand-500/30 bg-gradient-to-br from-brand-500/10 to-surface-700 p-5 flex flex-col items-center justify-center text-center gap-2">
                 <p className="text-slate-400 text-[11px] uppercase tracking-widest">Shared Pool</p>
                 <p className="text-white font-black text-4xl">$500</p>
                 <div className="flex items-center gap-2 mt-1">
@@ -245,7 +233,7 @@ export function HypeSection() {
               {/* ROW 2: spacer / spacer / arrow ↓ */}
               <div className="hidden sm:block py-3" />
               <div className="hidden sm:block" />
-              <div className="hidden sm:flex items-center justify-center py-3">
+              <div className="reveal-item hidden sm:flex items-center justify-center py-3" style={{ transitionDelay: '550ms' }}>
                 <div className="flex flex-col items-center gap-1">
                   <div className="h-8 w-0.5 bg-slate-600 rounded" />
                   <div className="text-slate-500 text-lg rotate-90">›</div>
@@ -253,7 +241,7 @@ export function HypeSection() {
               </div>
 
               {/* BOTTOM-LEFT: Payouts */}
-              <div className="order-4 sm:order-none rounded-2xl border border-green-500/25 bg-gradient-to-br from-green-500/10 to-surface-700 p-5">
+              <div style={{ transitionDelay: '1100ms' }} className="reveal-item order-4 sm:order-none rounded-xl border border-green-500/25 bg-gradient-to-br from-green-500/10 to-surface-700 p-5">
                 <p className="text-green-400 text-[11px] font-bold uppercase tracking-widest mb-4">Your payout</p>
                 <div className="space-y-3">
                   {[
@@ -277,7 +265,7 @@ export function HypeSection() {
               </div>
 
               {/* Arrow ← */}
-              <div className="hidden sm:flex items-center justify-center">
+              <div className="reveal-item hidden sm:flex items-center justify-center" style={{ transitionDelay: '900ms' }}>
                 <div className="flex flex-col items-center gap-1">
                   <div className="text-slate-500 text-lg">‹</div>
                   <div className="w-8 h-0.5 bg-slate-600 rounded" />
@@ -285,24 +273,14 @@ export function HypeSection() {
               </div>
 
               {/* BOTTOM-RIGHT: Win */}
-              <div className="order-3 sm:order-none rounded-2xl border border-green-500/35 bg-gradient-to-br from-green-500/15 to-surface-700 p-5 flex flex-col items-center justify-center text-center gap-2">
-                <span className="text-4xl">🏆</span>
+              <div style={{ transitionDelay: '700ms' }} className="reveal-item order-3 sm:order-none rounded-xl border border-green-500/35 bg-gradient-to-br from-green-500/15 to-surface-700 p-5 flex flex-col items-center justify-center text-center gap-2">
                 <p className="text-green-400 text-[11px] uppercase tracking-widest">Round win</p>
                 <p className="text-white font-black text-4xl">$100</p>
                 <p className="text-slate-500 text-[10px]">Split by % share</p>
               </div>
 
-            </div>
+            </RevealGroup>
           </div>
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center gap-4 mb-10">
-          <div className="flex-1 h-px bg-white/5" />
-          <p className="text-brand-400 font-black text-sm tracking-widest uppercase flex items-center gap-2">
-            <span>🪙</span> Play Together, Win Together <span>🪙</span>
-          </p>
-          <div className="flex-1 h-px bg-white/5" />
         </div>
 
         {/* CTA */}
@@ -310,10 +288,10 @@ export function HypeSection() {
           <a
             href="https://hype.bet/LuckAndLoad"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="sponsored noopener noreferrer"
             className="inline-flex items-center gap-3 rounded-xl bg-hype px-10 py-4 text-base font-black text-black hover:bg-hype/90 transition-colors uppercase tracking-wide"
           >
-            🎮 Play Together with Friends
+            Play Together with Friends
           </a>
           <GamblingNotice className="mt-3" />
         </div>
@@ -364,7 +342,7 @@ export function AnnouncementsSection({ announcements }: { announcements: UpdateI
                   </div>
                   <p className="text-slate-400 text-sm leading-relaxed">{ann.body}</p>
                   <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1">
-                    <p className="text-xs text-slate-600">{formatRelativeTime(ann.date)}</p>
+                    <p className="text-xs text-slate-500">{formatRelativeTime(ann.date)}</p>
                     {ann.href && (
                       <Link href={ann.href} className="text-xs font-semibold text-brand-400 hover:text-brand-300">
                         Read the guide →

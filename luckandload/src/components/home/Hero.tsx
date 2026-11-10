@@ -200,7 +200,7 @@ export function Hero() {
 
             <h1 className="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-white">
               Don&apos;t just watch.{' '}
-              <span className="text-gradient">Play with us live.</span>
+              <span className="text-brand-400">Play with us live.</span>
             </h1>
 
             <p className="text-lg text-slate-400 max-w-xl leading-relaxed">
@@ -209,6 +209,22 @@ export function Hero() {
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mt-2">
+              <a
+                href="https://hype.bet/LuckAndLoad"
+                target="_blank"
+                rel="sponsored noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-hype px-7 py-3 text-base font-black text-black hover:bg-hype/90 transition-all hover:scale-105"
+              >
+                Join Hype.bet
+              </a>
+
+              <a href="https://kick.com/luckandloadtv" target="_blank" rel="noopener noreferrer">
+                <Button size="lg" variant="secondary">
+                  Watch Live
+                  <ExternalLink size={14} />
+                </Button>
+              </a>
+
               {!session ? (
                 <button
                   onClick={() => signIn('discord')}
@@ -228,22 +244,6 @@ export function Hero() {
                   View Leaderboard
                 </Link>
               )}
-
-              <a
-                href="https://hype.bet/LuckAndLoad"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-hype px-7 py-3 text-base font-black text-black hover:bg-hype/90 transition-all hover:scale-105"
-              >
-                🎰 Join Hype.bet
-              </a>
-
-              <a href="https://kick.com/luckandloadtv" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="secondary">
-                  Watch Live
-                  <ExternalLink size={14} />
-                </Button>
-              </a>
             </div>
 
             <GamblingNotice />
