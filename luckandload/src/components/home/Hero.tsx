@@ -1,7 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSession, signIn } from 'next-auth/react'
+import Image from 'next/image'
 import Link from 'next/link'
+import { KICK_URL, describeUpcoming, type StreamSlot } from '@/lib/stream'
+import { useKickLive } from '@/lib/useKickLive'
 import { ExternalLink, Trophy, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
@@ -60,10 +63,10 @@ const SOCIALS = [
 ]
 
 const CLIPS = [
-  { id: 'X5_eUsj6T7o', thumb: '/Zeus%20vs%20Hades.png', embeddable: true },
-  { id: 'HoP3z6fPP1Y', thumb: '/7k%20X%20Shogun%20Jade.png' },
-  { id: 'xO4L92Hk2GI', thumb: '/Eternal%20Duel.png' },
-  { id: 'a2FX1ANlxCo', thumb: '/Full%20Screen%20Wilds.png' },
+  { id: 'X5_eUsj6T7o', thumb: '/shorts/zeus-vs-hades.jpg', embeddable: true },
+  { id: 'HoP3z6fPP1Y', thumb: '/shorts/shogun-jade-7k.jpg' },
+  { id: 'xO4L92Hk2GI', thumb: '/shorts/eternal-duel.jpg' },
+  { id: 'a2FX1ANlxCo', thumb: '/shorts/full-screen-wilds.jpg' },
 ]
 
 function ShortClip({ videoId, thumb, embeddable }: { videoId: string; thumb: string; embeddable?: boolean }) {
@@ -79,10 +82,12 @@ function ShortClip({ videoId, thumb, embeddable }: { videoId: string; thumb: str
         className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-surface-800 group block"
         style={{ aspectRatio: '9/16' }}
       >
-        <img
+        <Image
           src={thumb}
           alt="LuckAndLoadTV clip"
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          fill
+          sizes="(min-width: 1280px) 208px, (min-width: 1024px) 176px, 160px"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {/* Overlay */}
         <div className="absolute inset-0 bg-black/35 group-hover:bg-black/10 transition-colors duration-300" />
@@ -134,6 +139,42 @@ function ShortClip({ videoId, thumb, embeddable }: { videoId: string; thumb: str
   )
 }
 
+// Pulses red only when we're actually live. Otherwise it shows when the next stream starts.
+function StreamBadge() {
+  const status = useKickLive()
+  const [next, setNext] = useState<StreamSlot | null>(null)
+  useEffect(() => {
+    setNext(describeUpcoming()[0] ?? null)
+  }, [])
+
+  if (status === 'live') {
+    return (
+      <a
+        href={KICK_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-1.5 text-sm font-semibold text-red-300 transition-colors hover:bg-red-500/20"
+      >
+        <span className="live-dot" />
+        We&apos;re live now on Kick
+      </a>
+    )
+  }
+
+  return (
+    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface-700/60 px-4 py-1.5 text-sm text-slate-400">
+      <span className="h-2 w-2 rounded-full bg-slate-500" />
+      {next && next.day !== 'Starting soon' ? (
+        <span>
+          Next stream: <span className="text-slate-200">{next.day} {next.time} {next.zone.split(' ')[0]}</span>
+        </span>
+      ) : (
+        <span>Live on Kick &amp; Twitch</span>
+      )}
+    </div>
+  )
+}
+
 export function Hero() {
   const { data: session } = useSession()
 
@@ -155,19 +196,16 @@ export function Hero() {
 
           {/* Hero content */}
           <div className="flex flex-col items-center text-center gap-6 flex-1 max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-surface-700/60 px-4 py-1.5 text-sm">
-              <span className="live-dot" />
-              <span className="text-slate-400">Stream goes live on Kick & Twitch</span>
-            </div>
+            <StreamBadge />
 
             <h1 className="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-white">
-              Welcome to{' '}
-              <span className="text-gradient">LuckAndLoad</span>
-              <span className="text-white">TV</span>
+              Don&apos;t just watch.{' '}
+              <span className="text-gradient">Play with us live.</span>
             </h1>
 
             <p className="text-lg text-slate-400 max-w-xl leading-relaxed">
-              Two friends, zero filters, and a whole lot of spins. Join the community for live streams, bonus hunts, and vibes you won't find anywhere else.
+              We&apos;re LuckAndLoadTV, two Norwegian mates streaming bonus hunts on Kick and Twitch. Join our Hype.bet
+              multiplayer room and share every spin with us, live on stream. Jump in or leave whenever you want.
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mt-2">

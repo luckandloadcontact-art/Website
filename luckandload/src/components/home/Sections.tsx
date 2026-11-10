@@ -38,7 +38,7 @@ export function AboutSection() {
               <span className="text-gradient">one stream</span>
             </h2>
             <p className="text-slate-400 leading-relaxed mb-4">
-              LuckAndLoadTV started in September 2025 when two 24-year-old mates from Norway decided to stop talking about streaming and actually hit the "Go Live" button. We've both enjoyed gambling for years, but the stream quickly became about much more than slots and bonus hunts.
+              LuckAndLoadTV started in September 2025 when two mates from Norway, both 24 at the time, decided to stop talking about streaming and actually hit the "Go Live" button. We've both enjoyed gambling for years, but the stream quickly became about much more than slots and bonus hunts.
             </p>
             <p className="text-slate-400 leading-relaxed mb-4">
               Our goal has always been simple: build a community where people can relax, have a laugh after work, and feel like they're sitting in Discord with a couple of mates.
@@ -58,7 +58,6 @@ export function AboutSection() {
               width={700}
               height={500}
               className="w-full h-full object-cover"
-              priority
             />
           </div>
         </div>
@@ -72,8 +71,8 @@ export function CommunitySection() {
   const stats = [
     { label: 'Given away last 12 months', value: '💸 $15,000+', color: 'text-green-400' },
     { label: 'Bonus Hunts last 12 months', value: '🎯 100+', color: 'text-brand-400' },
-    { label: 'Hours of Banter', value: '☕ 500+', color: 'text-yellow-400' },
-    { label: 'Bad calls from chat', value: '🎰 ∞', color: 'text-indigo-400' },
+    { label: 'In leaderboard prizes every month', value: '🏆 $1,000', color: 'text-yellow-400' },
+    { label: 'Live since September', value: '📅 2025', color: 'text-indigo-400' },
   ]
 
   return (
@@ -81,7 +80,7 @@ export function CommunitySection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
           <Badge variant="brand" className="mb-3">Community</Badge>
-          <h2 className="text-3xl font-bold text-white">Growing every stream</h2>
+          <h2 className="text-3xl font-bold text-white">Our first year in numbers</h2>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

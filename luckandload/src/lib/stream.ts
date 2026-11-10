@@ -98,3 +98,39 @@ export function upcomingStreams(now = new Date()): UpcomingStream[] {
     .filter(stream => stream.start.getTime() + STREAM_HOURS * 3_600_000 > now.getTime())
     .sort((a, b) => a.start.getTime() - b.start.getTime())
 }
+
+export type StreamSlot = { title: string; day: string; time: string; zone: string; localTime: string | null }
+
+/** "CET (UTC+1)" in winter, "CEST (UTC+2)" in summer, worked out from the stream date itself. */
+function zoneLabel(date: Date): string {
+  let offset = '+1'
+  try {
+    const part = new Intl.DateTimeFormat('en-US', { timeZone: STREAM_TIME_ZONE, timeZoneName: 'shortOffset' })
+      .formatToParts(date)
+      .find(p => p.type === 'timeZoneName')
+    const parsed = part?.value.replace('GMT', '')
+    if (parsed) offset = parsed
+  } catch {
+    // Older browsers without shortOffset fall back to standard time.
+  }
+  return `${offset === '+2' ? 'CEST' : 'CET'} (UTC${offset})`
+}
+
+/**
+ * Upcoming streams as display text. Call it in the browser (in an effect), so visitors also see the
+ * time in their own time zone.
+ */
+export function describeUpcoming(now = new Date()): StreamSlot[] {
+  return upcomingStreams(now).map(stream => {
+    const time = stream.start.toLocaleTimeString('en-GB', { timeZone: STREAM_TIME_ZONE, hour: '2-digit', minute: '2-digit' })
+    const localTime = stream.start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+    const day = stream.started
+      ? 'Starting soon'
+      : stream.daysAway === 0
+        ? 'Today'
+        : stream.daysAway === 1
+          ? 'Tomorrow'
+          : stream.start.toLocaleDateString('en-US', { timeZone: STREAM_TIME_ZONE, weekday: 'long' })
+    return { title: stream.title, day, time, zone: zoneLabel(stream.start), localTime: localTime === time ? null : localTime }
+  })
+}

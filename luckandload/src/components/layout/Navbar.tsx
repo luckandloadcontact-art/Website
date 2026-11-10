@@ -13,7 +13,6 @@ const NAV_LINKS: { href: string | null; label: string; comingSoon?: boolean; hig
   { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/guides', label: 'Guides' },
   { href: '/slot-wheel', label: 'Slot Wheel' },
-  { href: '/events', label: 'Events' },
 ]
 
 export function Navbar() {

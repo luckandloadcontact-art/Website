@@ -1,5 +1,5 @@
+import Image from 'next/image'
 import Link from 'next/link'
-import { Zap } from 'lucide-react'
 
 const SOCIAL_LINKS = [
   { label: 'Twitch', href: 'https://twitch.tv/luckandloadtv', color: 'hover:text-purple-400' },
@@ -14,14 +14,9 @@ export function Footer() {
     <footer className="border-t border-white/5 bg-surface-950">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-6">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-brand-500">
-              <Zap size={13} className="text-white fill-white" />
-            </div>
-            <span className="font-bold text-white text-sm">
-              LuckAndLoad<span className="text-brand-500">TV</span>
-            </span>
-          </div>
+          <Link href="/" aria-label="LuckAndLoadTV home">
+            <Image src="/logo-navbar.png" alt="LuckAndLoadTV" width={180} height={124} className="h-16 w-auto object-contain" />
+          </Link>
 
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             {SOCIAL_LINKS.map(l => (
@@ -42,6 +37,7 @@ export function Footer() {
             <Link href="/leaderboard" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Leaderboard</Link>
             <Link href="/casinos/hype-bet" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Hype.bet Bonus</Link>
             <Link href="/guides" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Guides</Link>
+            <Link href="/events" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Events</Link>
             <Link href="/contact" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Contact</Link>
             <Link href="/responsible-gambling" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Gambling Help</Link>
             <Link href="/terms" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Terms</Link>

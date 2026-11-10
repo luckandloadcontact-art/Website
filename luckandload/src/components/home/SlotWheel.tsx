@@ -69,6 +69,22 @@ export function SlotWheel() {
   // uten dette kunne man rekke å spinne før alle rakk å bli hentet inn i nettleser-cachen.
   const [loadedCount, setLoadedCount] = useState(0)
   const assetsReady = loadedCount >= WHEEL_GAMES.length
+  // The hidden preloader (below) only mounts once the wheel is close to the screen, so the 118 game
+  // images are not fetched on page load, and not written into the HTML of every page that shows it.
+  const sectionRef = useRef<HTMLElement>(null)
+  const [nearScreen, setNearScreen] = useState(false)
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el || nearScreen) return
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries.some(e => e.isIntersecting)) setNearScreen(true)
+      },
+      { rootMargin: '600px 0px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [nearScreen])
   const [nameCopied, setNameCopied] = useState(false)
 
   async function copyGameName(name: string) {
@@ -180,7 +196,7 @@ export function SlotWheel() {
   }
 
   return (
-    <section className="relative border-t border-white/5 py-16">
+    <section ref={sectionRef} className="relative border-t border-white/5 py-16">
       {/* Only the glow is clipped, not the section: clipping the section cut off the provider filter
           dropdown whenever no spin result below made the section tall enough. */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -196,6 +212,7 @@ export function SlotWheel() {
         dette skalerer uansett hvor mange spill listen vokser til, i stedet for å bare håpe at
         forhåndslastingen rakk å bli ferdig i tide.
       */}
+      {nearScreen && (
       <div aria-hidden="true" className="absolute h-0 w-0 overflow-hidden opacity-0">
         {WHEEL_GAMES.map(game => (
           <div key={game.id} className="relative aspect-[3/4] w-32 sm:w-44">
@@ -204,13 +221,14 @@ export function SlotWheel() {
               alt=""
               fill
               sizes="176px"
-              priority
+              loading="eager"
               onLoad={() => setLoadedCount(c => c + 1)}
               onError={() => setLoadedCount(c => c + 1)}
             />
           </div>
         ))}
       </div>
+      )}
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-400">
           <Dices size={13} /> Slot Wheel

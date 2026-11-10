@@ -1,11 +1,15 @@
 import { Hero } from '@/components/home/Hero'
 import { AboutSection, CommunitySection, AnnouncementsSection, HypeSection, type UpdateItem } from '@/components/home/Sections'
-import { GUIDES } from '@/lib/guides'
+import type { Metadata } from 'next'
+import { GUIDES, SITE_URL } from '@/lib/guides'
 import { LiveSection } from '@/components/home/LiveSection'
 import { SlotWheel } from '@/components/home/SlotWheel'
 import { NewsSection } from '@/components/home/NewsSection'
 import { createAdminClient } from '@/lib/supabase'
 import type { Announcement } from '@/types'
+
+// Title and description come from the root layout.
+export const metadata: Metadata = { alternates: { canonical: SITE_URL } }
 
 async function getAnnouncements(): Promise<Announcement[]> {
   try {
