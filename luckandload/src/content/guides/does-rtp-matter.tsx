@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import { GuideH2, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
+import { RtpCostChart } from '@/components/guides/RtpCostChart'
 
 // RTP versions from SlotCatalog (checked November 2026).
+// Cost = $1,000 bet x (100% - RTP).
 const WANTED_ROWS = [
-  { rtp: '96.38%', note: 'Top version', cost: '$36.20' },
-  { rtp: '94.55%', note: '', cost: '$54.50' },
-  { rtp: '92.33%', note: '', cost: '$76.70' },
-  { rtp: '88.42%', note: 'Lowest version', cost: '$115.80' },
+  { rtp: '96.38%', label: 'Top version', cost: 36.2 },
+  { rtp: '94.55%', cost: 54.5 },
+  { rtp: '92.33%', cost: 76.7 },
+  { rtp: '88.42%', label: 'Lowest version', cost: 115.8 },
 ]
 
 const SOURCE_LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
@@ -73,27 +75,11 @@ export default function DoesRtpMatter() {
 
       <GuideH2>What it costs you</GuideH2>
       <GuideP>Say you play 1,000 spins at $1 on Wanted Dead or a Wild. That&apos;s $1,000 bet in total.</GuideP>
-      <div className="mb-5 max-w-3xl overflow-x-auto">
-        <table className="w-full min-w-[24rem] text-left text-sm">
-          <thead className="border-b border-white/20 text-white">
-            <tr>
-              <th scope="col" className="py-3 pr-4 font-semibold">RTP version</th>
-              <th scope="col" className="py-3 font-semibold">Average cost of 1,000 $1 spins</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/10 text-slate-200">
-            {WANTED_ROWS.map(row => (
-              <tr key={row.rtp}>
-                <th scope="row" className="py-3 pr-4 font-normal">
-                  {row.rtp}
-                  {row.note && <span className="ml-2 text-slate-500">{row.note}</span>}
-                </th>
-                <td className="py-3">{row.cost}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <RtpCostChart
+        title="Wanted Dead or a Wild: average cost of 1,000 spins at $1"
+        rows={WANTED_ROWS}
+        caption="RTP versions from SlotCatalog. These are long-run averages, and any single session can go much better or worse."
+      />
       <GuideP>
         Same game, same bets, same spins. On the lowest version you lose more than three times as much on average. If
         you&apos;re clearing a bonus, the gap grows with every dollar you have to wager.
