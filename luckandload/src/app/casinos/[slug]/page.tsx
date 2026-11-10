@@ -145,6 +145,8 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
         </aside>
 
         <div className="max-w-3xl">
+          {Body && <Body playUrl={casino.playUrl} />}
+
           <GuideH2>What you get when you sign up through us</GuideH2>
           <GuideList>
             {casino.ourPerks.map(perk => (
@@ -158,8 +160,6 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
             </Link>
             .
           </GuideP>
-
-          {Body && <Body playUrl={casino.playUrl} />}
 
           <GuideH2>Pros and cons</GuideH2>
           <GuideH3>What we like</GuideH3>
