@@ -198,9 +198,10 @@ export function Hero() {
           <div className="flex flex-col items-center text-center gap-6 flex-1 max-w-2xl">
             <StreamBadge />
 
-            <h1 className="text-5xl sm:text-6xl font-bold leading-tight tracking-tight text-white">
-              More Than Just a Stream.{' '}
-              <span className="block text-brand-400">You&apos;re Part of the Action.</span>
+            {/* Sized so each sentence stays on one line from tablet width up (two lines in total). */}
+            <h1 className="text-4xl sm:text-[2.75rem] lg:text-[2.5rem] xl:text-5xl font-bold leading-tight tracking-tight text-white">
+              <span className="block sm:whitespace-nowrap">More Than Just a Stream.</span>
+              <span className="block text-brand-400 sm:whitespace-nowrap">You&apos;re Part of the Action.</span>
             </h1>
 
             <p className="text-lg text-slate-400 max-w-xl leading-relaxed">
