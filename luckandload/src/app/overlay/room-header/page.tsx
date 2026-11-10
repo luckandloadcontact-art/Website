@@ -14,14 +14,15 @@ export default function RoomHeaderOverlayPage() {
     <ScaledFrame width={320} height={44}>
       <style>
         {
-          '@keyframes room-dot{0%,100%{opacity:.45;box-shadow:0 0 2px 0 rgba(28,228,121,.4)}50%{opacity:1;box-shadow:0 0 10px 3px rgba(28,228,121,.85)}}'
+          // Calm "breathing" glow: the dot never fades out, only the soft halo swells slowly.
+          '@keyframes room-dot{0%,100%{opacity:.8;box-shadow:0 0 2px 0 rgba(28,228,121,.3)}50%{opacity:1;box-shadow:0 0 6px 1px rgba(28,228,121,.55)}}'
         }
       </style>
       <div className="flex h-full w-full items-center justify-between rounded-t-[14px] border-2 border-b-0 border-indigo-400/40 bg-gradient-to-r from-[#161a3a] to-[#0f1229] px-4">
         <div className="flex items-center gap-2.5">
           <span
-            className="h-3 w-3 rounded-full bg-hype"
-            style={{ animation: 'room-dot 1.6s ease-in-out infinite' }}
+            className="h-2.5 w-2.5 rounded-full bg-hype"
+            style={{ animation: 'room-dot 3.2s ease-in-out infinite' }}
           />
           <span className="text-[16px] font-black uppercase tracking-wider text-white">Room players</span>
         </div>
