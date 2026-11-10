@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { GuideDetails, GuideDetailsGroup, GuideH2, GuideH3, GuideList, GuideP } from '@/components/guides/GuideContent'
 
 const XP_RATES = [
@@ -146,7 +147,11 @@ export default function HypeBetReview({ playUrl }: { playUrl: string }) {
       <GuideP>
         RTP is the share of the money bet on a game that it pays back over time. Many slots come in several RTP versions,
         and each casino chooses which one to run. Hype.bet runs its slots on the highest RTP settings available, so you
-        get the best possible odds on the same games.
+        get the best possible odds on the same games. Wondering how much that matters?{' '}
+        <Link href="/guides/does-rtp-matter" className="text-brand-400 underline underline-offset-2 hover:text-brand-300">
+          Read our guide to why RTP matters
+        </Link>
+        .
       </GuideP>
     </>
   )
