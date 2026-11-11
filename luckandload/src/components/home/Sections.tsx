@@ -140,10 +140,10 @@ export function HypeSection() {
           {/* Left: bullet points */}
           <div className="space-y-6">
             {[
-              { Icon: Users, text: <>A host can create a virtual room where <strong className="text-white">hundreds of players</strong> can join and play together</> },
-              { Icon: LogIn, text: <>While LuckAndLoadTV manages the game, anyone can <strong className="text-white">join in and leave at any time</strong></> },
-              { Icon: Wallet, text: <><strong className="text-white">Each player contributes</strong> to the room by depositing money into a shared pool</> },
-              { Icon: PieChart, text: <>With every bet, players in the room will either win or lose based on <strong className="text-white">their share</strong> of the pool</> },
+              { Icon: Users, text: <>A host can create a virtual room where players can join and play together</> },
+              { Icon: LogIn, text: <>While LuckAndLoadTV hosts the room, anyone can <strong className="text-white">join in and leave at any time</strong></> },
+              { Icon: Wallet, text: <><strong className="text-white">Each player can contribute</strong> to the room by depositing money into a shared pool</> },
+              { Icon: PieChart, text: <>Players win and lose based on their percentage in the room</> },
             ].map(({ Icon, text }, i) => (
               <div key={i} className="flex items-start gap-4">
                 <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-500/10 text-brand-400">
