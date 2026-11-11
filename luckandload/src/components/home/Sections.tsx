@@ -28,20 +28,28 @@ export function AboutSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl font-bold text-white mb-4 leading-tight">
-              Two mates, great minds,<br />
-              <span className="text-brand-400">one stream</span>
+              Two mates. <span className="text-brand-400">One stream.</span>
             </h2>
             <p className="text-slate-400 leading-relaxed mb-4">
-              LuckAndLoadTV started in September 2025 when two mates from Norway, both 24 at the time, decided to stop talking about streaming and actually hit the "Go Live" button. We've both enjoyed gambling for years, but the stream quickly became about much more than slots and bonus hunts.
+              We&apos;re Kristian and Simon, two mates from Norway who started LuckAndLoadTV back in September 2025.
             </p>
             <p className="text-slate-400 leading-relaxed mb-4">
-              Our goal has always been simple: build a community where people can relax, have a laugh after work, and feel like they're sitting in Discord with a couple of mates.
+              We&apos;ve both been into slots for years, but what really made us want to start streaming was discovering the
+              multiplayer room concept. The idea of playing alongside other people, sharing the same spins and experiencing
+              the wins and losses together was something we found genuinely exciting. So we decided to give streaming a shot.
             </p>
             <p className="text-slate-400 leading-relaxed mb-4">
-              If you've ever joined one of our streams, you'll know that banter is basically our third host. We give it, we get it, and honestly, we wouldn't want it any other way.
+              Fast forward a year, and we&apos;ve both quit our jobs, moved in together, and decided to take streaming
+              full-time.
+            </p>
+            <p className="text-slate-400 leading-relaxed mb-4">
+              From the beginning, we&apos;ve wanted LuckAndLoadTV to feel more like hanging out in Discord with your mates
+              than watching a traditional gambling stream. Somewhere people can join the conversation, have a laugh and feel
+              like they&apos;re part of what&apos;s happening, whether they&apos;re playing in the room or just watching.
             </p>
             <p className="text-slate-400 leading-relaxed">
-              Whether you're here for the bonus hunts, the gambling, the terrible predictions, the occasional big win, or just the vibes — you're welcome aboard. Welcome to LuckAndLoadTV ❤️
+              We&apos;re still figuring things out as we go, but building a community around something we both enjoy has
+              been the best part of it all.
             </p>
           </div>
 
