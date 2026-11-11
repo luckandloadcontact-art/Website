@@ -70,12 +70,12 @@ export function AboutSection() {
 
 // ─── Community stats ──────────────────────────────────────
 export function CommunitySection() {
-  // `count` numbers count up when scrolled into view. The year is shown as is.
-  const stats = [
-    { label: 'Given away in the last 12 months', count: 15000, prefix: '$', suffix: '+', color: 'text-green-400' },
-    { label: 'Bonus hunts in the last 12 months', count: 100, suffix: '+', color: 'text-brand-400' },
-    { label: 'In leaderboard prizes every month', count: 1000, prefix: '$', color: 'text-yellow-400' },
-    { label: 'Live since September', text: '2025', color: 'text-indigo-400' },
+  // `count` numbers count up when scrolled into view; `text` is shown as is.
+  const stats: { label: string; count?: number; text?: string; prefix?: string; suffix?: string; color: string }[] = [
+    { label: 'Given away in our first year', count: 15000, prefix: '$', suffix: '+', color: 'text-green-400' },
+    { label: 'Times players have joined our multiplayer rooms', count: 7000, suffix: '+', color: 'text-brand-400' },
+    { label: 'Our biggest win – Zeus vs Hades', count: 13500, prefix: '$', color: 'text-yellow-400' },
+    { label: 'In monthly leaderboard prizes', count: 1000, prefix: '$', color: 'text-indigo-400' },
   ]
 
   return (
