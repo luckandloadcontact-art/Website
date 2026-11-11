@@ -4,8 +4,11 @@
 export const STREAM_TIME_ZONE = 'Europe/Oslo'
 const STREAM_HOURS = 3 // How long a stream counts as "on" after its start time
 
-// This week's streams, copied from the events in our Discord. Update every week. Dates and times
-// are Norwegian time. Once the last one is over, the home page asks people to follow us instead.
+// A stream as it travels from the server to the browser: title and start time (ISO, UTC).
+export type ScheduledStream = { title: string; start: string }
+
+// Fallback only. The schedule is read from the scheduled events in our Discord (lib/discordEvents.ts).
+// This list is used when Discord isn't set up or can't be reached. Dates and times are Norwegian time.
 export const SCHEDULED_STREAMS = [
   { date: '2026-11-09', time: '18:00', title: 'Classic Bonushunt' },
   { date: '2026-11-11', time: '18:00', title: 'No Ante Bonushunt' },
@@ -81,17 +84,25 @@ export type UpcomingStream = {
   started: boolean // Inside the scheduled slot but not (yet) detected as live
 }
 
+/** The manual fallback list in the same shape as the Discord events. */
+export function manualStreams(): ScheduledStream[] {
+  return SCHEDULED_STREAMS.map(stream => ({
+    title: stream.title,
+    start: zonedTime(stream.date, stream.time, STREAM_TIME_ZONE).toISOString(),
+  }))
+}
+
 /** Scheduled streams that haven't finished yet, soonest first. */
-export function upcomingStreams(now = new Date()): UpcomingStream[] {
+export function upcomingStreams(streams: ScheduledStream[] = manualStreams(), now = new Date()): UpcomingStream[] {
   const today = partsInZone(now, STREAM_TIME_ZONE)
   const todayUtc = Date.UTC(today.year, today.month - 1, today.day)
-  return SCHEDULED_STREAMS.map(stream => {
-    const start = zonedTime(stream.date, stream.time, STREAM_TIME_ZONE)
-    const [year, month, day] = stream.date.split('-').map(Number)
+  return streams.map(stream => {
+    const start = new Date(stream.start)
+    const day = partsInZone(start, STREAM_TIME_ZONE)
     return {
       title: stream.title,
       start,
-      daysAway: Math.round((Date.UTC(year, month - 1, day) - todayUtc) / 86_400_000),
+      daysAway: Math.round((Date.UTC(day.year, day.month - 1, day.day) - todayUtc) / 86_400_000),
       started: start.getTime() <= now.getTime(),
     }
   })
@@ -120,8 +131,8 @@ function zoneLabel(date: Date): string {
  * Upcoming streams as display text. Call it in the browser (in an effect), so visitors also see the
  * time in their own time zone.
  */
-export function describeUpcoming(now = new Date()): StreamSlot[] {
-  return upcomingStreams(now).map(stream => {
+export function describeUpcoming(streams?: ScheduledStream[], now = new Date()): StreamSlot[] {
+  return upcomingStreams(streams, now).map(stream => {
     const time = stream.start.toLocaleTimeString('en-GB', { timeZone: STREAM_TIME_ZONE, hour: '2-digit', minute: '2-digit' })
     const localTime = stream.start.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
     const day = stream.started

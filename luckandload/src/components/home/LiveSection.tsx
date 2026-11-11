@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { CalendarClock, ExternalLink, Play, Tv } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { BEST_CLIPS, KICK_URL, describeUpcoming, type StreamSlot } from '@/lib/stream'
+import { BEST_CLIPS, KICK_URL, describeUpcoming, type ScheduledStream, type StreamSlot } from '@/lib/stream'
 import { useKickLive } from '@/lib/useKickLive'
 
 const TWITCH_CHANNEL = 'luckandloadtv'
 const KICK_CHANNEL = 'luckandloadtv'
 const DISCORD_URL = 'https://discord.gg/yagZVjqqbr'
 
-export function LiveSection() {
+export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
   const [platform, setPlatform] = useState<'twitch' | 'kick'>('twitch')
   // Twitch sin embed krever et parent-domene som matcher siden den vises på (feiler ellers med
   // "cannot be embedded"). Hentes fra window i stedet for å hardkodes, slik at embeden også
@@ -28,8 +28,8 @@ export function LiveSection() {
   useEffect(() => {
     setParentHost(window.location.hostname)
     // Klokkeslett regnes ut i nettleseren, så besøkende også ser sendetiden i sin egen tidssone.
-    setUpcoming(describeUpcoming())
-  }, [])
+    setUpcoming(describeUpcoming(streams))
+  }, [streams])
 
   return (
     <section className="border-t border-white/5 py-16">

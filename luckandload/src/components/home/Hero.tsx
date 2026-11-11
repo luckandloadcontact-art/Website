@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useSession, signIn } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { KICK_URL, describeUpcoming, type StreamSlot } from '@/lib/stream'
+import { KICK_URL, describeUpcoming, type ScheduledStream, type StreamSlot } from '@/lib/stream'
 import { useKickLive } from '@/lib/useKickLive'
 import { ExternalLink, Trophy, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -140,12 +140,12 @@ function ShortClip({ videoId, thumb, embeddable }: { videoId: string; thumb: str
 }
 
 // Pulses red only when we're actually live. Otherwise it shows when the next stream starts.
-function StreamBadge() {
+function StreamBadge({ streams }: { streams: ScheduledStream[] }) {
   const status = useKickLive()
   const [next, setNext] = useState<StreamSlot | null>(null)
   useEffect(() => {
-    setNext(describeUpcoming()[0] ?? null)
-  }, [])
+    setNext(describeUpcoming(streams)[0] ?? null)
+  }, [streams])
 
   if (status === 'live') {
     return (
@@ -175,7 +175,7 @@ function StreamBadge() {
   )
 }
 
-export function Hero() {
+export function Hero({ streams }: { streams: ScheduledStream[] }) {
   const { data: session } = useSession()
 
   return (
@@ -196,7 +196,7 @@ export function Hero() {
 
           {/* Hero content */}
           <div className="flex flex-col items-center text-center gap-6 flex-1 max-w-2xl">
-            <StreamBadge />
+            <StreamBadge streams={streams} />
 
             {/* Sized so each sentence stays on one line from tablet width up (two lines in total). */}
             <h1 className="text-4xl sm:text-[2.75rem] lg:text-[2.5rem] xl:text-5xl font-bold leading-tight tracking-tight text-white">

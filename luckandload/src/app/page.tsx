@@ -6,6 +6,8 @@ import { LiveSection } from '@/components/home/LiveSection'
 import { SlotWheel } from '@/components/home/SlotWheel'
 import { NewsSection } from '@/components/home/NewsSection'
 import { createAdminClient } from '@/lib/supabase'
+import { getDiscordStreams } from '@/lib/discordEvents'
+import { manualStreams } from '@/lib/stream'
 import type { Announcement } from '@/types'
 
 // Title and description come from the root layout.
@@ -56,15 +58,18 @@ function buildUpdates(announcements: Announcement[]): UpdateItem[] {
 }
 
 export default async function HomePage() {
-  const announcements = buildUpdates(await getAnnouncements())
+  const [updates, discordStreams] = await Promise.all([getAnnouncements(), getDiscordStreams()])
+  const announcements = buildUpdates(updates)
+  // Events from our Discord, or the manual list in lib/stream.ts if Discord isn't available.
+  const streams = discordStreams ?? manualStreams()
 
   return (
     <div>
-      <Hero />
+      <Hero streams={streams} />
       <HypeSection />
       <AboutSection />
       <CommunitySection />
-      <LiveSection />
+      <LiveSection streams={streams} />
       <SlotWheel />
       <NewsSection />
       {announcements.length > 0 && <AnnouncementsSection announcements={announcements} />}
