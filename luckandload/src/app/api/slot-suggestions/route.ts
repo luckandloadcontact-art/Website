@@ -56,14 +56,9 @@ export async function POST(req: Request) {
 
   const body = await req.json().catch(() => null)
   const gameName = typeof body?.gameName === 'string' ? body.gameName.replace(/\s+/g, ' ').trim() : ''
-  const providerRaw = typeof body?.provider === 'string' ? body.provider.replace(/\s+/g, ' ').trim() : ''
-  const provider = providerRaw || null
 
   if (gameName.length < 2 || gameName.length > 80) {
     return NextResponse.json({ error: 'Enter the name of the game (2 to 80 characters).' }, { status: 400 })
-  }
-  if (provider && provider.length > 60) {
-    return NextResponse.json({ error: 'The provider name is too long.' }, { status: 400 })
   }
 
   const key = normalizeGameName(gameName)
@@ -87,7 +82,7 @@ export async function POST(req: Request) {
 
   const { data, error } = await supabase
     .from('slot_suggestions')
-    .insert({ user_id: userId, game_name: gameName, provider })
+    .insert({ user_id: userId, game_name: gameName })
     .select('id, game_name, provider, status, created_at, reviewed_at')
     .single()
   if (error) {

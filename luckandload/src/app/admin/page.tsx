@@ -979,7 +979,6 @@ function AdminPageInner() {
                 <thead>
                   <tr className="border-b border-white/5 text-xs text-slate-500">
                     <th scope="col" className="px-5 py-3 text-left font-medium">Game</th>
-                    <th scope="col" className="px-5 py-3 text-left font-medium">Provider</th>
                     <th scope="col" className="px-5 py-3 text-left font-medium">Suggested by</th>
                     <th scope="col" className="px-5 py-3 text-left font-medium">Sent</th>
                     <th scope="col" className="px-5 py-3 text-right font-medium">Status</th>
@@ -989,7 +988,6 @@ function AdminPageInner() {
                   {suggestions.map(s => (
                     <tr key={s.id}>
                       <th scope="row" className="px-5 py-3 text-left font-medium text-white">{s.gameName}</th>
-                      <td className="px-5 py-3 text-slate-400">{s.provider ?? '–'}</td>
                       <td className="px-5 py-3">
                         <span className="flex items-center gap-2">
                           {s.avatarUrl && <PlayerAvatar src={s.avatarUrl} name={s.suggestedBy} size={22} />}
@@ -1036,7 +1034,7 @@ function AdminPageInner() {
                   ))}
                   {!suggestions.length && (
                     <tr>
-                      <td colSpan={5} className="px-5 py-8 text-center text-slate-600">No suggestions yet.</td>
+                      <td colSpan={4} className="px-5 py-8 text-center text-slate-600">No suggestions yet.</td>
                     </tr>
                   )}
                 </tbody>

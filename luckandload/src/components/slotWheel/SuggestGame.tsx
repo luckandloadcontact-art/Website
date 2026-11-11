@@ -4,10 +4,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { useSession, signIn } from 'next-auth/react'
 import { Lightbulb, Send } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { WHEEL_GAMES } from '@/lib/slotWheel'
 import { MAX_PENDING_SUGGESTIONS, type SlotSuggestion } from '@/lib/slotSuggestions'
 
-const PROVIDERS = Array.from(new Set(WHEEL_GAMES.map(g => g.provider))).sort((a, b) => a.localeCompare(b))
 
 const STATUS_STYLE: Record<SlotSuggestion['status'], { label: string; className: string }> = {
   pending: { label: 'Waiting', className: 'bg-white/5 text-slate-300' },
@@ -21,7 +19,6 @@ export function SuggestGame() {
   const { status } = useSession()
   const [suggestions, setSuggestions] = useState<SlotSuggestion[]>([])
   const [gameName, setGameName] = useState('')
-  const [provider, setProvider] = useState('')
   const [sending, setSending] = useState(false)
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null)
 
@@ -46,7 +43,7 @@ export function SuggestGame() {
       const res = await fetch('/api/slot-suggestions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ gameName, provider }),
+        body: JSON.stringify({ gameName }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) {
@@ -56,7 +53,6 @@ export function SuggestGame() {
       setSuggestions(list => [data.suggestion, ...list])
       setMessage({ kind: 'ok', text: `Thanks! We'll take a look at ${data.suggestion.gameName}.` })
       setGameName('')
-      setProvider('')
     } catch {
       setMessage({ kind: 'error', text: 'Something went wrong. Try again.' })
     } finally {
@@ -88,7 +84,7 @@ export function SuggestGame() {
 
       {status === 'authenticated' && (
         <>
-          <form onSubmit={submit} className="mt-4 grid gap-3 sm:grid-cols-[1fr_12rem_auto]">
+          <form onSubmit={submit} className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto]">
             <label className="sr-only" htmlFor="suggest-game">Game name</label>
             <input
               id="suggest-game"
@@ -100,22 +96,6 @@ export function SuggestGame() {
               disabled={atLimit}
               className="rounded-lg border border-white/10 bg-surface-900 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-brand-500 focus:outline-none disabled:opacity-50"
             />
-            <label className="sr-only" htmlFor="suggest-provider">Provider (optional)</label>
-            <input
-              id="suggest-provider"
-              value={provider}
-              onChange={e => setProvider(e.target.value)}
-              placeholder="Provider (optional)"
-              maxLength={60}
-              list="suggest-providers"
-              disabled={atLimit}
-              className="rounded-lg border border-white/10 bg-surface-900 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-brand-500 focus:outline-none disabled:opacity-50"
-            />
-            <datalist id="suggest-providers">
-              {PROVIDERS.map(p => (
-                <option key={p} value={p} />
-              ))}
-            </datalist>
             <button
               type="submit"
               disabled={sending || atLimit || gameName.trim().length < 2}
@@ -146,7 +126,6 @@ export function SuggestGame() {
                   <li key={s.id} className="flex items-center justify-between gap-3 py-2">
                     <span className="min-w-0 truncate text-slate-200">
                       {s.gameName}
-                      {s.provider && <span className="text-slate-500"> · {s.provider}</span>}
                     </span>
                     <span className={cn('shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold', STATUS_STYLE[s.status].className)}>
                       {STATUS_STYLE[s.status].label}
