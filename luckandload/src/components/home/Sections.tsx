@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/Badge'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import { formatRelativeTime } from '@/lib/utils'
 import type { Announcement } from '@/types'
-import { Users, LogIn, Wallet, PieChart, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle, BookOpen } from 'lucide-react'
+import { ArrowDown, ArrowLeft, ArrowRight, Users, LogIn, Wallet, PieChart, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle, BookOpen } from 'lucide-react'
 import { CountUp } from '@/components/ui/CountUp'
 import { RevealGroup } from '@/components/ui/RevealGroup'
 
@@ -211,10 +211,7 @@ export function HypeSection() {
 
               {/* Arrow → */}
               <div className="reveal-item hidden sm:flex items-center justify-center" style={{ transitionDelay: '200ms' }}>
-                <div className="flex flex-col items-center gap-1">
-                  <div className="w-8 h-0.5 bg-slate-600 rounded" />
-                  <div className="text-slate-500 text-lg">›</div>
-                </div>
+                <ArrowRight size={24} strokeWidth={2} className="text-slate-500" />
               </div>
 
               {/* TOP-RIGHT: Total balance */}
@@ -234,10 +231,7 @@ export function HypeSection() {
               <div className="hidden sm:block py-3" />
               <div className="hidden sm:block" />
               <div className="reveal-item hidden sm:flex items-center justify-center py-3" style={{ transitionDelay: '550ms' }}>
-                <div className="flex flex-col items-center gap-1">
-                  <div className="h-8 w-0.5 bg-slate-600 rounded" />
-                  <div className="text-slate-500 text-lg rotate-90">›</div>
-                </div>
+                <ArrowDown size={24} strokeWidth={2} className="text-slate-500" />
               </div>
 
               {/* BOTTOM-LEFT: Payouts */}
@@ -266,10 +260,7 @@ export function HypeSection() {
 
               {/* Arrow ← */}
               <div className="reveal-item hidden sm:flex items-center justify-center" style={{ transitionDelay: '900ms' }}>
-                <div className="flex flex-col items-center gap-1">
-                  <div className="text-slate-500 text-lg">‹</div>
-                  <div className="w-8 h-0.5 bg-slate-600 rounded" />
-                </div>
+                <ArrowLeft size={24} strokeWidth={2} className="text-slate-500" />
               </div>
 
               {/* BOTTOM-RIGHT: Win */}
