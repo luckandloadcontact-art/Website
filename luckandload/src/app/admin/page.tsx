@@ -4,7 +4,8 @@ import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import {
   LayoutDashboard, Users, Megaphone, Trophy,
-  Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords, History, Camera, ChevronDown, Instagram
+  Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords, History, Camera, ChevronDown, Instagram,
+  Lightbulb, Check, X
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
@@ -18,10 +19,11 @@ import { Bracket } from '@/components/events/Bracket'
 // runtime-import herfra ville feilet bygget (denne fila er en client component).
 import type { LeaderboardSnapshot } from '@/lib/affilka'
 import type { GrowthData } from '@/lib/growth'
+import type { AdminSlotSuggestion } from '@/lib/slotSuggestions'
 import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 import toast from 'react-hot-toast'
 
-type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard' | 'growth'
+type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard' | 'growth' | 'suggestions'
 
 function formatUsd(amount: number) {
   return `$${Math.round(amount).toLocaleString('en-US')}`
@@ -59,6 +61,8 @@ function AdminPageInner() {
   const [capturingSnapshot, setCapturingSnapshot] = useState(false)
   const [expandedSnapshot, setExpandedSnapshot] = useState<string | null>(null)
   const [growth, setGrowth] = useState<GrowthData | null>(null)
+  const [suggestions, setSuggestions] = useState<AdminSlotSuggestion[] | null>(null)
+  const [reviewingId, setReviewingId] = useState<string | null>(null)
 
   // New announcement form
   const [newAnn, setNewAnn] = useState({ title: '', body: '', type: 'info', pinned: false })
@@ -105,14 +109,16 @@ function AdminPageInner() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [usersRes, annRes, tourneyRes, snapshotsRes, igRes, growthRes] = await Promise.all([
+      const [usersRes, annRes, tourneyRes, snapshotsRes, igRes, growthRes, suggestionsRes] = await Promise.all([
         fetch('/api/admin/users'),
         fetch('/api/admin/announcements'),
         fetch('/api/admin/tournament'),
         fetch('/api/admin/leaderboard-snapshots'),
         fetch('/api/admin/instagram-token'),
         fetch('/api/admin/growth'),
+        fetch('/api/admin/slot-suggestions'),
       ])
+      setSuggestions(suggestionsRes.ok ? await suggestionsRes.json() : null)
       if (usersRes.ok) setUsers(await usersRes.json())
       if (annRes.ok) setAnnouncements(await annRes.json())
       if (tourneyRes.ok) setTournamentResults(await tourneyRes.json())
@@ -127,6 +133,27 @@ function AdminPageInner() {
   }, [])
 
   useEffect(() => { fetchData() }, [fetchData])
+
+  async function reviewSuggestion(id: string, status: 'approved' | 'declined') {
+    setReviewingId(id)
+    try {
+      const res = await fetch('/api/admin/slot-suggestions', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      })
+      if (!res.ok) {
+        toast.error((await res.json().catch(() => ({}))).error ?? 'Could not save')
+        return
+      }
+      setSuggestions(list =>
+        list?.map(s => (s.id === id ? { ...s, status, reviewedAt: new Date().toISOString() } : s)) ?? null
+      )
+      toast.success(status === 'approved' ? 'Approved' : 'Declined')
+    } finally {
+      setReviewingId(null)
+    }
+  }
 
   async function handleAdjustPoints(e: React.FormEvent) {
     e.preventDefault()
@@ -295,6 +322,8 @@ function AdminPageInner() {
     )
   }
 
+  const pendingSuggestions = suggestions?.filter(s => s.status === 'pending').length ?? 0
+
   const TABS: { key: AdminTab; label: string; icon: React.ReactNode }[] = [
     { key: 'overview', label: 'Overview', icon: <LayoutDashboard size={15} /> },
     { key: 'users', label: 'Users', icon: <Users size={15} /> },
@@ -302,6 +331,11 @@ function AdminPageInner() {
     { key: 'events', label: 'Events', icon: <Swords size={15} /> },
     { key: 'leaderboard', label: 'Leaderboard', icon: <History size={15} /> },
     { key: 'growth', label: 'Growth', icon: <TrendingUp size={15} /> },
+    {
+      key: 'suggestions',
+      label: `Suggestions${pendingSuggestions ? ` (${pendingSuggestions})` : ''}`,
+      icon: <Lightbulb size={15} />,
+    },
   ]
 
   const currentMonth = growth?.months[0]
@@ -916,6 +950,99 @@ function AdminPageInner() {
               </div>
             </Card>
           </div>
+        )}
+
+        {/* Slot Wheel suggestions */}
+        {tab === 'suggestions' && !suggestions && (
+          <Card>
+            <CardContent className="py-8 text-center text-sm text-slate-400">
+              Suggestions could not be loaded. Check that <code>supabase/migrations/011_slot_suggestions.sql</code> has
+              been run.
+            </CardContent>
+          </Card>
+        )}
+
+        {tab === 'suggestions' && suggestions && (
+          <Card>
+            <CardHeader>
+              <h2 className="font-semibold text-white flex items-center gap-2 pb-0">
+                <Lightbulb size={15} className="text-brand-500" />
+                Slot Wheel suggestions
+              </h2>
+              <p className="text-xs text-slate-500 pt-1">
+                Games viewers want on the wheel. Waiting ones are listed first, oldest first. Approved games still need
+                a cover image before they can be added to the wheel.
+              </p>
+            </CardHeader>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-white/5 text-xs text-slate-500">
+                    <th scope="col" className="px-5 py-3 text-left font-medium">Game</th>
+                    <th scope="col" className="px-5 py-3 text-left font-medium">Provider</th>
+                    <th scope="col" className="px-5 py-3 text-left font-medium">Suggested by</th>
+                    <th scope="col" className="px-5 py-3 text-left font-medium">Sent</th>
+                    <th scope="col" className="px-5 py-3 text-right font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 text-slate-200">
+                  {suggestions.map(s => (
+                    <tr key={s.id}>
+                      <th scope="row" className="px-5 py-3 text-left font-medium text-white">{s.gameName}</th>
+                      <td className="px-5 py-3 text-slate-400">{s.provider ?? '–'}</td>
+                      <td className="px-5 py-3">
+                        <span className="flex items-center gap-2">
+                          {s.avatarUrl && <PlayerAvatar src={s.avatarUrl} name={s.suggestedBy} size={22} />}
+                          {s.suggestedBy}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-5 py-3 text-slate-400">{formatRelativeTime(s.createdAt)}</td>
+                      <td className="px-5 py-3 text-right">
+                        {s.status === 'pending' ? (
+                          <span className="inline-flex gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              disabled={reviewingId === s.id}
+                              onClick={() => reviewSuggestion(s.id, 'approved')}
+                              className="text-hype hover:text-hype"
+                            >
+                              <Check size={14} />
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              disabled={reviewingId === s.id}
+                              onClick={() => reviewSuggestion(s.id, 'declined')}
+                              className="text-red-300 hover:text-red-200"
+                            >
+                              <X size={14} />
+                              Decline
+                            </Button>
+                          </span>
+                        ) : (
+                          <span
+                            className={cn(
+                              'rounded-md px-2 py-0.5 text-xs font-semibold',
+                              s.status === 'approved' ? 'bg-hype/10 text-hype' : 'bg-red-500/10 text-red-300'
+                            )}
+                          >
+                            {s.status === 'approved' ? 'Approved' : 'Declined'}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  {!suggestions.length && (
+                    <tr>
+                      <td colSpan={5} className="px-5 py-8 text-center text-slate-600">No suggestions yet.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
         )}
       </div>
     </div>

@@ -13,7 +13,7 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       intro="What we collect when you use luckandloadtv.com, why we collect it, and what you can do about it."
-      updated="November 6, 2026"
+      updated="November 11, 2026"
     >
       <LegalSection title="Who is responsible">
         <p>
@@ -30,7 +30,7 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong className="text-white">From using the site:</strong> your last login time, loads balance and
-            history, and your results in Daily Blackjack and Guess the Slot.
+            history, your results in Daily Blackjack and Guess the Slot, and the games you suggest for the Slot Wheel.
           </li>
           <li>
             <strong className="text-white">From Hype.bet:</strong> the username, avatar, XP and amount wagered of

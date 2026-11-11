@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Check, Copy, Dices, ExternalLink, SlidersHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WHEEL_GAMES, HYPE_PLAY_URL, type WheelGame } from '@/lib/slotWheel'
+import { SuggestGame } from '@/components/slotWheel/SuggestGame'
 
 // Hvor mange kort som genereres for én "rull" -- lang nok til at animasjonen føles som et
 // ordentlig spinn, med litt buffer etter vinneren så stripen ikke ser tom ut idet den stopper.
@@ -431,6 +432,8 @@ export function SlotWheel() {
             </a>
           </div>
         )}
+
+        <SuggestGame />
       </div>
     </section>
   )
