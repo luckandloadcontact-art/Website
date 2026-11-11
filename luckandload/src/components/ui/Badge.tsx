@@ -71,7 +71,8 @@ export function StatCard({ label, value, sub }: { label: string; value: string |
   return (
     <div className="rounded-xl bg-surface-700/60 border border-white/5 p-4">
       <p className="text-xs text-slate-500 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-white">{value}</p>
+      {/* data-sensitive: hidden by the admin panel's streamer mode. */}
+      <p data-sensitive className="text-2xl font-bold text-white">{value}</p>
       {sub && <p className="text-xs text-slate-500 mt-0.5">{sub}</p>}
     </div>
   )

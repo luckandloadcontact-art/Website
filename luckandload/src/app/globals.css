@@ -85,3 +85,14 @@
   opacity: 0;
   transform: translateY(10px);
 }
+
+/* Admin streamer mode: blur numbers and player data so the panel can be shown on stream. */
+[data-streamer='on'] [data-sensitive],
+[data-streamer='on'] .tabular-nums {
+  filter: blur(8px);
+  user-select: none;
+}
+[data-streamer] [data-sensitive],
+[data-streamer] .tabular-nums {
+  transition: filter 200ms ease-out;
+}

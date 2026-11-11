@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import {
   LayoutDashboard, Users, Megaphone, Trophy,
   Plus, Save, Trash2, RefreshCw, TrendingUp, Shield, Swords, History, Camera, ChevronDown, Instagram,
-  Lightbulb, Check, X
+  Lightbulb, Check, X, Eye, EyeOff
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
@@ -63,6 +63,8 @@ function AdminPageInner() {
   const [growth, setGrowth] = useState<GrowthData | null>(null)
   const [suggestions, setSuggestions] = useState<AdminSlotSuggestion[] | null>(null)
   const [reviewingId, setReviewingId] = useState<string | null>(null)
+  // On every time the panel opens, so numbers are never shown on stream by accident.
+  const [streamerMode, setStreamerMode] = useState(true)
 
   // New announcement form
   const [newAnn, setNewAnn] = useState({ title: '', body: '', type: 'info', pinned: false })
@@ -354,7 +356,22 @@ function AdminPageInner() {
               <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
               <p className="text-xs text-slate-500">Logged in as {session?.user?.displayName}</p>
             </div>
-            <Button variant="ghost" size="sm" onClick={fetchData} className="ml-auto">
+            <button
+              type="button"
+              onClick={() => setStreamerMode(on => !on)}
+              aria-pressed={streamerMode}
+              title={streamerMode ? 'Numbers are hidden. Click to show them.' : 'Hide numbers before going live.'}
+              className={cn(
+                'ml-auto inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-colors',
+                streamerMode
+                  ? 'border-red-500/40 bg-red-500/10 text-red-300 hover:bg-red-500/20'
+                  : 'border-white/10 text-slate-400 hover:text-white'
+              )}
+            >
+              {streamerMode ? <EyeOff size={13} /> : <Eye size={13} />}
+              Streamer mode: {streamerMode ? 'On' : 'Off'}
+            </button>
+            <Button variant="ghost" size="sm" onClick={fetchData}>
               <RefreshCw size={13} />
               Refresh
             </Button>
@@ -381,7 +398,8 @@ function AdminPageInner() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      {/* Streamer mode blurs numbers and player data (see globals.css) so the panel can be shown on stream. */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8" data-streamer={streamerMode ? 'on' : 'off'}>
 
         {/* Overview */}
         {tab === 'overview' && (
@@ -583,7 +601,7 @@ function AdminPageInner() {
                           {u.role}
                         </Badge>
                       </td>
-                      <td className="px-5 py-3 text-right font-medium text-brand-400 text-xs">
+                      <td data-sensitive className="px-5 py-3 text-right font-medium text-brand-400 text-xs">
                         {formatPoints(u.points)}
                       </td>
                       <td className="px-5 py-3 text-right text-slate-600 text-xs">
@@ -888,7 +906,7 @@ function AdminPageInner() {
                         <td className="px-5 py-3 text-right font-semibold tabular-nums text-brand-400">
                           {month.newPlayers.length}
                         </td>
-                        <td className="min-w-48 px-5 py-3 text-xs text-slate-400">
+                        <td data-sensitive className="min-w-48 px-5 py-3 text-xs text-slate-400">
                           {month.newPlayers.join(', ') || '–'}
                         </td>
                         <td className="px-5 py-3 text-right tabular-nums">{formatUsd(month.wagered)}</td>
