@@ -12,7 +12,8 @@ export const metadata: Metadata = {
   title: 'LuckAndLoadTV – Play Live With Us in Hype.bet Multiplayer Rooms',
   description:
     'Norwegian casino streamers on Kick and Twitch. Watch our bonus hunts, join our Hype.bet multiplayer room and play under code LuckAndLoad for monthly prizes.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  // Fixed to the live domain: absolute URLs (like each guide's share image) must never point at localhost.
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: 'LuckAndLoadTV',
     description: 'Join the community. Watch the streams. Climb the leaderboard.',
