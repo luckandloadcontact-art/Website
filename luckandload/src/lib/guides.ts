@@ -91,13 +91,13 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: 'does-rtp-matter',
-    title: 'Does RTP Matter? Why the Same Slot Can Pay Back Less',
+    title: 'Does Slot RTP Matter? Hacksaw and Nolimit City RTP Versions',
     description:
-      'RTP matters more than most players think. See how casinos choose between RTP versions of the same slot, what it costs you, and how to check it.',
+      'Slot RTP explained: why the same slot pays back less at some casinos, the RTP versions Hacksaw and Nolimit City use, bonus buy RTP, and how to check it.',
     authorSlug: 'simon',
     published: '2026-11-10',
-    updated: '2026-11-10',
-    readingMinutes: 4,
+    updated: '2026-11-12',
+    readingMinutes: 6,
     ctaLead: 'Hype.bet runs the highest RTP versions of its games.',
   },
   {

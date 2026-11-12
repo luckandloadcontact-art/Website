@@ -1,5 +1,14 @@
 import Link from 'next/link'
-import { GuideH2, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
+import {
+  GuideDetails,
+  GuideDetailsGroup,
+  GuideH2,
+  GuideH3,
+  GuideInlineCta,
+  GuideList,
+  GuideP,
+  JsonLd,
+} from '@/components/guides/GuideContent'
 import { RtpCostChart } from '@/components/guides/RtpCostChart'
 
 // RTP versions from SlotCatalog (checked November 2026).
@@ -11,7 +20,78 @@ const WANTED_ROWS = [
   { rtp: '88.42%', label: 'Lowest version', cost: 115.8 },
 ]
 
+// Top RTP and the lower versions casinos can choose instead (SlotCatalog, November 2026).
+const HACKSAW_ROWS = [
+  { game: 'Wanted Dead or a Wild', top: '96.38%', lower: '94.55%, 92.33%, 88.42%' },
+  { game: 'Le Bandit', top: '96.34%', lower: '94.23%, 92.17%, 88.36%' },
+  { game: 'RIP City', top: '96.22%', lower: '94.27%, 92.32%, 88.02%' },
+]
+
+const NOLIMIT_ROWS = [
+  { game: 'Bounty Hunters', top: '96.07%', lower: '94.14%, 92.18%' },
+  { game: 'Tombstone RIP', top: '96.08%', lower: '94.08%' },
+]
+
+// Short answers to what people search about RTP. Also sent to Google as FAQPage data.
+const FAQ = [
+  {
+    question: 'What does RTP mean in slots?',
+    answer:
+      'RTP stands for return to player. It is the share of all the money bet on a slot that the slot pays back over time. A 96% RTP slot pays back $96 for every $100 bet on average, and the casino keeps $4.',
+  },
+  {
+    question: 'What is a good RTP for a slot?',
+    answer:
+      'Most modern slots sit around 96% on their top version. If a slot shows around 94% or less, the casino is usually running a lowered version of it.',
+  },
+  {
+    question: 'Can a casino change the RTP of a slot?',
+    answer:
+      'Not on the fly, but it can choose which version to run. Studios like Hacksaw Gaming and Nolimit City release several RTP versions of the same game, and each casino picks one.',
+  },
+  {
+    question: 'What RTP does Hacksaw Gaming use?',
+    answer:
+      'Hacksaw slots usually come in four versions: around 96%, 94%, 92% and 88%. Wanted Dead or a Wild, for example, is 96.38% at the top and 88.42% at the bottom.',
+  },
+  {
+    question: 'What RTP does Nolimit City use?',
+    answer:
+      'Nolimit City slots are usually around 96% on their top version, with lower versions around 94% and 92%. Bounty Hunters is 96.07% at the top, and can be set to 94.14% or 92.18%.',
+  },
+  {
+    question: 'Is the bonus buy RTP the same as the base game?',
+    answer:
+      'Not always. Bonus buys often have their own RTP. On Mental by Nolimit City the bonus buys are 96.17% to 96.68%, above the base game, while Chaos Crew by Hacksaw drops from 96.3% to 95.92% when you buy the bonus.',
+  },
+]
+
 const SOURCE_LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
+
+function RtpVersionTable({ rows }: { rows: { game: string; top: string; lower: string }[] }) {
+  return (
+    <div className="mb-5 max-w-3xl overflow-x-auto">
+      <table className="w-full min-w-[24rem] text-left text-sm">
+        <thead className="border-b border-white/20 text-white">
+          <tr>
+            <th scope="col" className="py-3 pr-4 font-semibold">Slot</th>
+            <th scope="col" className="py-3 pr-4 font-semibold">Top RTP</th>
+            <th scope="col" className="py-3 font-semibold">Lower versions</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-white/10 text-slate-200">
+          {rows.map(row => (
+            <tr key={row.game}>
+              <th scope="row" className="py-3 pr-4 font-normal">{row.game}</th>
+              <td className="py-3 pr-4 font-semibold tabular-nums text-hype">{row.top}</td>
+              <td className="py-3 tabular-nums text-slate-400">{row.lower}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
 
 export default function DoesRtpMatter() {
   return (
@@ -40,38 +120,32 @@ export default function DoesRtpMatter() {
         its own RTP. The casino picks which version it runs. The game looks and plays exactly the same, but the lower
         versions pay back less.
       </GuideP>
-      <GuideList>
-        <li>
-          <strong className="text-white">Hacksaw Gaming:</strong> Wanted Dead or a Wild has a top RTP of 96.38%, but
-          casinos can run it at 94.55%, 92.33% or 88.42% instead, according to{' '}
-          <a
-            href="https://slotcatalog.com/en/slots/Wanted-Dead-or-a-Wild"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-            className={SOURCE_LINK}
-          >
-            SlotCatalog
-          </a>
-          .
-        </li>
-        <li>
-          <strong className="text-white">Nolimit City:</strong> Bounty Hunters runs at 96.07% at most, and can be set
-          down to 94.14% or 92.18%. Across its games, Nolimit City offers RTP settings{' '}
-          <a
-            href="https://www.casinos.com/nolimit-city"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-            className={SOURCE_LINK}
-          >
-            anywhere between 84% and 97%
-          </a>
-          .
-        </li>
-      </GuideList>
       <GuideP>
         Why would a casino pick a lower version? Because it earns more on every spin. Some markets also have rules that
-        limit which versions can be used.
+        limit which versions can be used. Here&apos;s what that looks like at two of the studios we play the most. The
+        figures come from{' '}
+        <a href="https://slotcatalog.com/" target="_blank" rel="nofollow noopener noreferrer" className={SOURCE_LINK}>
+          SlotCatalog
+        </a>
+        .
       </GuideP>
+
+      <GuideH3>Hacksaw Gaming RTP versions</GuideH3>
+      <GuideP>
+        Hacksaw usually makes four versions of each slot: one around 96%, and lower ones around 94%, 92% and 88%.
+      </GuideP>
+      <RtpVersionTable rows={HACKSAW_ROWS} />
+
+      <GuideH3>Nolimit City RTP versions</GuideH3>
+      <GuideP>
+        Nolimit City&apos;s top versions sit around 96%, with lower versions around 94% and 92%. Across its catalogue,
+        the studio offers RTP settings{' '}
+        <a href="https://www.casinos.com/nolimit-city" target="_blank" rel="nofollow noopener noreferrer" className={SOURCE_LINK}>
+          anywhere between 84% and 97%
+        </a>
+        .
+      </GuideP>
+      <RtpVersionTable rows={NOLIMIT_ROWS} />
 
       <GuideH2>What it costs you</GuideH2>
       <GuideP>Say you play 1,000 spins at $1 on Wanted Dead or a Wild. That&apos;s $1,000 bet in total.</GuideP>
@@ -126,6 +200,34 @@ export default function DoesRtpMatter() {
           listed separately in the game rules.
         </li>
       </GuideList>
+
+      <GuideH2>Bonus buy RTP</GuideH2>
+      <GuideP>
+        Buying the bonus doesn&apos;t always pay back the same as spinning for it. On Mental by Nolimit City, the three
+        bonus buys pay back 96.17% to 96.68%, a little more than the 96.06% base game. On Chaos Crew by Hacksaw it&apos;s
+        the other way round: 96.3% in the base game, but 95.92% when you buy the bonus. The game rules list both, so
+        it&apos;s worth a look if you buy bonuses a lot.
+      </GuideP>
+
+      <GuideH2>Questions about slot RTP</GuideH2>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: FAQ.map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          })),
+        }}
+      />
+      <GuideDetailsGroup>
+        {FAQ.map(item => (
+          <GuideDetails key={item.question} summary={item.question}>
+            <GuideP>{item.answer}</GuideP>
+          </GuideDetails>
+        ))}
+      </GuideDetailsGroup>
 
       <GuideH2>The short version</GuideH2>
       <GuideP>
