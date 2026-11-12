@@ -116,6 +116,11 @@ export const CASINOS: Casino[] = [
           'A host opens a room and picks the games and bet size. Players can watch for free or add money to a shared pool. Every win or loss is split by each player’s share of the pool, and you can leave at any time. Rooms are for casino games only, not sports betting.',
       },
       {
+        question: 'Is Hype.bet legit?',
+        answer:
+          'We’ve streamed and played on Hype.bet for more than a year, and neither we nor the players under our code have run into any significant problems. It’s run by BlackSands B.V. and licensed in Curaçao. Like most casinos, it can ask for ID before a withdrawal, so verifying your account early makes cashing out smoother.',
+      },
+      {
         question: 'Is Hype.bet licensed?',
         answer:
           'Yes. Hype.bet is run by BlackSands B.V. in Curaçao and licensed by the Curaçao Gaming Authority under license number OGL/2024/985/0430. Check that it’s legal and available where you live before you sign up.',
@@ -123,10 +128,10 @@ export const CASINOS: Casino[] = [
     ],
     shareImage: '/og/hype-bet.jpg',
     description:
-      'The Hype.bet welcome bonus and LuckAndLoad code explained: 100% RakeBoost, free spins, the monthly Rolex draw, double XP in multiplayer rooms, RTP and license.',
-    reviewTitle: 'Hype.bet Bonus Code and Review 2026',
+      'Our honest Hype.bet review after a year of streaming there: the bonus code, 100% RakeBoost, free spins, multiplayer rooms, the monthly Rolex draw, RTP and license.',
+    reviewTitle: 'Hype.bet Review 2026: Bonus Code and Our Honest Verdict',
     authorSlug: 'kristian',
-    updated: '2026-11-09',
+    updated: '2026-11-12',
   },
 ]
 

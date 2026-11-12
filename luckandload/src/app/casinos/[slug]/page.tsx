@@ -28,7 +28,8 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!casino) return {}
   const url = `${SITE_URL}/casinos/${casino.slug}`
   const offer = activeOffer(casino)
-  const title = offer ? `${casino.name} Bonus Code: ${offer.headline}` : casino.reviewTitle
+  // Leads with "Review": people search "hype bet review" right before they sign up.
+  const title = offer ? `${casino.name} Review & Bonus Code: ${offer.headline}` : casino.reviewTitle
   return {
     title: `${title} – LuckAndLoadTV`,
     description: casino.description,
@@ -89,7 +90,7 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
         <header className="mb-8 flex items-start gap-5">
           <Image src={casino.logo} alt={`${casino.name} logo`} width={72} height={72} className="h-[72px] w-[72px] shrink-0 rounded-2xl" priority />
           <div>
-            <h1 className="mb-3 text-3xl font-bold leading-tight text-white sm:text-4xl">{casino.name} Bonus and Review</h1>
+            <h1 className="mb-3 text-3xl font-bold leading-tight text-white sm:text-4xl">{casino.name} Casino Review &amp; Bonus Code</h1>
             <p className="text-sm text-slate-500">
               By{' '}
               <Link href={`/authors/${author.slug}`} className="text-brand-400 hover:text-brand-300 underline underline-offset-2">

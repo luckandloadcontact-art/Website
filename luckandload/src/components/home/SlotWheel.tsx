@@ -50,7 +50,8 @@ function buildReel(games: WheelGame[]): WheelGame[] {
   return items
 }
 
-export function SlotWheel() {
+// asPage: on /slot-wheel the wheel is the page itself, so it gets the page's h1 and a searchable title.
+export function SlotWheel({ asPage = false }: { asPage?: boolean }) {
   const [reel, setReel] = useState<WheelGame[]>(() => buildReel(WHEEL_GAMES))
   const [spinning, setSpinning] = useState(false)
   const [result, setResult] = useState<WheelGame | null>(null)
@@ -197,7 +198,7 @@ export function SlotWheel() {
   }
 
   return (
-    <section ref={sectionRef} className="relative border-t border-white/5 py-16">
+    <section ref={sectionRef} className={cn('relative py-16', !asPage && 'border-t border-white/5')}>
       {/* Only the glow is clipped, not the section: clipping the section cut off the provider filter
           dropdown whenever no spin result below made the section tall enough. */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -234,9 +235,15 @@ export function SlotWheel() {
         <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-400">
           <Dices size={13} /> Slot Wheel
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black text-white">Can&apos;t decide what to play?</h2>
+        {asPage ? (
+          <h1 className="text-3xl sm:text-4xl font-black text-white">Random Slot Picker</h1>
+        ) : (
+          <h2 className="text-2xl sm:text-3xl font-black text-white">Can&apos;t decide what to play?</h2>
+        )}
         <p className="mx-auto mb-8 mt-2 max-w-xl text-sm text-slate-400">
-          Spin the wheel and let the professionals pick for you.
+          {asPage
+            ? `Can't decide what to play? Spin the wheel for a random slot from ${WHEEL_GAMES.length} games we play on stream, with a suggested bonus buy.`
+            : 'Spin the wheel and let the professionals pick for you.'}
         </p>
 
         {/* Reel */}

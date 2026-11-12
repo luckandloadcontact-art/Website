@@ -7,11 +7,13 @@ import { ArrowLeft } from 'lucide-react'
 import { GuideCta, JsonLd } from '@/components/guides/GuideContent'
 import DepositWithoutWelcomeBonus from '@/content/guides/deposit-without-welcome-bonus'
 import DoesRtpMatter from '@/content/guides/does-rtp-matter'
+import WhatIsABonusHunt from '@/content/guides/what-is-a-bonus-hunt'
 import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType> = {
   'deposit-without-welcome-bonus': DepositWithoutWelcomeBonus,
   'does-rtp-matter': DoesRtpMatter,
+  'what-is-a-bonus-hunt': WhatIsABonusHunt,
 }
 
 export const dynamicParams = false

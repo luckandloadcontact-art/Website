@@ -57,6 +57,17 @@ export const AUTHORS: Author[] = [
 // Newest first. Each guide's body is registered in app/guides/[slug]/page.tsx.
 export const GUIDES: Guide[] = [
   {
+    slug: 'what-is-a-bonus-hunt',
+    title: 'What Is a Bonus Hunt? How It Works, Explained by Streamers',
+    description:
+      'What is a bonus hunt? How streamers collect and open slot bonuses, what break-even means, an example with numbers, and the hunt formats we run on stream.',
+    authorSlug: 'kristian',
+    published: '2026-11-12',
+    updated: '2026-11-12',
+    readingMinutes: 4,
+    ctaLead: 'Our bonus hunts run live on Kick and Twitch, in a Hype.bet multiplayer room you can join.',
+  },
+  {
     slug: 'does-rtp-matter',
     title: 'Does RTP Matter? Why the Same Slot Can Pay Back Less',
     description:
