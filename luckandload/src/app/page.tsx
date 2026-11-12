@@ -1,7 +1,7 @@
 import { Hero } from '@/components/home/Hero'
 import { AboutSection, CommunitySection, AnnouncementsSection, HypeSection, type UpdateItem } from '@/components/home/Sections'
 import type { Metadata } from 'next'
-import { GUIDES, SITE_URL } from '@/lib/guides'
+import { SITE_URL, publishedGuides } from '@/lib/guides'
 import { LiveSection } from '@/components/home/LiveSection'
 import { SlotWheel } from '@/components/home/SlotWheel'
 import { NewsSection } from '@/components/home/NewsSection'
@@ -34,8 +34,7 @@ const MAX_UPDATES = 5
 // Latest Updates mixes announcements from the admin panel with every published guide, so a new
 // guide shows up here automatically on its publish date. Pinned announcements stay on top.
 function buildUpdates(announcements: Announcement[]): UpdateItem[] {
-  const today = new Date().toISOString().slice(0, 10)
-  const guides: UpdateItem[] = GUIDES.filter(guide => guide.published <= today).map(guide => ({
+  const guides: UpdateItem[] = publishedGuides().map(guide => ({
     id: `guide-${guide.slug}`,
     title: `New guide: ${guide.title}`,
     body: guide.description,

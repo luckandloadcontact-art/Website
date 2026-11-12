@@ -8,15 +8,21 @@ import { GuideCta, JsonLd } from '@/components/guides/GuideContent'
 import DepositWithoutWelcomeBonus from '@/content/guides/deposit-without-welcome-bonus'
 import DoesRtpMatter from '@/content/guides/does-rtp-matter'
 import WhatIsABonusHunt from '@/content/guides/what-is-a-bonus-hunt'
-import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide } from '@/lib/guides'
+import IsHypeBetLegit from '@/content/guides/is-hype-bet-legit'
+import HypeBetReviewGuide from '@/content/guides/hype-bet-review'
+import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType> = {
   'deposit-without-welcome-bonus': DepositWithoutWelcomeBonus,
   'does-rtp-matter': DoesRtpMatter,
   'what-is-a-bonus-hunt': WhatIsABonusHunt,
+  'is-hype-bet-legit': IsHypeBetLegit,
+  'hype-bet-review': HypeBetReviewGuide,
 }
 
 export const dynamicParams = false
+// Hourly, so a guide scheduled for a later date goes from 404 to live on its publish day.
+export const revalidate = 3600
 
 export function generateStaticParams() {
   return GUIDES.map(guide => ({ slug: guide.slug }))
@@ -24,7 +30,7 @@ export function generateStaticParams() {
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
   const guide = getGuide(params.slug)
-  if (!guide) return {}
+  if (!guide || !isPublished(guide)) return {}
   const url = `${SITE_URL}/guides/${guide.slug}`
   return {
     title: `${guide.title} – LuckAndLoadTV`,
@@ -47,7 +53,7 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
   const guide = getGuide(params.slug)
   const author = guide && getAuthor(guide.authorSlug)
   const Body = guide && BODIES[guide.slug]
-  if (!guide || !author || !Body) notFound()
+  if (!guide || !author || !Body || !isPublished(guide)) notFound()
 
   const authorPath = `/authors/${author.slug}`
 

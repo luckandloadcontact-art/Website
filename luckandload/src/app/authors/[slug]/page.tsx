@@ -3,9 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { JsonLd } from '@/components/guides/GuideContent'
-import { AUTHORS, GUIDES, SITE_URL, formatGuideDate, getAuthor } from '@/lib/guides'
+import { AUTHORS, SITE_URL, formatGuideDate, getAuthor, publishedGuides } from '@/lib/guides'
 
 export const dynamicParams = false
+export const revalidate = 3600
 
 export function generateStaticParams() {
   return AUTHORS.map(author => ({ slug: author.slug }))
@@ -50,7 +51,7 @@ export default function AuthorPage({ params }: { params: { slug: string } }) {
   const author = getAuthor(params.slug)
   if (!author) notFound()
 
-  const guides = GUIDES.filter(guide => guide.authorSlug === author.slug)
+  const guides = publishedGuides().filter(guide => guide.authorSlug === author.slug)
 
   return (
     <div className="min-h-screen py-20 px-4">

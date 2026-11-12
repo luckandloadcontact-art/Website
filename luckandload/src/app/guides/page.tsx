@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { GUIDES, SITE_URL, formatGuideDate, getAuthor } from '@/lib/guides'
+import { SITE_URL, formatGuideDate, getAuthor, publishedGuides } from '@/lib/guides'
+
+// Hourly, so guides scheduled for a later date appear on their publish day.
+export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Casino Guides – LuckAndLoadTV',
@@ -20,7 +23,7 @@ export default function GuidesPage() {
         </div>
 
         <div className="space-y-4">
-          {GUIDES.map(guide => (
+          {publishedGuides().map(guide => (
             <Link
               key={guide.slug}
               href={`/guides/${guide.slug}`}

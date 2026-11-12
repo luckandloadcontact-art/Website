@@ -9,7 +9,7 @@ import { StickyClaimBar } from '@/components/casinos/StickyClaimBar'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import HypeBetReview from '@/content/casinos/hype-bet'
 import { CASINOS, activeOffer, formatOfferEnd, getCasino } from '@/lib/casinos'
-import { SITE_URL, formatGuideDate, getAuthor } from '@/lib/guides'
+import { SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished, type Guide } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType<{ playUrl: string }>> = {
   'hype-bet': HypeBetReview,
@@ -28,8 +28,9 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!casino) return {}
   const url = `${SITE_URL}/casinos/${casino.slug}`
   const offer = activeOffer(casino)
-  // Leads with "Review": people search "hype bet review" right before they sign up.
-  const title = offer ? `${casino.name} Review & Bonus Code: ${offer.headline}` : casino.reviewTitle
+  // This page targets "bonus code"; the full review is its own guide (guides/hype-bet-review), so the
+  // two pages don't compete for the same search.
+  const title = offer ? `${casino.name} Bonus Code: ${offer.headline}` : casino.reviewTitle
   return {
     title: `${title} – LuckAndLoadTV`,
     description: casino.description,
@@ -52,6 +53,10 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
   const url = `${SITE_URL}/casinos/${casino.slug}`
   const offer = activeOffer(casino)
   const Body = BODIES[casino.slug]
+  // Guides about this casino, in the order listed. Scheduled ones appear on their publish day.
+  const relatedGuides = (casino.guideSlugs ?? [])
+    .map(slug => getGuide(slug))
+    .filter((guide): guide is Guide => !!guide && isPublished(guide))
 
   return (
     <div className="min-h-screen px-4 pt-12 pb-28 sm:px-6 md:pb-12 lg:px-8">
@@ -90,7 +95,7 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
         <header className="mb-8 flex items-start gap-5">
           <Image src={casino.logo} alt={`${casino.name} logo`} width={72} height={72} className="h-[72px] w-[72px] shrink-0 rounded-2xl" priority />
           <div>
-            <h1 className="mb-3 text-3xl font-bold leading-tight text-white sm:text-4xl">{casino.name} Casino Review &amp; Bonus Code</h1>
+            <h1 className="mb-3 text-3xl font-bold leading-tight text-white sm:text-4xl">{casino.name} Bonus Code &amp; Welcome Offer</h1>
             <p className="text-sm text-slate-500">
               By{' '}
               <Link href={`/authors/${author.slug}`} className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
@@ -219,6 +224,21 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
               </GuideDetails>
             ))}
           </GuideDetailsGroup>
+
+          {relatedGuides.length > 0 && (
+            <>
+              <GuideH2>More about {casino.name}</GuideH2>
+              <ul className="mb-6 space-y-2">
+                {relatedGuides.map(guide => (
+                  <li key={guide.slug}>
+                    <Link href={`/guides/${guide.slug}`} className="font-semibold text-brand-400 underline underline-offset-2 hover:text-brand-300">
+                      {guide.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
           <GuideP>
             Set a budget before you play and stop when you reach it. If gambling stops being fun,{' '}

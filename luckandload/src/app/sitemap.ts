@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { CASINOS } from '@/lib/casinos'
-import { AUTHORS, GUIDES, SITE_URL } from '@/lib/guides'
+import { AUTHORS, SITE_URL, publishedGuides } from '@/lib/guides'
 
 const ROUTES = [
   '',
@@ -18,10 +18,13 @@ const ROUTES = [
   '/privacy',
 ]
 
+// Hourly, so scheduled guides are added on their publish day.
+export const revalidate = 3600
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...ROUTES.map(route => ({ url: `${SITE_URL}${route}` })),
-    ...GUIDES.map(guide => ({ url: `${SITE_URL}/guides/${guide.slug}`, lastModified: guide.updated })),
+    ...publishedGuides().map(guide => ({ url: `${SITE_URL}/guides/${guide.slug}`, lastModified: guide.updated })),
     ...AUTHORS.map(author => ({ url: `${SITE_URL}/authors/${author.slug}` })),
     ...CASINOS.map(casino => ({ url: `${SITE_URL}/casinos/${casino.slug}`, lastModified: casino.updated })),
   ]

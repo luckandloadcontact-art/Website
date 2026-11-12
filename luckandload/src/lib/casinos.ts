@@ -32,6 +32,7 @@ export type Casino = {
   reviewTitle: string
   authorSlug: string
   updated: string
+  guideSlugs?: string[] // Guides linked under "More about" on the review page
 }
 
 export type CasinoPerk = { title: string; text: string }
@@ -128,9 +129,10 @@ export const CASINOS: Casino[] = [
     ],
     shareImage: '/og/hype-bet.jpg',
     description:
-      'Our honest Hype.bet review after a year of streaming there: the bonus code, 100% RakeBoost, free spins, multiplayer rooms, the monthly Rolex draw, RTP and license.',
-    reviewTitle: 'Hype.bet Review 2026: Bonus Code and Our Honest Verdict',
+      'The Hype.bet bonus code LuckAndLoad and welcome offer explained: 100% RakeBoost up to $500, 100 free spins, the monthly Rolex draw, double XP in rooms and the terms.',
+    reviewTitle: 'Hype.bet Bonus Code and Welcome Offer 2026',
     authorSlug: 'kristian',
+    guideSlugs: ['hype-bet-review', 'is-hype-bet-legit', 'does-rtp-matter', 'what-is-a-bonus-hunt'],
     updated: '2026-11-12',
   },
 ]

@@ -57,6 +57,28 @@ export const AUTHORS: Author[] = [
 // Newest first. Each guide's body is registered in app/guides/[slug]/page.tsx.
 export const GUIDES: Guide[] = [
   {
+    slug: 'hype-bet-review',
+    title: 'Hype.bet Review 2026: Our Honest Verdict After a Year',
+    description:
+      'Our Hype.bet review after a year of streaming there: multiplayer rooms, games and RTP, the welcome bonus, Hype Time, withdrawals, the downsides and our verdict.',
+    authorSlug: 'kristian',
+    published: '2026-11-13',
+    updated: '2026-11-13',
+    readingMinutes: 5,
+    ctaLead: 'Hype.bet is where we stream every week, and where our multiplayer room is.',
+  },
+  {
+    slug: 'is-hype-bet-legit',
+    title: 'Is Hype.bet Legit? Our Honest Answer After a Year',
+    description:
+      'Is Hype.bet legit and safe? Who runs it, its license, what Trustpilot reviews say, whether the games are rigged, and how to avoid problems with withdrawals.',
+    authorSlug: 'simon',
+    published: '2026-11-12',
+    updated: '2026-11-12',
+    readingMinutes: 4,
+    ctaLead: "We've played on Hype.bet for more than a year without any significant problems.",
+  },
+  {
     slug: 'what-is-a-bonus-hunt',
     title: 'What Is a Bonus Hunt? How It Works, Explained by Streamers',
     description:
@@ -89,6 +111,23 @@ export const GUIDES: Guide[] = [
     readingMinutes: 3,
   },
 ]
+
+// A guide goes live at midnight Norwegian time on its `published` date. Until then it's left out
+// of every list and its page returns 404, so a guide can be added ahead of time. Pages that list
+// guides revalidate hourly, so it appears without a new deploy.
+export const GUIDES_REVALIDATE_SECONDS = 3600
+
+function todayInOslo(now = new Date()) {
+  return now.toLocaleDateString('en-CA', { timeZone: 'Europe/Oslo' }) // YYYY-MM-DD
+}
+
+export function isPublished(guide: Guide, now = new Date()) {
+  return guide.published <= todayInOslo(now)
+}
+
+export function publishedGuides(now = new Date()) {
+  return GUIDES.filter(guide => isPublished(guide, now))
+}
 
 export function getGuide(slug: string) {
   return GUIDES.find(guide => guide.slug === slug)
