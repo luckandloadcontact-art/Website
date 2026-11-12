@@ -109,7 +109,7 @@ export default function GuessTheSlotPage() {
 
   if (status === 'loading' || (status === 'authenticated' && !state)) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
+      <main className="min-h-[60vh] flex items-center justify-center">
         <div className="h-6 w-6 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
       </main>
     )
@@ -117,7 +117,7 @@ export default function GuessTheSlotPage() {
 
   if (status === 'unauthenticated') {
     return (
-      <main className="min-h-screen flex items-center justify-center">
+      <main className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center space-y-4">
           <h1 className="text-3xl font-bold text-white">🎰 Guess the Slot</h1>
           <p className="text-surface-300">Sign in with Discord to play</p>
@@ -135,7 +135,7 @@ export default function GuessTheSlotPage() {
   const hasExactMatch = !!highlighted || !!exactMatch()
 
   return (
-    <div className="min-h-screen pt-16 sm:pt-24">
+    <div className="pt-16 pb-8 sm:pt-24">
       {/* Header */}
       <div className="border-b border-white/5 bg-gradient-to-b from-surface-900 to-surface-950">
         <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 text-center">

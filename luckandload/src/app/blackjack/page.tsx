@@ -405,13 +405,13 @@ export default function BlackjackPage() {
 
   // ── Loading / unauth ──
   if (status === 'loading') return (
-    <main className="min-h-screen flex items-center justify-center">
+    <main className="min-h-[60vh] flex items-center justify-center">
       <div className="h-6 w-6 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
     </main>
   )
 
   if (status === 'unauthenticated') return (
-    <main className="min-h-screen flex items-center justify-center">
+    <main className="min-h-[60vh] flex items-center justify-center">
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-white">🃏 Daily Blackjack</h1>
         <p className="text-surface-300">Sign in with Discord to play</p>
@@ -459,7 +459,7 @@ export default function BlackjackPage() {
   const split1DoneLabel = split1Bust ? '💥 Bust' : result?.splitStatus ? resultLabel(result.splitStatus).text : undefined
 
   return (
-    <main className="min-h-screen py-24 px-4">
+    <main className="px-4 pt-24 pb-8">
       <div className="max-w-3xl lg:max-w-4xl mx-auto space-y-6">
 
         {/* Header */}
