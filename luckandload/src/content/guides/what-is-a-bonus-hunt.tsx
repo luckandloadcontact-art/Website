@@ -1,5 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { GuideH2, GuideH3, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
+import { HuntOpening } from '@/components/guides/HuntOpening'
 
 // A made-up hunt to show the maths. Break-even = hunt cost / total of all bonus bet sizes.
 const EXAMPLE_ROWS = [
@@ -23,6 +25,19 @@ export default function WhatIsABonusHunt() {
       </GuideP>
 
       <GuideH2>How a bonus hunt works</GuideH2>
+      <div className="mb-5 flex flex-col gap-6 sm:flex-row sm:items-start">
+      <figure className="order-last mx-auto w-full max-w-[14rem] shrink-0">
+        <Image
+          src="/guides/bonus-hunt-forbidden-fury.jpg"
+          alt="The LuckAndLoadTV crew reacting while opening a Forbidden Fury bonus on stream"
+          width={480}
+          height={753}
+          className="w-full rounded-xl border border-white/10"
+        />
+        <figcaption className="mt-2 text-xs leading-5 text-slate-400">
+          Opening a bonus on stream: Forbidden Fury at a $0.60 bet.
+        </figcaption>
+      </figure>
       <GuideList>
         <li>
           <strong className="text-white">You start with a set balance.</strong> Everything in the hunt comes out of
@@ -42,6 +57,7 @@ export default function WhatIsABonusHunt() {
           balance was left, and compare it with where you started.
         </li>
       </GuideList>
+      </div>
 
       <GuideH2>Break-even: the number everyone watches</GuideH2>
       <GuideP>
@@ -64,8 +80,9 @@ export default function WhatIsABonusHunt() {
       <GuideP>
         The hunt cost $700, and the bet sizes add up to $20. $700 divided by $20 is 35, so each bonus has to pay 35 times
         its bet size on average just to get back to $1,000. One 300x hit can carry a whole hunt, and a row of 10x bonuses
-        can sink it.
+        can sink it. Here&apos;s what that looks like during an opening:
       </GuideP>
+      <HuntOpening />
 
       <GuideH2>Words you&apos;ll hear on stream</GuideH2>
       <GuideList>
