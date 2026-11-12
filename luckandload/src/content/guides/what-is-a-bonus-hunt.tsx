@@ -83,6 +83,10 @@ export default function WhatIsABonusHunt() {
         can sink it. Here&apos;s what that looks like during an opening:
       </GuideP>
       <HuntOpening />
+      <GuideInlineCta title="Play along with our bonus hunts">
+        We stream in a Hype.bet multiplayer room, so you can join during the hunt and share in the result. Jump in or
+        leave whenever you want.
+      </GuideInlineCta>
 
       <GuideH2>Words you&apos;ll hear on stream</GuideH2>
       <GuideList>
@@ -119,11 +123,6 @@ export default function WhatIsABonusHunt() {
         We open the regular 3-scatter bonuses straight away and only save the ones that land 4 or 5 scatters. Fewer
         bonuses on the list, but they&apos;re the big ones.
       </GuideP>
-
-      <GuideInlineCta title="Play along with our bonus hunts">
-        We stream in a Hype.bet multiplayer room, so you can join during the hunt and share in the result. Jump in or
-        leave whenever you want.
-      </GuideInlineCta>
 
       <GuideH2>Can a bonus hunt make money?</GuideH2>
       <GuideP>

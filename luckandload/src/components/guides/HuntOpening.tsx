@@ -15,14 +15,14 @@ const SCALE_MAX = 60 // The average track runs from 0x to 60x
 const STEP_MS = 900
 
 const BONUSES = [
-  { slot: 'Wanted Dead or a Wild', multi: 12 },
-  { slot: 'Le Bandit', multi: 48 },
+  { slot: 'Wanted Dead or a Wild', multi: 72 },
+  { slot: 'Le Bandit', multi: 3 },
   { slot: 'Mental', multi: 7 },
-  { slot: 'Sugar Rush 1000', multi: 120 },
+  { slot: 'Sugar Rush 1000', multi: 18 },
   { slot: 'Duck Hunters', multi: 22 },
   { slot: 'Big Bamboo', multi: 15 },
-  { slot: 'RIP City', multi: 3 },
-  { slot: 'Zeus vs Hades', multi: 61 },
+  { slot: 'RIP City', multi: 58 },
+  { slot: 'Zeus vs Hades', multi: 89 },
 ]
 
 export function HuntOpening() {
