@@ -1,5 +1,16 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { GuideH2, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
+import { RatingBreakdown } from '@/components/guides/RatingBreakdown'
+
+// Trustpilot, November 2026: 120 reviews, TrustScore 3.3.
+const TRUSTPILOT_ROWS = [
+  { stars: 5, percent: 54 },
+  { stars: 4, percent: 7 },
+  { stars: 3, percent: 0.5, display: '<1%' },
+  { stars: 2, percent: 2 },
+  { stars: 1, percent: 36 },
+]
 
 const FACTS = [
   { label: 'Operator', value: 'BlackSands B.V.' },
@@ -61,6 +72,11 @@ export default function IsHypeBetLegit() {
         , Hype.bet scores 3.3 out of 5 from 120 reviews. Most reviews are either 5 stars or 1 star, which is normal for
         casinos: happy players rarely write reviews, while players who lost or got stuck often do.
       </GuideP>
+      <RatingBreakdown
+        title="Hype.bet on Trustpilot: share of reviews by rating"
+        rows={TRUSTPILOT_ROWS}
+        caption="120 reviews, 3.3 out of 5. Figures from Trustpilot, checked November 2026."
+      />
       <GuideList>
         <li>
           <strong className="text-white">What people like:</strong> fast deposits and withdrawals (one player got an
@@ -76,6 +92,19 @@ export default function IsHypeBetLegit() {
         Hype.bet replies to almost every negative review. For account issues, it asks players to contact support, since
         it can&apos;t discuss individual accounts in public.
       </GuideP>
+
+      <figure className="mb-6 max-w-3xl">
+        <Image
+          src="/casinos/hype-double-xp-rooms.png"
+          alt="Hype.bet banner showing a multiplayer room, where players share every spin with the host"
+          width={1184}
+          height={286}
+          className="w-full rounded-xl border border-white/10"
+        />
+        <figcaption className="mt-2 text-xs text-slate-400">
+          The multiplayer rooms are what players praise most, and they&apos;re why we stream on Hype.bet.
+        </figcaption>
+      </figure>
 
       <GuideInlineCta title="See it for yourself on Hype.bet">
         Join our multiplayer room when we&apos;re live and watch how it works before you play. Players under our code

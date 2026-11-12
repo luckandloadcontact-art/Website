@@ -135,6 +135,9 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'darkdeserthighway', name: 'Dark Desert Highway', provider: 'Just Slots', image: '/wheel/darkdeserthighway.jpeg' },
   { id: 'gatorhunters2', name: 'Gator Hunters 2', provider: 'Nolimit City', image: '/wheel/gatorhunters2.png' },
   { id: 'barbarossabeyondtheedge', name: 'Barbarossa Beyond the Edge', provider: 'Peter & Sons', image: '/wheel/barbarossabeyondtheedge.png' },
+  // Viewer suggestions approved in the admin panel (November 2026).
+  { id: 'ratroyale', name: 'Rat Royale', provider: 'Pragmatic Play', image: '/wheel/ratroyale.png' },
+  { id: 'megajail', name: 'Mega Jail', provider: 'Shady Lady', image: '/wheel/megajail.webp' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */

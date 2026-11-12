@@ -68,17 +68,6 @@ export const GUIDES: Guide[] = [
     ctaLead: 'Hype.bet is where we stream every week, and where our multiplayer room is.',
   },
   {
-    slug: 'is-hype-bet-legit',
-    title: 'Is Hype.bet Legit? Our Honest Answer After a Year',
-    description:
-      'Is Hype.bet legit and safe? Who runs it, its license, what Trustpilot reviews say, whether the games are rigged, and how to avoid problems with withdrawals.',
-    authorSlug: 'simon',
-    published: '2026-11-12',
-    updated: '2026-11-12',
-    readingMinutes: 4,
-    ctaLead: "We've played on Hype.bet for more than a year without any significant problems.",
-  },
-  {
     slug: 'what-is-a-bonus-hunt',
     title: 'What Is a Bonus Hunt? How It Works, Explained by Streamers',
     description:
@@ -109,6 +98,17 @@ export const GUIDES: Guide[] = [
     published: '2026-11-05',
     updated: '2026-11-05',
     readingMinutes: 3,
+  },
+  {
+    slug: 'is-hype-bet-legit',
+    title: 'Is Hype.bet Legit? Our Honest Answer After a Year',
+    description:
+      'Is Hype.bet legit and safe? Who runs it, its license, what Trustpilot reviews say, whether the games are rigged, and how to avoid problems with withdrawals.',
+    authorSlug: 'simon',
+    published: '2026-11-04', // Shown as our first guide, at the bottom of the list
+    updated: '2026-11-12',
+    readingMinutes: 4,
+    ctaLead: "We've played on Hype.bet for more than a year without any significant problems.",
   },
 ]
 

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { SlotWheel } from '@/components/home/SlotWheel'
-import { GuideDetails, GuideDetailsGroup, GuideH2, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
+import { GuideDetails, GuideDetailsGroup, GuideH2, GuideInlineCta, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
 import { WHEEL_GAMES } from '@/lib/slotWheel'
 
 const PROVIDER_COUNT = new Set(WHEEL_GAMES.map(game => game.provider)).size
@@ -58,6 +58,10 @@ export default function SlotWheelPage() {
             your casino.
           </li>
         </GuideList>
+        <GuideInlineCta title="Got your slot? Play it on Hype.bet">
+          Every game on the wheel is on Hype.bet, running the highest RTP version available. Players under our code also
+          compete on our monthly leaderboard.
+        </GuideInlineCta>
         <GuideP>
           We use the wheel on stream when chat can&apos;t agree on what to play next. Before you open the game, check
           its RTP in the game info, since the same slot can pay back less at some casinos.{' '}
