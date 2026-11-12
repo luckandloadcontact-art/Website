@@ -93,19 +93,6 @@ export default function IsHypeBetLegit() {
         it can&apos;t discuss individual accounts in public.
       </GuideP>
 
-      <figure className="mb-6 max-w-3xl">
-        <Image
-          src="/casinos/hype-double-xp-rooms.png"
-          alt="Hype.bet banner showing a multiplayer room, where players share every spin with the host"
-          width={1184}
-          height={286}
-          className="w-full rounded-xl border border-white/10"
-        />
-        <figcaption className="mt-2 text-xs text-slate-400">
-          The multiplayer rooms are what players praise most, and they&apos;re why we stream on Hype.bet.
-        </figcaption>
-      </figure>
-
       <GuideInlineCta title="See it for yourself on Hype.bet">
         Join our multiplayer room when we&apos;re live and watch how it works before you play. Players under our code
         also compete on our monthly leaderboard.
@@ -135,6 +122,19 @@ export default function IsHypeBetLegit() {
           can trigger a new ID check, so expect one if you do.
         </li>
       </GuideList>
+
+      <figure className="mb-6 max-w-3xl">
+        <Image
+          src="/casinos/hype-double-xp-rooms.png"
+          alt="Hype.bet banner showing a multiplayer room, where players share every spin with the host"
+          width={1184}
+          height={286}
+          className="w-full rounded-xl border border-white/10"
+        />
+        <figcaption className="mt-2 text-xs text-slate-400">
+          The multiplayer rooms are what players praise most, and they&apos;re why we stream on Hype.bet.
+        </figcaption>
+      </figure>
 
       <GuideH2>Our verdict: is Hype.bet safe?</GuideH2>
       <GuideP>
