@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
+import { SITE_URL } from '@/lib/guides'
 import { LegalPage, LegalSection } from '@/components/layout/LegalPage'
 
 export const metadata: Metadata = {
   title: 'Gambling Help – LuckAndLoadTV',
   description: 'Where to get confidential help with gambling, and how to keep gambling under control.',
+  alternates: { canonical: `${SITE_URL}/responsible-gambling` },
 }
 
 const linkClass = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'

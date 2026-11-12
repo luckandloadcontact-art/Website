@@ -145,3 +145,18 @@ export function formatGuideDate(date: string) {
     timeZone: 'UTC',
   })
 }
+
+/** Page title with " – LuckAndLoadTV" added only when it still fits in Google's ~60 characters. */
+export function seoTitle(title: string) {
+  const branded = `${title} – LuckAndLoadTV`
+  return branded.length <= 60 ? branded : title
+}
+
+/**
+ * Where "Read our Hype.bet review" links go: the review guide once it's published, and the bonus
+ * code page until then. The anchor text says "review", so it should point at the review page.
+ */
+export function hypeReviewHref(now = new Date()) {
+  const review = getGuide('hype-bet-review')
+  return review && isPublished(review, now) ? '/guides/hype-bet-review' : '/casinos/hype-bet'
+}

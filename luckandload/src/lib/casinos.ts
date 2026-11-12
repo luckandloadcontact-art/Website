@@ -129,7 +129,7 @@ export const CASINOS: Casino[] = [
     ],
     shareImage: '/og/hype-bet.jpg',
     description:
-      'The Hype.bet bonus code LuckAndLoad and welcome offer explained: 100% RakeBoost up to $500, 100 free spins, the monthly Rolex draw, double XP in rooms and the terms.',
+      'The Hype.bet bonus code LuckAndLoad explained: 100% RakeBoost up to $500, 100 free spins, the monthly Rolex draw, double XP in rooms and the bonus terms.',
     reviewTitle: 'Hype.bet Bonus Code and Welcome Offer 2026',
     authorSlug: 'kristian',
     guideSlugs: ['hype-bet-review', 'is-hype-bet-legit', 'does-rtp-matter', 'what-is-a-bonus-hunt'],

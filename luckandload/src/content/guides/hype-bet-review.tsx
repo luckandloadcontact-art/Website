@@ -78,7 +78,10 @@ export default function HypeBetReview() {
         , with $1,000 in prizes.
       </GuideP>
 
-      <GuideInlineCta title="Try Hype.bet with our code">
+      <GuideInlineCta
+        title="Try Hype.bet with our code"
+        secondary={{ href: '/casinos/hype-bet', label: 'See the Hype.bet bonus code' }}
+      >
         Sign up through our link to get the welcome offer and a spot on our leaderboard, then join our multiplayer room
         the next time we&apos;re live.
       </GuideInlineCta>

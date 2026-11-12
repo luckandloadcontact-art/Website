@@ -196,7 +196,7 @@ function JoinSlide() {
 
         <p className="mt-3 flex items-center gap-1.5 text-[14px] font-semibold text-slate-400">
           <BookOpen size={15} className="text-slate-500" />
-          Read our Hype.bet review: <span className="font-bold text-white">luckandloadtv.com/hype</span>
+          Claim the Hype.bet bonus: <span className="font-bold text-white">luckandloadtv.com/hype</span>
         </p>
       </div>
     </div>

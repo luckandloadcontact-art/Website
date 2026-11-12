@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
+import { SITE_URL } from '@/lib/guides'
 import Link from 'next/link'
 import { LegalPage, LegalSection } from '@/components/layout/LegalPage'
 
 export const metadata: Metadata = {
   title: 'Terms of Use – LuckAndLoadTV',
   description: 'The terms for using the LuckAndLoadTV website, its games, loads and leaderboard.',
+  alternates: { canonical: `${SITE_URL}/terms` },
 }
 
 const linkClass = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'

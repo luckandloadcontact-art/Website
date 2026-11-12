@@ -10,7 +10,7 @@ import DoesRtpMatter from '@/content/guides/does-rtp-matter'
 import WhatIsABonusHunt from '@/content/guides/what-is-a-bonus-hunt'
 import IsHypeBetLegit from '@/content/guides/is-hype-bet-legit'
 import HypeBetReviewGuide from '@/content/guides/hype-bet-review'
-import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished } from '@/lib/guides'
+import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished, seoTitle } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType> = {
   'deposit-without-welcome-bonus': DepositWithoutWelcomeBonus,
@@ -33,7 +33,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   if (!guide || !isPublished(guide)) return {}
   const url = `${SITE_URL}/guides/${guide.slug}`
   return {
-    title: `${guide.title} – LuckAndLoadTV`,
+    title: seoTitle(guide.title),
     description: guide.description,
     alternates: { canonical: url },
     openGraph: {
@@ -44,7 +44,6 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       publishedTime: guide.published,
       modifiedTime: guide.updated,
       authors: [`${SITE_URL}/authors/${guide.authorSlug}`],
-      images: [{ url: `${SITE_URL}/og/default.png`, width: 1200, height: 630, alt: 'LuckAndLoadTV' }],
     },
   }
 }
@@ -71,6 +70,17 @@ export default function GuidePage({ params }: { params: { slug: string } }) {
           dateModified: guide.updated,
           author: { '@type': 'Person', name: author.name, url: `${SITE_URL}${authorPath}`, image: `${SITE_URL}${author.image}` },
           publisher: { '@type': 'Organization', name: 'LuckAndLoadTV', url: SITE_URL },
+        }}
+      />
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Guides', item: `${SITE_URL}/guides` },
+            { '@type': 'ListItem', position: 3, name: guide.title, item: `${SITE_URL}/guides/${guide.slug}` },
+          ],
         }}
       />
       <article className="mx-auto max-w-6xl">

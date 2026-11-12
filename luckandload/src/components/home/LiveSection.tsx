@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { CalendarClock, ExternalLink, Play, Tv } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { BEST_CLIPS, KICK_URL, describeUpcoming, type ScheduledStream, type StreamSlot } from '@/lib/stream'
@@ -131,6 +132,12 @@ export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
                   <p className="text-sm text-slate-400">The next schedule is coming soon. Follow us to hear when we go live.</p>
                 )
               )}
+              <Link
+                href="/guides/what-is-a-bonus-hunt"
+                className="mt-4 inline-flex w-fit items-center gap-1.5 text-xs text-brand-400 underline underline-offset-2 hover:text-brand-300"
+              >
+                What is a bonus hunt?
+              </Link>
               {/* Pushes the buttons to the bottom of the card, with at least some space above them. */}
               <div className="min-h-6 flex-1" />
               <a

@@ -6,7 +6,7 @@ import { SITE_URL, formatGuideDate, getAuthor, publishedGuides } from '@/lib/gui
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Casino Guides – LuckAndLoadTV',
+  title: 'Casino Guides: Bonus Hunts, RTP and Hype.bet – LuckAndLoadTV',
   description: 'Short, practical casino guides from the hosts of LuckAndLoadTV: bonuses, wagering and how the games work.',
   alternates: { canonical: `${SITE_URL}/guides` },
 }

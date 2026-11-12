@@ -9,7 +9,7 @@ import { StickyClaimBar } from '@/components/casinos/StickyClaimBar'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import HypeBetReview from '@/content/casinos/hype-bet'
 import { CASINOS, activeOffer, formatOfferEnd, getCasino } from '@/lib/casinos'
-import { SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished, type Guide } from '@/lib/guides'
+import { SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished, seoTitle, type Guide } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType<{ playUrl: string }>> = {
   'hype-bet': HypeBetReview,
@@ -32,7 +32,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   // two pages don't compete for the same search.
   const title = offer ? `${casino.name} Bonus Code: ${offer.headline}` : casino.reviewTitle
   return {
-    title: `${title} – LuckAndLoadTV`,
+    title: seoTitle(title),
     description: casino.description,
     alternates: { canonical: url },
     openGraph: {
@@ -84,6 +84,16 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
         }}
       />
 
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: `${casino.name} Bonus Code`, item: url },
+          ],
+        }}
+      />
       <article className="mx-auto max-w-4xl">
         {CASINOS.length > 1 && (
           <Link href="/casinos" className="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-500 transition-colors hover:text-slate-300">

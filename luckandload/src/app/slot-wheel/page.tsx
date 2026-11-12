@@ -26,6 +26,9 @@ const FAQ = [
   },
 ]
 
+// Hourly, so links that change on a guide's publish day (like the review link) update by themselves.
+export const revalidate = 3600
+
 export default function SlotWheelPage() {
   return (
     <main className="min-h-screen pt-8 sm:pt-12">
@@ -63,7 +66,11 @@ export default function SlotWheelPage() {
           compete on our monthly leaderboard.
         </GuideInlineCta>
         <GuideP>
-          We use the wheel on stream when chat can&apos;t agree on what to play next. Before you open the game, check
+          We use the wheel on stream when chat can&apos;t agree on what to play next, and when we collect bonuses for a{' '}
+          <Link href="/guides/what-is-a-bonus-hunt" className="text-brand-400 underline underline-offset-2 hover:text-brand-300">
+            bonus hunt
+          </Link>
+          . Before you open the game, check
           its RTP in the game info, since the same slot can pay back less at some casinos.{' '}
           <Link href="/guides/does-rtp-matter" className="text-brand-400 underline underline-offset-2 hover:text-brand-300">
             Here&apos;s why RTP matters

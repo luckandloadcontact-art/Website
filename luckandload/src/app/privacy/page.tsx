@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
+import { SITE_URL } from '@/lib/guides'
 import { LegalPage, LegalSection } from '@/components/layout/LegalPage'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy – LuckAndLoadTV',
   description: 'What personal data LuckAndLoadTV collects, why, and the rights you have over it.',
+  alternates: { canonical: `${SITE_URL}/privacy` },
 }
 
 const linkClass = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'

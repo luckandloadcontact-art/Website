@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
+import { hypeReviewHref } from '@/lib/guides'
 
 // Fold-out sections for terms and other details. Built on <details>, so it works without
 // JavaScript and the text stays in the page for search engines while it's closed.
@@ -46,7 +47,17 @@ export function JsonLd({ data }: { data: Record<string, unknown> }) {
 }
 
 // Short call to action placed inside an article body, between sections.
-export function GuideInlineCta({ title, children }: { title: string; children: React.ReactNode }) {
+// The text link next to the button goes to our Hype.bet review by default; pass `secondary` to
+// change it (the review guide itself links to the bonus code page instead).
+export function GuideInlineCta({
+  title,
+  children,
+  secondary = { href: hypeReviewHref(), label: 'Read our Hype.bet review' },
+}: {
+  title: string
+  children: React.ReactNode
+  secondary?: { href: string; label: string }
+}) {
   return (
     <aside className="my-8 max-w-3xl rounded-xl border border-hype/40 bg-hype/5 p-5">
       <p className="mb-1.5 text-lg font-bold text-white">{title}</p>
@@ -60,8 +71,8 @@ export function GuideInlineCta({ title, children }: { title: string; children: R
         >
           Play on Hype.bet
         </a>
-        <Link href="/casinos/hype-bet" className="text-sm text-brand-400 underline underline-offset-2 hover:text-brand-300">
-          Read our Hype.bet review
+        <Link href={secondary.href} className="text-sm text-brand-400 underline underline-offset-2 hover:text-brand-300">
+          {secondary.label}
         </Link>
       </div>
       <p className="mt-3 text-xs text-slate-500">18+. Affiliate link: we earn commission if you sign up and play through it.</p>

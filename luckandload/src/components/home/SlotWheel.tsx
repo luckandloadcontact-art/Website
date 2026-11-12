@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Check, Copy, Dices, ExternalLink, SlidersHorizontal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { WHEEL_GAMES, HYPE_PLAY_URL, type WheelGame } from '@/lib/slotWheel'
@@ -244,6 +245,14 @@ export function SlotWheel({ asPage = false }: { asPage?: boolean }) {
           {asPage
             ? `Can't decide what to play? Spin the wheel for a random slot from ${WHEEL_GAMES.length} games we play on stream, with a suggested bonus buy.`
             : 'Spin the wheel and let the professionals pick for you.'}
+          {!asPage && (
+            <>
+              {' '}
+              <Link href="/slot-wheel" className="text-brand-400 underline underline-offset-2 hover:text-brand-300">
+                Open the full random slot picker
+              </Link>
+            </>
+          )}
         </p>
 
         {/* Reel */}

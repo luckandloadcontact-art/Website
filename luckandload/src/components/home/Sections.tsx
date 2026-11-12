@@ -8,6 +8,7 @@ import type { Announcement } from '@/types'
 import { ArrowDown, ArrowLeft, ArrowRight, Users, LogIn, Wallet, PieChart, MessageSquare, Calendar, Info, CheckCircle, AlertTriangle, BookOpen } from 'lucide-react'
 import { CountUp } from '@/components/ui/CountUp'
 import { RevealGroup } from '@/components/ui/RevealGroup'
+import { hypeReviewHref } from '@/lib/guides'
 
 // One row in Latest Updates: an announcement from the admin panel, or a published guide.
 export type UpdateItem = {
@@ -180,7 +181,7 @@ export function HypeSection() {
                   top 6 on the leaderboard
                 </Link>
                 {' '}plus a $20 random draw open to everyone who plays under our code.{' '}
-                <Link href="/casinos/hype-bet" className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold">
+                <Link href={hypeReviewHref()} className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold">
                   Read our Hype.bet review
                 </Link>
                 .

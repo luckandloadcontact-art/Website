@@ -46,7 +46,11 @@ export default function WhatIsABonusHunt() {
         <li>
           <strong className="text-white">You collect bonuses.</strong> You spin or buy your way into the bonus round on
           one slot, then leave the bonus unopened and move on to the next game. Slots save the bonus, so it&apos;s
-          waiting for you when you come back.
+          waiting for you when you come back. Can&apos;t decide which slot to collect next? Our{' '}
+          <Link href="/slot-wheel" className={LINK}>
+            random slot picker
+          </Link>{' '}
+          can choose for you.
         </li>
         <li>
           <strong className="text-white">You open them all.</strong> Once the list is full or the balance runs low, you

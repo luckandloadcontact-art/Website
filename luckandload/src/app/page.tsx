@@ -6,9 +6,39 @@ import { LiveSection } from '@/components/home/LiveSection'
 import { SlotWheel } from '@/components/home/SlotWheel'
 import { NewsSection } from '@/components/home/NewsSection'
 import { createAdminClient } from '@/lib/supabase'
+import { JsonLd } from '@/components/guides/GuideContent'
 import { getDiscordStreams } from '@/lib/discordEvents'
 import { manualStreams } from '@/lib/stream'
 import type { Announcement } from '@/types'
+
+// Who we are, for search engines: links the site to our channels so Google can connect the brand.
+const ORGANIZATION_DATA = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'LuckAndLoadTV',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo-navbar.png`,
+  description: 'Norwegian casino streamers on Kick and Twitch, known for bonus hunts and Hype.bet multiplayer rooms.',
+  foundingDate: '2025-09',
+  founder: [
+    { '@type': 'Person', name: 'Kristian', url: `${SITE_URL}/authors/kristian` },
+    { '@type': 'Person', name: 'Simon', url: `${SITE_URL}/authors/simon` },
+  ],
+  sameAs: [
+    'https://kick.com/luckandloadtv',
+    'https://twitch.tv/luckandloadtv',
+    'https://youtube.com/@LuckAndLoad',
+    'https://tiktok.com/@luckandloadtv',
+    'https://discord.gg/yagZVjqqbr',
+  ],
+}
+
+const WEBSITE_DATA = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'LuckAndLoadTV',
+  url: SITE_URL,
+}
 
 // Title and description come from the root layout.
 export const metadata: Metadata = { alternates: { canonical: SITE_URL } }
@@ -64,6 +94,8 @@ export default async function HomePage() {
 
   return (
     <div>
+      <JsonLd data={ORGANIZATION_DATA} />
+      <JsonLd data={WEBSITE_DATA} />
       <Hero streams={streams} />
       <HypeSection />
       <AboutSection />

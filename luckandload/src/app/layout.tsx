@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   // Used by the home page and by any page without its own title.
   title: 'LuckAndLoadTV – Play Live With Us in Hype.bet Multiplayer Rooms',
   description:
-    'Norwegian casino streamers on Kick and Twitch. Watch our bonus hunts, join our Hype.bet multiplayer room and play under code LuckAndLoad for $1,000 in monthly prizes.',
+    'Norwegian casino streamers on Kick and Twitch. Watch our bonus hunts, join our Hype.bet multiplayer room and play under code LuckAndLoad for monthly prizes.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   openGraph: {
     title: 'LuckAndLoadTV',
