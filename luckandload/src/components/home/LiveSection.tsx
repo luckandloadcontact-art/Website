@@ -23,7 +23,12 @@ export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
   const status = useKickLive()
   const [upcoming, setUpcoming] = useState<StreamSlot[]>([])
   const showPlayer = status === 'live' || status === 'unknown'
-  const showSchedule = status !== 'live'
+  const live = status === 'live'
+  // While live, the scheduled stream that has started is "on now"; the rest are later this week.
+  const current = live && upcoming[0]?.day === 'Starting soon' ? upcoming[0] : null
+  const later = current ? upcoming.slice(1) : upcoming
+  // Offline, later[0] is shown big as the next stream, so the list starts after it.
+  const laterList = live ? later.slice(0, 3) : later.slice(1, 4)
 
   useEffect(() => {
     setParentHost(window.location.hostname)
@@ -72,28 +77,45 @@ export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
           )}
         </div>
 
-        {showSchedule && (
-          <div className={cn('mx-auto grid max-w-5xl gap-6 md:grid-cols-[17rem_1fr]', showPlayer && 'mb-6')}>
+        {/* Schedule card on the left. On the right: the player when we're live, the best clips when we're not. */}
+        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-[17rem_1fr]">
             <div className="flex flex-col rounded-2xl border border-white/10 bg-surface-800 p-6">
-              <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-400">
-                <CalendarClock size={14} />
-                Next stream
-              </p>
-              {upcoming.length > 0 ? (
+              {live ? (
                 <>
-                  <p className="text-3xl font-bold text-white">{upcoming[0].day}</p>
+                  <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-red-300">
+                    <span className="live-dot" />
+                    On stream now
+                  </p>
+                  <p className="text-3xl font-bold text-white">Live now</p>
+                  {current && (
+                    <p className="mt-3 inline-flex w-fit rounded-lg bg-red-500/10 px-2.5 py-1 text-sm font-semibold text-red-200">
+                      {current.title}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-400">
+                  <CalendarClock size={14} />
+                  Next stream
+                </p>
+              )}
+              {!live && later.length > 0 && (
+                <>
+                  <p className="text-3xl font-bold text-white">{later[0].day}</p>
                   <p className="mt-0.5 text-sm text-slate-300">
-                    {upcoming[0].time} {upcoming[0].zone}
-                    {upcoming[0].localTime && <span className="text-slate-500"> · {upcoming[0].localTime} yours</span>}
+                    {later[0].time} {later[0].zone}
+                    {later[0].localTime && <span className="text-slate-500"> · {later[0].localTime} yours</span>}
                   </p>
                   <p className="mt-3 inline-flex w-fit rounded-lg bg-brand-500/10 px-2.5 py-1 text-sm font-semibold text-brand-300">
-                    {upcoming[0].title}
+                    {later[0].title}
                   </p>
-                  {upcoming.length > 1 && (
+                </>
+              )}
+              {laterList.length > 0 ? (
                     <>
                       <p className="mt-5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Later this week</p>
                       <ul className="mt-2 divide-y divide-white/5 text-sm">
-                        {upcoming.slice(1, 4).map(slot => (
+                        {laterList.map(slot => (
                           <li key={`${slot.day}-${slot.time}-${slot.title}`} className="flex items-baseline justify-between gap-3 py-2">
                             <span className="text-slate-200">{slot.title}</span>
                             <span className="shrink-0 text-xs text-slate-500">
@@ -103,16 +125,19 @@ export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
                         ))}
                       </ul>
                     </>
-                  )}
-                </>
               ) : (
-                <p className="text-sm text-slate-400">The next schedule is coming soon. Follow us to hear when we go live.</p>
+                !live &&
+                later.length === 0 && (
+                  <p className="text-sm text-slate-400">The next schedule is coming soon. Follow us to hear when we go live.</p>
+                )
               )}
+              {/* Pushes the buttons to the bottom of the card, with at least some space above them. */}
+              <div className="min-h-6 flex-1" />
               <a
                 href={KICK_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-auto flex items-center justify-center gap-2 rounded-lg bg-green-500 px-4 py-2.5 text-sm font-bold text-black transition-colors hover:bg-green-400"
+                className="flex items-center justify-center gap-2 rounded-lg bg-green-500 px-4 py-2.5 text-sm font-bold text-black transition-colors hover:bg-green-400"
               >
                 Follow on Kick
               </a>
@@ -126,6 +151,30 @@ export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
               </a>
             </div>
 
+            {showPlayer ? (
+            <div className="order-first aspect-video self-start overflow-hidden rounded-2xl border border-white/8 bg-black md:order-none">
+              {!parentHost ? (
+                <div className="flex h-full items-center justify-center text-sm text-slate-500">Loading stream…</div>
+              ) : platform === 'twitch' ? (
+                <iframe
+                  key="twitch"
+                  title="LuckAndLoadTV on Twitch"
+                  src={`https://player.twitch.tv/?channel=${TWITCH_CHANNEL}&parent=${parentHost}&muted=true`}
+                  className="h-full w-full"
+                  allowFullScreen
+                />
+              ) : (
+                <iframe
+                  key="kick"
+                  title="LuckAndLoadTV on Kick"
+                  src={`https://player.kick.com/${KICK_CHANNEL}`}
+                  className="h-full w-full"
+                  allow="autoplay; fullscreen"
+                  allowFullScreen
+                />
+              )}
+            </div>
+            ) : (
             <div>
               <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-5 gap-y-1">
                 <p className="text-base font-semibold text-white">Missed a stream? Our best moments</p>
@@ -173,33 +222,8 @@ export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
                 ))}
               </div>
             </div>
+            )}
           </div>
-        )}
-
-        {showPlayer && (
-        <div className="mx-auto aspect-video max-w-4xl overflow-hidden rounded-2xl border border-white/8 bg-black">
-          {!parentHost ? (
-            <div className="flex h-full items-center justify-center text-sm text-slate-500">Loading stream…</div>
-          ) : platform === 'twitch' ? (
-            <iframe
-              key="twitch"
-              title="LuckAndLoadTV on Twitch"
-              src={`https://player.twitch.tv/?channel=${TWITCH_CHANNEL}&parent=${parentHost}&muted=true`}
-              className="h-full w-full"
-              allowFullScreen
-            />
-          ) : (
-            <iframe
-              key="kick"
-              title="LuckAndLoadTV on Kick"
-              src={`https://player.kick.com/${KICK_CHANNEL}`}
-              className="h-full w-full"
-              allow="autoplay; fullscreen"
-              allowFullScreen
-            />
-          )}
-        </div>
-        )}
       </div>
     </section>
   )
