@@ -12,6 +12,7 @@ import {
 import { RoomSplit } from '@/components/guides/RoomSplit'
 import { CountUp } from '@/components/ui/CountUp'
 import { publishedGuideHref } from '@/lib/guides'
+import { Flame, PieChart, Rocket, Trophy, UserPlus, Users, type LucideIcon } from 'lucide-react'
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
@@ -21,19 +22,38 @@ const MAX_WIN_CLIP = 'https://kick.com/luckandloadtv/clips/clip_01M357FSZ7261ER4
 
 // Our room in numbers (Kristian, November 2026). Joins are not unique players.
 // `text` is shown as is; `value` counts up.
-const ROOM_STATS: { value?: number; prefix?: string; suffix?: string; text?: string; label: string }[] = [
-  { value: 7000, suffix: '+', label: 'joins to our room so far' },
-  { text: '20–40', label: 'players on a normal stream' },
-  { value: 100, prefix: 'up to ', label: 'players on special streams' },
-  { value: 13500, prefix: '$', label: 'biggest single win, shared' },
+const ROOM_STATS: { Icon: LucideIcon; value?: number; prefix?: string; suffix?: string; text?: string; label: string }[] = [
+  { Icon: UserPlus, value: 7000, suffix: '+', label: 'joins to our room so far' },
+  { Icon: Users, text: '20–40', label: 'players on a normal stream' },
+  { Icon: Flame, value: 100, prefix: '~', label: 'players on our biggest streams' },
+  { Icon: Trophy, value: 13500, prefix: '$', label: 'biggest win, split by the room' },
 ]
 
-const COMPARISON = [
-  { label: 'Whose money is played', pool: 'One shared pool that everyone adds to', round: 'Each player bets their own money' },
-  { label: 'Who makes the choices', pool: 'The host picks the slot and the bet size', round: 'Every player places their own bet' },
-  { label: 'How results work', pool: 'Every win and loss is split by your share of the pool', round: 'You win or lose on your own bet' },
-  { label: 'Example', pool: 'Multiplayer rooms on Hype.bet', round: 'Crash games, where everyone rides the same round' },
-]
+// The two meanings of "multiplayer casino", side by side.
+const COMPARISON = {
+  pool: {
+    Icon: PieChart,
+    title: 'Shared pool',
+    tag: 'Multiplayer room',
+    rows: [
+      { label: 'Whose money', value: 'One pool that everyone adds to' },
+      { label: 'Who decides', value: 'The host picks the slot and the bet size' },
+      { label: 'Results', value: 'Every win and loss is split by your share' },
+      { label: 'Where', value: 'Multiplayer rooms on Hype.bet' },
+    ],
+  },
+  round: {
+    Icon: Rocket,
+    title: 'Shared round',
+    tag: 'Crash-style games',
+    rows: [
+      { label: 'Whose money', value: 'Each player bets their own' },
+      { label: 'Who decides', value: 'Every player places their own bet' },
+      { label: 'Results', value: 'You win or lose on your own bet' },
+      { label: 'Where', value: 'Crash games, where everyone rides the same round' },
+    ],
+  },
+}
 
 // Short answers to what people search about multiplayer casinos. Also sent to Google as FAQPage data.
 const FAQ = [
@@ -86,13 +106,20 @@ export default function MultiplayerCasino() {
         from a lot of hours inside one.
       </GuideP>
 
-      <ul className="mb-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
-        {ROOM_STATS.map(stat => (
-          <li key={stat.label} className="rounded-xl border border-white/10 bg-surface-800 p-4">
-            <p className="text-2xl font-bold tabular-nums text-hype">
+      <ul className="mb-10 grid max-w-4xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {ROOM_STATS.map(({ Icon, ...stat }) => (
+          <li
+            key={stat.label}
+            className="relative overflow-hidden rounded-2xl border border-hype/20 bg-gradient-to-b from-hype/[0.09] to-surface-800/40 p-5"
+          >
+            <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-hype/70 to-transparent" />
+            <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-hype/15 text-hype ring-1 ring-hype/30">
+              <Icon size={20} strokeWidth={2.25} />
+            </span>
+            <p className="text-3xl font-black leading-none tracking-tight text-white tabular-nums sm:text-4xl">
               {stat.value !== undefined ? <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} /> : stat.text}
             </p>
-            <p className="mt-1 text-xs leading-5 text-slate-400">{stat.label}</p>
+            <p className="mt-2 text-sm leading-5 text-slate-400">{stat.label}</p>
           </li>
         ))}
       </ul>
@@ -105,25 +132,50 @@ export default function MultiplayerCasino() {
         time, but each player bets and wins on their own. Some casinos, Stake for example, group games like that in a
         multiplayer section.
       </GuideP>
-      <div className="mb-5 max-w-3xl overflow-x-auto">
-        <table className="w-full min-w-[32rem] text-left text-sm">
-          <thead className="border-b border-white/20 text-white">
-            <tr>
-              <th scope="col" className="py-3 pr-4 font-semibold"><span className="sr-only">Compared</span></th>
-              <th scope="col" className="py-3 pr-4 font-semibold">Shared pool (room)</th>
-              <th scope="col" className="py-3 font-semibold">Shared round</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-white/10 text-slate-200">
-            {COMPARISON.map(row => (
-              <tr key={row.label}>
-                <th scope="row" className="py-3 pr-4 align-top font-normal text-slate-400">{row.label}</th>
-                <td className="py-3 pr-4 align-top">{row.pool}</td>
-                <td className="py-3 align-top">{row.round}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="relative mb-6 grid max-w-4xl gap-4 md:grid-cols-2">
+        {[COMPARISON.pool, COMPARISON.round].map(({ Icon, title, tag, rows }, i) => {
+          const highlight = i === 0
+          return (
+            <div
+              key={title}
+              className={`rounded-2xl border p-5 sm:p-6 ${
+                highlight
+                  ? 'border-hype/40 bg-gradient-to-br from-hype/[0.12] via-hype/[0.04] to-transparent shadow-[0_0_40px_-12px_rgba(28,228,121,0.35)]'
+                  : 'border-white/10 bg-surface-800'
+              }`}
+            >
+              <div className="mb-5 flex items-center gap-3">
+                <span
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
+                    highlight ? 'bg-hype text-black' : 'bg-white/10 text-slate-300'
+                  }`}
+                >
+                  <Icon size={22} strokeWidth={2.25} />
+                </span>
+                <div>
+                  <p className="text-lg font-bold leading-tight text-white">{title}</p>
+                  <p className={`text-xs font-semibold uppercase tracking-wide ${highlight ? 'text-hype' : 'text-slate-500'}`}>
+                    {tag}
+                  </p>
+                </div>
+              </div>
+              <dl className="space-y-3">
+                {rows.map(row => (
+                  <div key={row.label} className="border-t border-white/10 pt-3">
+                    <dt className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{row.label}</dt>
+                    <dd className={`mt-0.5 text-sm leading-6 ${highlight ? 'text-slate-100' : 'text-slate-300'}`}>{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          )
+        })}
+        <span
+          aria-hidden
+          className="absolute left-1/2 top-1/2 hidden h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-surface-950 text-xs font-black text-slate-300 md:flex"
+        >
+          VS
+        </span>
       </div>
       <GuideP>
         The rest of this guide is about rooms, because that&apos;s where playing together really changes the game: one
@@ -203,7 +255,7 @@ export default function MultiplayerCasino() {
           controls
           playsInline
           preload="none"
-          poster="/guides/zeus-max-win-room-poster.jpg"
+          poster="/guides/multiplayer-room-gains.jpg"
           className="aspect-video w-full rounded-xl border border-white/10 bg-black"
         >
           <source src="/guides/zeus-max-win-room.mp4" type="video/mp4" />
