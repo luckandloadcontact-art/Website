@@ -1,6 +1,4 @@
-import Image from 'next/image'
 import Link from 'next/link'
-import { Play } from 'lucide-react'
 import {
   GuideDetails,
   GuideDetailsGroup,
@@ -16,8 +14,8 @@ import { CountUp } from '@/components/ui/CountUp'
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
-// Kick clip of the $13,500 Zeus vs Hades max win in our room (22 Sep 2026). The player balances on
-// the left jump at about 0:55. Kick has no clip embed, so the image links to the clip.
+// Kick clip of the $13,500 Zeus vs Hades max win in our room (22 Sep 2026). The video on the page is
+// the same clip cut to start at 0:55 (1080p, public/guides/zeus-max-win-room.mp4).
 const MAX_WIN_CLIP = 'https://kick.com/luckandloadtv/clips/clip_01M357FSZ7261ER41Q8S6DE2FJ'
 
 // Our room in numbers (Kristian, November 2026). Joins are not unique players.
@@ -187,29 +185,25 @@ export default function MultiplayerCasino() {
         share of it. In the clip, watch the top 12 players on the left: their balances jump the moment the bonus ends.
       </GuideP>
       <figure className="mb-6 max-w-3xl">
-        <a
-          href={MAX_WIN_CLIP}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative block overflow-hidden rounded-xl border border-white/10"
+        {/* Only the poster loads with the page; the 40 MB video starts downloading when someone presses play. */}
+        <video
+          controls
+          playsInline
+          preload="none"
+          poster="/guides/zeus-max-win-room-poster.jpg"
+          className="aspect-video w-full rounded-xl border border-white/10 bg-black"
         >
-          <Image
-            src="/guides/zeus-vs-hades-max-win-room.jpg"
-            alt="A $13,500 max win on Zeus vs Hades: Gods of War in our Hype.bet multiplayer room, at a $0.90 bet"
-            width={1200}
-            height={673}
-            className="w-full transition-transform duration-300 group-hover:scale-[1.02]"
-          />
-          <span className="absolute inset-0 flex items-center justify-center bg-black/25 transition-colors group-hover:bg-black/10">
-            <span className="flex items-center gap-2 rounded-full bg-hype px-5 py-2.5 text-sm font-black uppercase tracking-wide text-black shadow-lg">
-              <Play size={16} fill="currentColor" />
-              Watch on Kick
-            </span>
-          </span>
-        </a>
+          <source src="/guides/zeus-max-win-room.mp4" type="video/mp4" />
+          <a href={MAX_WIN_CLIP} className={LINK}>
+            Watch the clip on Kick
+          </a>
+        </video>
         <figcaption className="mt-2 text-xs leading-5 text-slate-400">
-          Our $13,500 Zeus vs Hades max win, shared by the whole room. Skip to 0:55 to see the players&apos; balances on
-          the left jump.
+          Our $13,500 Zeus vs Hades max win, shared by the whole room. Watch the player balances on the left go from a
+          few hundred dollars to thousands.{' '}
+          <a href={MAX_WIN_CLIP} target="_blank" rel="noopener noreferrer" className={LINK}>
+            Watch on Kick
+          </a>
         </figcaption>
       </figure>
       <GuideP>
