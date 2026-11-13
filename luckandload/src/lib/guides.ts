@@ -78,7 +78,7 @@ export const GUIDES: Guide[] = [
   {
     slug: 'what-is-a-bonus-hunt',
     category: 'Bonus hunts',
-    cover: { src: '/Team.jpg.png', position: 'center 40%' },
+    cover: { src: '/guides/bonus-hunt-cover.jpg', position: 'center' },
     title: 'What Is a Bonus Hunt? How It Works, Explained by Streamers',
     description:
       'What is a bonus hunt? How streamers collect and open slot bonuses, what break-even means, an example with numbers, and the hunt formats we run on stream.',
