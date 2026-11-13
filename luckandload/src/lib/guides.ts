@@ -96,8 +96,8 @@ export const GUIDES: Guide[] = [
     description:
       'How multiplayer casino rooms work: play slots with friends or streamers from one shared pool, how wins are split, and what 7,000+ joins taught us.',
     authorSlug: 'kristian',
-    published: '2026-11-15',
-    updated: '2026-11-15',
+    published: '2026-11-14',
+    updated: '2026-11-14',
     readingMinutes: 6,
     ctaLead: 'Our multiplayer room is open on almost every stream, on Hype.bet.',
   },
