@@ -91,7 +91,7 @@ export const GUIDES: Guide[] = [
   {
     slug: 'does-rtp-matter',
     category: 'RTP',
-    cover: { src: '/wheel/wanted.jpg', position: 'center 35%' },
+    cover: { src: '/guides/slot-rtp-cover.jpg', position: 'center' },
     title: 'Does Slot RTP Matter? Hacksaw and Nolimit City RTP Versions',
     description:
       'Slot RTP explained: why the same slot pays back less at some casinos, the RTP versions Hacksaw and Nolimit City use, bonus buy RTP, and how to check it.',
@@ -104,7 +104,7 @@ export const GUIDES: Guide[] = [
   {
     slug: 'deposit-without-welcome-bonus',
     category: 'Bonuses',
-    cover: { src: '/wheel/zeusvshades.jpg', position: 'center 30%' },
+    cover: { src: '/guides/wagering-cover.jpg', position: 'center' },
     title: 'Wagering Requirements: Is a Casino Welcome Bonus Worth It?',
     description:
       "What wagering requirements really cost, the 14,000 kr win I couldn't withdraw, no wagering bonuses, and when to skip the casino welcome bonus.",
