@@ -11,6 +11,7 @@ import {
   JsonLd,
 } from '@/components/guides/GuideContent'
 import { RoomSplit } from '@/components/guides/RoomSplit'
+import { publishedGuideHref } from '@/lib/guides'
 
 const AT_A_GLANCE = [
   { label: 'Best for', value: 'Slots, and playing together with streamers and friends' },
@@ -57,6 +58,8 @@ const FAQ = [
 const WHEEL_CLIP = 'CrypticAgileHornetRlyTho-YHODuBcN_2XKf3iN'
 
 export default function HypeBetReview() {
+  // Links to the multiplayer guide from its publish day; the page revalidates hourly.
+  const multiplayerHref = publishedGuideHref('multiplayer-casino')
   return (
     <>
       <GuideP>
@@ -90,6 +93,15 @@ export default function HypeBetReview() {
         different: you&apos;re not just watching the streamer&apos;s session, you&apos;re part of it, whether it goes well
         or badly. We haven&apos;t seen anything like it on other casinos. At least once a month we also spin a wheel
         with a $2,500 top prize for the players in our room, and the wheels have paid out more than $10,000 so far.
+        {multiplayerHref && (
+          <>
+            {' '}
+            <Link href={multiplayerHref} className={LINK}>
+              Here&apos;s how multiplayer rooms work, step by step
+            </Link>
+            .
+          </>
+        )}
       </GuideP>
       <RoomSplit />
 

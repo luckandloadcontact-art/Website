@@ -10,6 +10,7 @@ import DoesRtpMatter from '@/content/guides/does-rtp-matter'
 import WhatIsABonusHunt from '@/content/guides/what-is-a-bonus-hunt'
 import IsHypeBetLegit from '@/content/guides/is-hype-bet-legit'
 import HypeBetReviewGuide from '@/content/guides/hype-bet-review'
+import MultiplayerCasino from '@/content/guides/multiplayer-casino'
 import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished, seoTitle } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType> = {
@@ -18,6 +19,7 @@ const BODIES: Record<string, ComponentType> = {
   'what-is-a-bonus-hunt': WhatIsABonusHunt,
   'is-hype-bet-legit': IsHypeBetLegit,
   'hype-bet-review': HypeBetReviewGuide,
+  'multiplayer-casino': MultiplayerCasino,
 }
 
 export const dynamicParams = false

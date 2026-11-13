@@ -76,6 +76,19 @@ export const GUIDES: Guide[] = [
     ctaLead: 'Hype.bet is where we stream every week, and where our multiplayer room is.',
   },
   {
+    slug: 'multiplayer-casino',
+    category: 'Multiplayer',
+    cover: { src: '/guides/zeus-vs-hades-max-win-room.jpg', position: 'center 40%' },
+    title: 'Multiplayer Casino: How to Play Slots With Friends Online',
+    description:
+      'How multiplayer casino rooms work: play slots with friends or streamers from one shared pool, how wins are split, and what 7,000+ joins taught us.',
+    authorSlug: 'kristian',
+    published: '2026-11-15',
+    updated: '2026-11-15',
+    readingMinutes: 6,
+    ctaLead: 'Our multiplayer room is open on almost every stream, on Hype.bet.',
+  },
+  {
     slug: 'what-is-a-bonus-hunt',
     category: 'Bonus hunts',
     cover: { src: '/guides/bonus-hunt-cover.jpg', position: 'center' },
@@ -175,4 +188,10 @@ export function seoTitle(title: string) {
 export function hypeReviewHref(now = new Date()) {
   const review = getGuide('hype-bet-review')
   return review && isPublished(review, now) ? '/guides/hype-bet-review' : '/casinos/hype-bet'
+}
+
+/** A guide's path once it's published, otherwise null, so other pages can link to it ahead of time. */
+export function publishedGuideHref(slug: string, now = new Date()) {
+  const guide = getGuide(slug)
+  return guide && isPublished(guide, now) ? `/guides/${slug}` : null
 }
