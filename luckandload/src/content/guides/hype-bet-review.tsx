@@ -1,6 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { GuideH2, GuideH3, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
+import {
+  GuideDetails,
+  GuideDetailsGroup,
+  GuideH2,
+  GuideH3,
+  GuideInlineCta,
+  GuideList,
+  GuideP,
+  JsonLd,
+} from '@/components/guides/GuideContent'
 import { RoomSplit } from '@/components/guides/RoomSplit'
 
 const AT_A_GLANCE = [
@@ -13,6 +22,36 @@ const AT_A_GLANCE = [
 ]
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
+
+// Short answers to what people ask about Hype.bet. Also sent to Google as FAQPage data. The bonus
+// code questions live on /casinos/hype-bet, so the two pages don't compete.
+const FAQ = [
+  {
+    question: 'Is Hype.bet a good casino?',
+    answer:
+      'For slots, and for playing together with other people, it is the best casino we have found. We have streamed there almost every week for more than a year. The main downsides are the Curaçao license and a welcome bonus that is built for slot players.',
+  },
+  {
+    question: 'What are Hype.bet multiplayer rooms?',
+    answer:
+      'A host opens a room and plays the slots, and other players join by adding money to a shared pool. Every win and loss is split by each player’s share of the pool, and you can join or leave between spins. Rooms are for casino games only, not sports betting.',
+  },
+  {
+    question: 'Does Hype.bet run the highest RTP versions?',
+    answer:
+      'Yes. Many slots come in several RTP versions, and Hype.bet runs the highest one available. On Wanted Dead or a Wild that means 96.38% instead of as low as 88.42% at some other casinos.',
+  },
+  {
+    question: 'What payment methods does Hype.bet accept?',
+    answer:
+      'Crypto and Interac. We use crypto, mostly Bitcoin and Ethereum. Crypto deposits are converted to USD at the live rate.',
+  },
+  {
+    question: 'How long do Hype.bet withdrawals take?',
+    answer:
+      'Our crypto withdrawals usually arrive in under 20 minutes, and players under our code tell us the same. The minimum withdrawal is $50. Hype.bet can ask for ID before you withdraw, so verify your account early.',
+  },
+]
 
 // Twitch clip of us hitting the $2,500 top prize on the room wheel.
 const WHEEL_CLIP = 'CrypticAgileHornetRlyTho-YHODuBcN_2XKf3iN'
@@ -56,7 +95,11 @@ export default function HypeBetReview() {
 
       <GuideH2>Games and RTP</GuideH2>
       <GuideP>
-        The slot library has the studios we play the most, like Hacksaw Gaming, Nolimit City and Pragmatic Play, along
+        The slot library has the studios we play the most in{' '}
+        <Link href="/guides/what-is-a-bonus-hunt" className={LINK}>
+          our bonus hunts
+        </Link>
+        , like Hacksaw Gaming, Nolimit City and Pragmatic Play, along
         with live casino, table games, crash games and a sportsbook. The bigger point for us is RTP. Many slots come in
         several versions, and the casino picks which one to run. Hype.bet runs the highest versions available, which on
         a slot like Wanted Dead or a Wild means 96.38% instead of as low as 88.42%.{' '}
@@ -73,8 +116,11 @@ export default function HypeBetReview() {
           <GuideH3>The welcome bonus</GuideH3>
           <GuideP>
             New players get a 100% RakeBoost up to $500 on their first deposit, plus 100 free spins and 10 tickets for the
-            Rolex draw. Instead of wagering,
-            the bonus unlocks in four parts as you earn XP, and each part can be withdrawn as soon as it unlocks. It suits
+            Rolex draw. Instead of{' '}
+            <Link href="/guides/wagering-requirements" className={LINK}>
+              wagering requirements
+            </Link>
+            , the bonus unlocks in four parts as you earn XP, and each part can be withdrawn as soon as it unlocks. It suits
             slot players best, since slots earn XP 20 times faster than table games. The full terms are on our{' '}
             <Link href="/casinos/hype-bet" className={LINK}>
               Hype.bet bonus code page
@@ -164,6 +210,26 @@ export default function HypeBetReview() {
         <li>Table games, live casino and crash earn XP 20 times slower, so the bonus is built for slot players.</li>
         <li>Bonus money you haven&apos;t unlocked expires 30 days after you activate it.</li>
       </GuideList>
+
+      <GuideH2>Questions about Hype.bet</GuideH2>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: FAQ.map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          })),
+        }}
+      />
+      <GuideDetailsGroup>
+        {FAQ.map(item => (
+          <GuideDetails key={item.question} summary={item.question}>
+            <GuideP>{item.answer}</GuideP>
+          </GuideDetails>
+        ))}
+      </GuideDetailsGroup>
 
       <GuideH2>Our verdict</GuideH2>
       <GuideP>

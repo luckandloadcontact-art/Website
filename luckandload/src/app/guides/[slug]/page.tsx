@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { GuideCta, JsonLd } from '@/components/guides/GuideContent'
-import DepositWithoutWelcomeBonus from '@/content/guides/deposit-without-welcome-bonus'
+import WageringRequirements from '@/content/guides/wagering-requirements'
 import DoesRtpMatter from '@/content/guides/does-rtp-matter'
 import WhatIsABonusHunt from '@/content/guides/what-is-a-bonus-hunt'
 import IsHypeBetLegit from '@/content/guides/is-hype-bet-legit'
@@ -13,7 +13,7 @@ import HypeBetReviewGuide from '@/content/guides/hype-bet-review'
 import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished, seoTitle } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType> = {
-  'deposit-without-welcome-bonus': DepositWithoutWelcomeBonus,
+  'wagering-requirements': WageringRequirements,
   'does-rtp-matter': DoesRtpMatter,
   'what-is-a-bonus-hunt': WhatIsABonusHunt,
   'is-hype-bet-legit': IsHypeBetLegit,

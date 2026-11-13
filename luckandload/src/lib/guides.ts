@@ -68,7 +68,7 @@ export const GUIDES: Guide[] = [
     cover: { src: '/casinos/hype-rolex-draw.png', position: 'center 45%' },
     title: 'Hype.bet Review 2026: Our Honest Verdict After a Year',
     description:
-      'Our Hype.bet review after a year of streaming there: multiplayer rooms, games and RTP, the welcome bonus, Hype Time, withdrawals, the downsides and our verdict.',
+      'Our Hype.bet review after a year of streaming there: multiplayer rooms, RTP, the welcome bonus, Hype Time, withdrawals, the downsides and our verdict.',
     authorSlug: 'kristian',
     published: '2026-11-13',
     updated: '2026-11-13',
@@ -102,7 +102,7 @@ export const GUIDES: Guide[] = [
     ctaLead: 'Hype.bet shows the RTP on every slot and runs the top versions of the games we play most.',
   },
   {
-    slug: 'deposit-without-welcome-bonus',
+    slug: 'wagering-requirements',
     category: 'Bonuses',
     cover: { src: '/guides/wagering-cover.jpg', position: 'center' },
     title: 'Wagering Requirements: Is a Casino Welcome Bonus Worth It?',

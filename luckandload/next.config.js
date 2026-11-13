@@ -11,7 +11,11 @@ const nextConfig = {
   },
   // Short address to say or show on stream, e.g. in the overlay and the !hype chat command.
   async redirects() {
-    return [{ source: '/hype', destination: '/casinos/hype-bet', permanent: false }]
+    return [
+      { source: '/hype', destination: '/casinos/hype-bet', permanent: false },
+      // The wagering guide's old address, from before it was retitled.
+      { source: '/guides/deposit-without-welcome-bonus', destination: '/guides/wagering-requirements', permanent: true },
+    ]
   },
 }
 

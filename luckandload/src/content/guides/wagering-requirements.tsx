@@ -20,7 +20,7 @@ const ROWS = [
   { label: 'Bonus limits on bets and games', noBonus: 'None', bonus: 'Usually' },
 ]
 
-export default function DepositWithoutWelcomeBonus() {
+export default function WageringRequirements() {
   return (
     <>
       <GuideP>
@@ -51,7 +51,11 @@ export default function DepositWithoutWelcomeBonus() {
       </figure>
       <GuideP>
         I switched to bonus buys at much higher stakes, 1,000 and 2,000 kr, hoping to get through the wagering faster.
-        They paid nothing. When I was finally done and could cash out, I had 2,300 kr left. I&apos;d been sitting on
+        They paid nothing. (These days we spread the risk over a{' '}
+        <Link href="/guides/what-is-a-bonus-hunt" className={LINK}>
+          bonus hunt
+        </Link>{' '}
+        instead.) When I was finally done and could cash out, I had 2,300 kr left. I&apos;d been sitting on
         14,000 kr, and it felt like I had nothing. I tried to build it back up and lost the lot.
       </GuideP>
       <GuideP>
@@ -96,7 +100,11 @@ export default function DepositWithoutWelcomeBonus() {
       <GuideP>
         At 96% RTP, betting $3,500 costs you about $140 on average. That&apos;s more than the $100 bonus, so think of it as
         extra playing time rather than free money. At 10x, you&apos;d only need to bet $1,000, which costs about $40 on
-        average.
+        average. On a lowered RTP version of the same slot, the wagering costs you even more.{' '}
+        <Link href="/guides/does-rtp-matter" className={LINK}>
+          Here&apos;s how RTP versions work
+        </Link>
+        .
       </GuideP>
 
       <GuideH2>No wagering bonuses</GuideH2>
@@ -107,6 +115,10 @@ export default function DepositWithoutWelcomeBonus() {
         withdrawn straight away, with no wagering on it.{' '}
         <Link href="/casinos/hype-bet" className={LINK}>
           See how the Hype.bet bonus works
+        </Link>
+        , or read{' '}
+        <Link href="/guides/hype-bet-review" className={LINK}>
+          our full Hype.bet review
         </Link>
         .
       </GuideP>

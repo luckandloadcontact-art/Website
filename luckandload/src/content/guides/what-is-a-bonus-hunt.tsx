@@ -1,6 +1,15 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { GuideH2, GuideH3, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
+import {
+  GuideDetails,
+  GuideDetailsGroup,
+  GuideH2,
+  GuideH3,
+  GuideInlineCta,
+  GuideList,
+  GuideP,
+  JsonLd,
+} from '@/components/guides/GuideContent'
 import { HuntOpening } from '@/components/guides/HuntOpening'
 import { HuntResults } from '@/components/guides/HuntResults'
 
@@ -22,6 +31,35 @@ const BET_ROWS = [
 ]
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
+
+// Short answers to what people search about bonus hunts. Also sent to Google as FAQPage data.
+const FAQ = [
+  {
+    question: 'What is a bonus hunt in slots?',
+    answer:
+      'A bonus hunt is when you collect bonus rounds on lots of different slots, leave them unopened, and then open them one after another at the end. The goal is to win back more than collecting them cost.',
+  },
+  {
+    question: 'How do you calculate break-even in a bonus hunt?',
+    answer:
+      'Divide what the hunt cost by the bet sizes of all the bonuses added up. A hunt that cost $700 with 20 bonuses at $1 has a break-even of $700 / $20 = 35x, so each bonus has to pay 35 times its bet on average to get your money back.',
+  },
+  {
+    question: 'What bet size should you use for a bonus hunt?',
+    answer:
+      'Smaller bets let you collect more bonuses, which makes the hunt less dependent on a few of them. With a $2,000 starting balance, we play about $0.60 on slots with a 3x ante, $0.80 on slots with a 2x ante, and $1 or more on slots without an ante.',
+  },
+  {
+    question: 'What are the best slots for a bonus hunt?',
+    answer:
+      'We build most hunts on Hacksaw Gaming, Nolimit City, Pragmatic Play, Just Slots and BGaming. Their bonuses trigger often enough to fill a list and can pay big. Older Relax Gaming and Push Gaming slots are usually harder work.',
+  },
+  {
+    question: 'What is a super bonus?',
+    answer:
+      'A stronger version of a slot’s bonus round, usually triggered by landing more scatters. In our Supers Only hunts we open the regular bonuses straight away and only save the ones with 4 or 5 scatters.',
+  },
+]
 
 export default function WhatIsABonusHunt() {
   return (
@@ -144,7 +182,12 @@ export default function WhatIsABonusHunt() {
       <GuideP>
         Most of our hunts are built on Hacksaw Gaming, Nolimit City, Pragmatic Play, Just Slots and BGaming. Their
         bonuses trigger often enough to collect a full list, and they can pay big. Older slots from Relax Gaming and Push
-        Gaming can be harder work and usually aren&apos;t the best picks for a hunt.
+        Gaming can be harder work and usually aren&apos;t the best picks for a hunt. To fill a list without overthinking
+        it, let our{' '}
+        <Link href="/slot-wheel" className={LINK}>
+          slot wheel
+        </Link>{' '}
+        pick the next game, and filter it by provider.
       </GuideP>
 
       <GuideH2>Open the wildest bonuses last</GuideH2>
@@ -201,6 +244,26 @@ export default function WhatIsABonusHunt() {
         nothing but Hacksaw&apos;s &quot;Le&quot; games is one we can&apos;t recommend either. They&apos;re fun to try
         once, though.
       </GuideP>
+
+      <GuideH2>Questions about bonus hunts</GuideH2>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: FAQ.map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          })),
+        }}
+      />
+      <GuideDetailsGroup>
+        {FAQ.map(item => (
+          <GuideDetails key={item.question} summary={item.question}>
+            <GuideP>{item.answer}</GuideP>
+          </GuideDetails>
+        ))}
+      </GuideDetailsGroup>
 
       <GuideH2>Can a bonus hunt make money?</GuideH2>
       <GuideP>
