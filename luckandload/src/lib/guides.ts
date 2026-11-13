@@ -74,8 +74,8 @@ export const GUIDES: Guide[] = [
       'What is a bonus hunt? How streamers collect and open slot bonuses, what break-even means, an example with numbers, and the hunt formats we run on stream.',
     authorSlug: 'kristian',
     published: '2026-11-12',
-    updated: '2026-11-12',
-    readingMinutes: 4,
+    updated: '2026-11-13',
+    readingMinutes: 6,
     ctaLead: 'Our bonus hunts run live on Kick and Twitch, in a Hype.bet multiplayer room you can join.',
   },
   {

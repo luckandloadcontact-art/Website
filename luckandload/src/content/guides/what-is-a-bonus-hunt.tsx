@@ -13,6 +13,13 @@ const EXAMPLE_ROWS = [
   { label: 'Break-even', value: '35x average' },
 ]
 
+// How we size bets with a $2,000 starting balance (Kristian, November 2026).
+const BET_ROWS = [
+  { type: 'Slots with a 3x ante (like most Hacksaw slots)', base: '$0.60', cost: '$1.80', chase: 'About 50 spins at most' },
+  { type: 'Slots with a 2x ante', base: '$0.80', cost: '$1.60', chase: 'A bit over 50 spins, not much more' },
+  { type: 'Slots without an ante', base: '$1 or more', cost: '$1 or more', chase: 'Well over 50 spins is fine' },
+]
+
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
 export default function WhatIsABonusHunt() {
@@ -20,8 +27,8 @@ export default function WhatIsABonusHunt() {
     <>
       <GuideP>
         A bonus hunt is when you collect bonus rounds on a bunch of different slots, leave them all unopened, and then
-        open them one after another at the end. The goal is simple: win back more than the hunt cost you. It&apos;s
-        what we do on most of our streams, so here&apos;s how it works.
+        open them one after another at the end. The goal is simple: win back more than the hunt cost you. We run one on
+        almost every stream, so here&apos;s how it works, and what we&apos;ve learned from doing a lot of them.
       </GuideP>
 
       <GuideH2>How a bonus hunt works</GuideH2>
@@ -92,6 +99,46 @@ export default function WhatIsABonusHunt() {
         leave whenever you want.
       </GuideInlineCta>
 
+      <GuideH2>Choosing your bet size</GuideH2>
+      <GuideP>
+        The bigger your bet, the fewer bonuses your balance can collect, and the more the whole hunt depends on just a
+        few of them. That makes it a lot more volatile. Our own bet sizes change from stream to stream, depending on how
+        much people add to our room. With a $2,000 starting balance, this is roughly how we do it:
+      </GuideP>
+      <div className="mb-5 max-w-3xl overflow-x-auto">
+        <table className="w-full min-w-[30rem] text-left text-sm">
+          <thead className="border-b border-white/20 text-white">
+            <tr>
+              <th scope="col" className="py-3 pr-4 font-semibold">Slot type</th>
+              <th scope="col" className="py-3 pr-4 font-semibold">Base bet</th>
+              <th scope="col" className="py-3 pr-4 font-semibold">Cost per spin</th>
+              <th scope="col" className="py-3 font-semibold">How long we chase a bonus</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/10 text-slate-200">
+            {BET_ROWS.map(row => (
+              <tr key={row.type}>
+                <th scope="row" className="py-3 pr-4 font-normal">{row.type}</th>
+                <td className="py-3 pr-4 tabular-nums">{row.base}</td>
+                <td className="py-3 pr-4 tabular-nums">{row.cost}</td>
+                <td className="py-3 text-slate-300">{row.chase}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <GuideP>
+        Chasing a bonus with the ante on gets expensive fast: 50 spins at $1.80 is already $90. On slots without an ante,
+        the base game tends to give you more back while you wait, so in our experience you can spin for a lot longer.
+      </GuideP>
+
+      <GuideH2>Open the wildest bonuses last</GuideH2>
+      <GuideP>
+        The order you open the bonuses in doesn&apos;t change what they pay, but it changes how the hunt plays out. We
+        save the super bonuses for the end, together with the most volatile slots. You&apos;d much rather have a wild
+        Nolimit City bonus left at the end, when one hit can still turn the whole hunt around, than a calm Big Bass game.
+      </GuideP>
+
       <GuideH2>Words you&apos;ll hear on stream</GuideH2>
       <GuideList>
         <li>
@@ -116,6 +163,11 @@ export default function WhatIsABonusHunt() {
       </GuideList>
 
       <GuideH2>The bonus hunts we run</GuideH2>
+      <GuideP>
+        Almost every stream starts with a bonus hunt, and once it&apos;s opened we carry on with regular spins and bonus
+        buys. Spreading the balance over a whole list of bonuses keeps the swings smaller than a few big buys would, so
+        we rarely lose the whole balance in one go. To stop it getting boring, we mix up the format:
+      </GuideP>
       <GuideH3>Classic Bonushunt</GuideH3>
       <GuideP>The standard format: collect a mix of bonuses across our favourite slots, then open them all.</GuideP>
       <GuideH3>No Ante Bonushunt</GuideH3>
@@ -126,6 +178,17 @@ export default function WhatIsABonusHunt() {
       <GuideP>
         We open the regular 3-scatter bonuses straight away and only save the ones that land 4 or 5 scatters. Fewer
         bonuses on the list, but they&apos;re the big ones.
+      </GuideP>
+      <GuideH3>Open one, keep one</GuideH3>
+      <GuideP>
+        Every other bonus is opened straight away, and the next one is saved for the list. The wins from the ones you
+        open go back into the hunt, which can bring the break-even down a lot. One of our favourite concepts.
+      </GuideP>
+      <GuideH3>Themed hunts</GuideH3>
+      <GuideP>
+        Sometimes we only collect bonuses from one series of games. A Big Bass only hunt was a disaster, and a hunt with
+        nothing but Hacksaw&apos;s &quot;Le&quot; games is one we can&apos;t recommend either. They&apos;re fun to try
+        once, though.
       </GuideP>
 
       <GuideH2>Can a bonus hunt make money?</GuideH2>
