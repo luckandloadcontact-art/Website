@@ -122,6 +122,11 @@ export const CASINOS: Casino[] = [
           'We’ve streamed and played on Hype.bet for more than a year, and neither we nor the players under our code have run into any significant problems. It’s run by BlackSands B.V. and licensed in Curaçao. Like most casinos, it can ask for ID before a withdrawal, so verifying your account early makes cashing out smoother.',
       },
       {
+        question: 'How fast are Hype.bet withdrawals?',
+        answer:
+          'In our experience, crypto withdrawals usually arrive in under 20 minutes. We use Bitcoin and Ethereum, and many of our players say the same. The minimum withdrawal is $50, and Hype.bet can ask for ID first, so verify your account early.',
+      },
+      {
         question: 'Is Hype.bet licensed?',
         answer:
           'Yes. Hype.bet is run by BlackSands B.V. in Curaçao and licensed by the Curaçao Gaming Authority under license number OGL/2024/985/0430. Check that it’s legal and available where you live before you sign up.',

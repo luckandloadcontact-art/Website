@@ -110,8 +110,9 @@ export default function HypeBetReview() {
 
       <GuideH2>Deposits and withdrawals</GuideH2>
       <GuideP>
-        You can pay with crypto or Interac. Crypto deposits are converted to USD at the live rate, and the minimum
-        withdrawal is $50. Like most casinos, Hype.bet can ask for ID before you withdraw, so verify your account early.
+        You can pay with crypto or Interac. We use crypto, mostly Bitcoin and Ethereum, and our withdrawals usually
+        arrive in under 20 minutes. Many of our players say the same. Crypto deposits are converted to USD at the live
+        rate, and the minimum withdrawal is $50. Like most casinos, Hype.bet can ask for ID before you withdraw, so verify your account early.
         Most complaints we see online are about exactly that.{' '}
         <Link href="/guides/is-hype-bet-legit" className={LINK}>
           Read more in our guide to whether Hype.bet is legit

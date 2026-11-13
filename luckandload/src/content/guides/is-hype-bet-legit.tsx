@@ -99,7 +99,10 @@ export default function IsHypeBetLegit() {
       </GuideInlineCta>
 
       <GuideH2>How to avoid problems with withdrawals</GuideH2>
-      <GuideP>Most complaints come down to a few things you can sort out before they become a problem:</GuideP>
+      <GuideP>
+        For us, withdrawals in Bitcoin and Ethereum usually arrive in under 20 minutes, and many of our players say the
+        same. Most complaints come down to a few things you can sort out before they become a problem:
+      </GuideP>
       <GuideList>
         <li>
           <strong className="text-white">Verify your account early.</strong> Like most casinos, Hype.bet can ask for ID

@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { GuideH2, GuideH3, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
 import { HuntOpening } from '@/components/guides/HuntOpening'
+import { HuntResults } from '@/components/guides/HuntResults'
 
 // A made-up hunt to show the maths. Break-even = hunt cost / total of all bonus bet sizes.
 const EXAMPLE_ROWS = [
@@ -94,6 +95,13 @@ export default function WhatIsABonusHunt() {
         can sink it. Here&apos;s what that looks like during an opening:
       </GuideP>
       <HuntOpening />
+
+      <GuideH2>Our best and worst bonus hunts</GuideH2>
+      <GuideP>
+        That one was made up. Our hunts usually start with $2,000 to $3,000. The best normal hunt we&apos;ve had paid
+        back 10 times the starting balance, and the worst gave back only 25% of it. Here are two real ones:
+      </GuideP>
+      <HuntResults />
       <GuideInlineCta title="Play along with our bonus hunts">
         We stream in a Hype.bet multiplayer room, so you can join during the hunt and share in the result. Jump in or
         leave whenever you want.
@@ -103,7 +111,7 @@ export default function WhatIsABonusHunt() {
       <GuideP>
         The bigger your bet, the fewer bonuses your balance can collect, and the more the whole hunt depends on just a
         few of them. That makes it a lot more volatile. Our own bet sizes change from stream to stream, depending on how
-        much people add to our room. With a $2,000 starting balance, this is roughly how we do it:
+        much people add to our room. With a $2,000 starting balance, this is roughly how we size them:
       </GuideP>
       <div className="mb-5 max-w-3xl overflow-x-auto">
         <table className="w-full min-w-[30rem] text-left text-sm">
@@ -130,6 +138,13 @@ export default function WhatIsABonusHunt() {
       <GuideP>
         Chasing a bonus with the ante on gets expensive fast: 50 spins at $1.80 is already $90. On slots without an ante,
         the base game tends to give you more back while you wait, so in our experience you can spin for a lot longer.
+      </GuideP>
+
+      <GuideH2>The best slots for a bonus hunt</GuideH2>
+      <GuideP>
+        Most of our hunts are built on Hacksaw Gaming, Nolimit City, Pragmatic Play, Just Slots and BGaming. Their
+        bonuses trigger often enough to collect a full list, and they can pay big. Older slots from Relax Gaming and Push
+        Gaming can be harder work and usually aren&apos;t the best picks for a hunt.
       </GuideP>
 
       <GuideH2>Open the wildest bonuses last</GuideH2>
