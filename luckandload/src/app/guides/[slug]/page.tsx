@@ -11,6 +11,7 @@ import WhatIsABonusHunt from '@/content/guides/what-is-a-bonus-hunt'
 import IsHypeBetLegit from '@/content/guides/is-hype-bet-legit'
 import HypeBetReviewGuide from '@/content/guides/hype-bet-review'
 import MultiplayerCasino from '@/content/guides/multiplayer-casino'
+import CanYouGambleOnTwitch from '@/content/guides/can-you-gamble-on-twitch'
 import { GUIDES, SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished, seoTitle } from '@/lib/guides'
 
 const BODIES: Record<string, ComponentType> = {
@@ -20,6 +21,7 @@ const BODIES: Record<string, ComponentType> = {
   'is-hype-bet-legit': IsHypeBetLegit,
   'hype-bet-review': HypeBetReviewGuide,
   'multiplayer-casino': MultiplayerCasino,
+  'can-you-gamble-on-twitch': CanYouGambleOnTwitch,
 }
 
 export const dynamicParams = false

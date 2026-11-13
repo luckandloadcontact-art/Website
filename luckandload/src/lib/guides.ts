@@ -76,6 +76,19 @@ export const GUIDES: Guide[] = [
     ctaLead: 'Hype.bet is where we stream every week, and where our multiplayer room is.',
   },
   {
+    slug: 'can-you-gamble-on-twitch',
+    category: 'Streaming',
+    cover: { src: '/guides/zeus-max-win-room-poster.jpg', position: 'center 85%' },
+    title: 'Can You Gamble on Twitch? How Gambling Streamers Work',
+    description:
+      'Can you gamble on Twitch? The Twitch, Kick and YouTube gambling rules from streamers who use them, which sites streamers use and how they make money.',
+    authorSlug: 'simon',
+    published: '2026-11-17',
+    updated: '2026-11-17',
+    readingMinutes: 6,
+    ctaLead: 'We stream slots on Kick and Twitch, in a Hype.bet multiplayer room you can join.',
+  },
+  {
     slug: 'multiplayer-casino',
     category: 'Multiplayer',
     cover: { src: '/guides/zeus-vs-hades-max-win-room.jpg', position: 'center 40%' },

@@ -11,6 +11,7 @@ import {
 } from '@/components/guides/GuideContent'
 import { RoomSplit } from '@/components/guides/RoomSplit'
 import { CountUp } from '@/components/ui/CountUp'
+import { publishedGuideHref } from '@/lib/guides'
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
@@ -74,6 +75,8 @@ const FAQ = [
 ]
 
 export default function MultiplayerCasino() {
+  // Links to the streamer guide from its publish day; the page revalidates hourly.
+  const streamerHref = publishedGuideHref('can-you-gamble-on-twitch')
   return (
     <>
       <GuideP>
@@ -175,6 +178,16 @@ export default function MultiplayerCasino() {
           bonus hunt
         </Link>
         , so the room collects the bonuses together and opens them together, with everyone watching the same balance.
+        {streamerHref && (
+          <>
+            {' '}
+            We stream on both Kick and Twitch;{' '}
+            <Link href={streamerHref} className={LINK}>
+              here&apos;s how gambling streams work on each platform
+            </Link>
+            .
+          </>
+        )}
       </GuideP>
       <GuideP>
         The best moments are the ones everyone shares. In September, a spin of our{' '}
