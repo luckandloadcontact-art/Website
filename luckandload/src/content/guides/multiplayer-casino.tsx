@@ -15,7 +15,7 @@ import { CountUp } from '@/components/ui/CountUp'
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
 // Kick clip of the $13,500 Zeus vs Hades max win in our room (22 Sep 2026). The video on the page is
-// the same clip cut to start at 0:55 (1080p, public/guides/zeus-max-win-room.mp4).
+// the same clip cut to 0:55–2:29 (1080p, public/guides/zeus-max-win-room.mp4).
 const MAX_WIN_CLIP = 'https://kick.com/luckandloadtv/clips/clip_01M357FSZ7261ER41Q8S6DE2FJ'
 
 // Our room in numbers (Kristian, November 2026). Joins are not unique players.
@@ -185,7 +185,7 @@ export default function MultiplayerCasino() {
         share of it. In the clip, watch the top 12 players on the left: their balances jump the moment the bonus ends.
       </GuideP>
       <figure className="mb-6 max-w-3xl">
-        {/* Only the poster loads with the page; the 40 MB video starts downloading when someone presses play. */}
+        {/* Only the poster loads with the page; the 46 MB video starts downloading when someone presses play. */}
         <video
           controls
           playsInline
