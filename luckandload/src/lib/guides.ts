@@ -64,7 +64,7 @@ export const GUIDES: Guide[] = [
     authorSlug: 'kristian',
     published: '2026-11-13',
     updated: '2026-11-13',
-    readingMinutes: 5,
+    readingMinutes: 6,
     ctaLead: 'Hype.bet is where we stream every week, and where our multiplayer room is.',
   },
   {

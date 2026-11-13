@@ -14,6 +14,9 @@ const AT_A_GLANCE = [
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
+// Twitch clip of us hitting the top prize on the $2,500 wheel.
+const WHEEL_CLIP = 'CrypticAgileHornetRlyTho-YHODuBcN_2XKf3iN'
+
 export default function HypeBetReview() {
   return (
     <>
@@ -41,9 +44,13 @@ export default function HypeBetReview() {
       <GuideP>
         This is what sets Hype.bet apart. A host opens a room and plays the slots, and anyone can join by adding money
         to a shared pool. Every win and loss is split by each player&apos;s share of the pool, and you can join or leave
-        between spins. On stream, it means viewers aren&apos;t just watching our bonus hunts, they&apos;re in them.
-        It&apos;s why we started streaming in the first place, and we haven&apos;t seen anything like it on other
-        casinos.
+        between spins.
+      </GuideP>
+      <GuideP>
+        The multiplayer room is the reason we started streaming so much. It turns a stream into something completely
+        different: you&apos;re not just watching the streamer&apos;s session, you&apos;re part of it, whether it goes well
+        or badly. We haven&apos;t seen anything like it on other casinos. At least once a month we also spin a $2,500
+        wheel for everyone in our room, and it has paid out more than $10,000 to our players so far.
       </GuideP>
       <RoomSplit />
 
@@ -100,6 +107,31 @@ export default function HypeBetReview() {
         </figure>
       </div>
 
+      <GuideH2>Our $2,500 wheel for room players</GuideH2>
+      <GuideP>
+        At least once a month, often on the same day we pay out the leaderboard, we spin a $2,500 wheel in our room.
+        Whatever it lands on goes straight to every player who has wagered in the room when we spin it. Nothing goes to
+        us. The prizes on the wheel vary, and we&apos;ve hit the top prize more than three times. In our first year,
+        the wheel has paid out more than $10,000 to our players. Here&apos;s one of the times we hit the top prize:
+      </GuideP>
+      <figure className="mb-6 max-w-3xl">
+        <div className="aspect-video overflow-hidden rounded-xl border border-white/10 bg-black">
+          <iframe
+            src={`https://clips.twitch.tv/embed?clip=${WHEEL_CLIP}&parent=luckandloadtv.com&parent=www.luckandloadtv.com&autoplay=false`}
+            title="LuckAndLoadTV hitting the top prize on the $2,500 wheel"
+            className="h-full w-full"
+            loading="lazy"
+            allowFullScreen
+          />
+        </div>
+        <figcaption className="mt-2 text-xs leading-5 text-slate-400">
+          Hitting the top prize on our $2,500 wheel, live on stream.{' '}
+          <a href={`https://www.twitch.tv/luckandloadtv/clip/${WHEEL_CLIP}`} target="_blank" rel="noopener noreferrer" className={LINK}>
+            Watch on Twitch
+          </a>
+        </figcaption>
+      </figure>
+
       <GuideInlineCta
         title="Try Hype.bet with our code"
         secondary={{ href: '/casinos/hype-bet', label: 'See the Hype.bet bonus code' }}
@@ -111,8 +143,9 @@ export default function HypeBetReview() {
       <GuideH2>Deposits and withdrawals</GuideH2>
       <GuideP>
         You can pay with crypto or Interac. We use crypto, mostly Bitcoin and Ethereum, and our withdrawals usually
-        arrive in under 20 minutes. Many of our players say the same. Crypto deposits are converted to USD at the live
-        rate, and the minimum withdrawal is $50. Like most casinos, Hype.bet can ask for ID before you withdraw, so verify your account early.
+        arrive in under 20 minutes. Players under our code tell us the same. Crypto deposits are converted to USD at the
+        live rate, and the minimum withdrawal is $50. Like most casinos, Hype.bet can ask for ID before you withdraw, so
+        verify your account early.
         Most complaints we see online are about exactly that.{' '}
         <Link href="/guides/is-hype-bet-legit" className={LINK}>
           Read more in our guide to whether Hype.bet is legit
