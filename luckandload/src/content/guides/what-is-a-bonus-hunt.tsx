@@ -16,7 +16,7 @@ const EXAMPLE_ROWS = [
 // How we size bets with a $2,000 starting balance (Kristian, November 2026).
 const BET_ROWS = [
   { type: 'Slots with a 3x ante (like most Hacksaw slots)', base: '$0.60', cost: '$1.80', chase: 'About 50 spins at most' },
-  { type: 'Slots with a 2x ante', base: '$0.80', cost: '$1.60', chase: 'A bit over 50 spins, not much more' },
+  { type: 'Slots with a 2x ante', base: '$0.80', cost: '$1.60', chase: 'A bit over 50, then often a few El Manuel spins' },
   { type: 'Slots without an ante', base: '$1 or more', cost: '$1 or more', chase: 'Well over 50 spins is fine' },
 ]
 
@@ -139,18 +139,10 @@ export default function WhatIsABonusHunt() {
         Nolimit City bonus left at the end, when one hit can still turn the whole hunt around, than a calm Big Bass game.
       </GuideP>
 
-      <GuideH2>Words you&apos;ll hear on stream</GuideH2>
+      <GuideH2>Bonus hunt terms you&apos;ll hear on stream</GuideH2>
       <GuideList>
         <li>
-          <strong className="text-white">Start and cost.</strong> What the hunt started with, and how much of it went
-          into collecting the bonuses.
-        </li>
-        <li>
           <strong className="text-white">BE (break-even).</strong> The average multiplier needed to get your money back.
-        </li>
-        <li>
-          <strong className="text-white">Current average.</strong> What the bonuses opened so far have paid on average.
-          Above break-even means the hunt is on track.
         </li>
         <li>
           <strong className="text-white">Super bonus.</strong> A stronger version of a slot&apos;s bonus round, usually
@@ -159,6 +151,10 @@ export default function WhatIsABonusHunt() {
         <li>
           <strong className="text-white">Ante bet.</strong> An optional extra bet that makes bonuses trigger more often,
           in return for a higher cost per spin.
+        </li>
+        <li>
+          <strong className="text-white">El Manuel.</strong> Our own one. When the autoplay runs out, we hit a few spins
+          by hand. If the bonus lands on one of those, that&apos;s an El Manuel.
         </li>
       </GuideList>
 
@@ -193,32 +189,28 @@ export default function WhatIsABonusHunt() {
 
       <GuideH2>Can a bonus hunt make money?</GuideH2>
       <GuideP>
-        Not on average. Collecting lots of bonuses doesn&apos;t change the odds of any of them. Every slot still has the
-        same house edge, so over many hunts you should expect to lose a little of what you put in. What a hunt does is
-        bundle the excitement into one opening, which is why it&apos;s fun to watch. It also helps to play the version
-        of each slot with the highest RTP,{' '}
+        Not on average. Collecting lots of bonuses doesn&apos;t change the odds of any of them, and every slot keeps its
+        house edge. What a hunt does is bundle the excitement into one opening. Playing the highest RTP version of each
+        slot helps,{' '}
         <Link href="/guides/does-rtp-matter" className={LINK}>
           since the same game can pay back less at some casinos
         </Link>
+        . If you hunt yourself, set a budget before you start and stick to it. If gambling stops being fun,{' '}
+        <Link href="/responsible-gambling" className={LINK}>
+          there&apos;s free help available
+        </Link>
         .
       </GuideP>
-
-      <GuideH2>Watch one live</GuideH2>
       <GuideP>
         The easiest way to understand a bonus hunt is to watch one. Our schedule is on the{' '}
         <Link href="/" className={LINK}>
           home page
         </Link>
-        , and you can follow us on{' '}
+        , or follow us on{' '}
         <a href="https://kick.com/luckandloadtv" target="_blank" rel="noopener noreferrer" className={LINK}>
           Kick
         </a>{' '}
-        to get notified when we go live. If you hunt yourself, set a budget before you start and stick to it. If
-        gambling stops being fun,{' '}
-        <Link href="/responsible-gambling" className={LINK}>
-          there&apos;s free help available
-        </Link>
-        .
+        to get notified when we go live.
       </GuideP>
     </>
   )
