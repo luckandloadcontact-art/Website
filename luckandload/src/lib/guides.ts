@@ -91,13 +91,13 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: 'deposit-without-welcome-bonus',
-    title: 'Depositing Without a Welcome Bonus: Pros and Cons',
+    title: 'Wagering Requirements: Is a Casino Welcome Bonus Worth It?',
     description:
-      'Should you skip the casino welcome bonus? See the pros and cons of depositing without one, what wagering costs in numbers, and how to opt out.',
+      "What wagering requirements really cost, the 14,000 kr win I couldn't withdraw, no wagering bonuses, and when to skip the casino welcome bonus.",
     authorSlug: 'kristian',
     published: '2026-11-05',
-    updated: '2026-11-05',
-    readingMinutes: 3,
+    updated: '2026-11-13',
+    readingMinutes: 4,
   },
   {
     slug: 'is-hype-bet-legit',
