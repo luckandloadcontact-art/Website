@@ -14,7 +14,7 @@ const AT_A_GLANCE = [
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
-// Twitch clip of us hitting the top prize on the $2,500 wheel.
+// Twitch clip of us hitting the $2,500 top prize on the room wheel.
 const WHEEL_CLIP = 'CrypticAgileHornetRlyTho-YHODuBcN_2XKf3iN'
 
 export default function HypeBetReview() {
@@ -49,8 +49,8 @@ export default function HypeBetReview() {
       <GuideP>
         The multiplayer room is the reason we started streaming so much. It turns a stream into something completely
         different: you&apos;re not just watching the streamer&apos;s session, you&apos;re part of it, whether it goes well
-        or badly. We haven&apos;t seen anything like it on other casinos. At least once a month we also spin a $2,500
-        wheel for everyone in our room, and it has paid out more than $10,000 to our players so far.
+        or badly. We haven&apos;t seen anything like it on other casinos. At least once a month we also spin a wheel
+        with a $2,500 top prize for the players in our room, and the wheels have paid out more than $10,000 so far.
       </GuideP>
       <RoomSplit />
 
@@ -107,25 +107,29 @@ export default function HypeBetReview() {
         </figure>
       </div>
 
-      <GuideH2>Our $2,500 wheel for room players</GuideH2>
+      <GuideH2>The room wheel: up to $2,500 for our players</GuideH2>
       <GuideP>
-        At least once a month, often on the same day we pay out the leaderboard, we spin a $2,500 wheel in our room.
-        Whatever it lands on goes straight to every player who has wagered in the room when we spin it. Nothing goes to
-        us. The prizes on the wheel vary, and we&apos;ve hit the top prize more than three times. In our first year,
-        the wheel has paid out more than $10,000 to our players. Here&apos;s one of the times we hit the top prize:
+        At least once a month, often on the same day we pay out the leaderboard, we spin a wheel in our room with a top
+        prize of $2,500. A wheel costs $350, and we buy them with cash or with points the room earns from wagering.
+      </GuideP>
+      <GuideP>
+        Whatever the wheel lands on is split between the players who have wagered in the room, based on how much each of
+        them wagered. The more you&apos;ve wagered, the bigger your share. We don&apos;t take a cut. The prizes vary, and
+        we&apos;ve hit the $2,500 top prize more than three times. In our first year, the wheels have paid out more than
+        $10,000 to our players. Here&apos;s one of those top prizes:
       </GuideP>
       <figure className="mb-6 max-w-3xl">
         <div className="aspect-video overflow-hidden rounded-xl border border-white/10 bg-black">
           <iframe
             src={`https://clips.twitch.tv/embed?clip=${WHEEL_CLIP}&parent=luckandloadtv.com&parent=www.luckandloadtv.com&autoplay=false`}
-            title="LuckAndLoadTV hitting the top prize on the $2,500 wheel"
+            title="LuckAndLoadTV hitting the $2,500 top prize on the room wheel"
             className="h-full w-full"
             loading="lazy"
             allowFullScreen
           />
         </div>
         <figcaption className="mt-2 text-xs leading-5 text-slate-400">
-          Hitting the top prize on our $2,500 wheel, live on stream.{' '}
+          Hitting the $2,500 top prize on the room wheel, live on stream.{' '}
           <a href={`https://www.twitch.tv/luckandloadtv/clip/${WHEEL_CLIP}`} target="_blank" rel="noopener noreferrer" className={LINK}>
             Watch on Twitch
           </a>

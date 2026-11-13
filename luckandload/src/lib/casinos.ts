@@ -73,6 +73,10 @@ export const CASINOS: Casino[] = [
         title: 'Giveaways',
         text: 'Regular giveaways on stream and in our Discord.',
       },
+      {
+        title: 'Room wheel',
+        text: 'At least once a month we spin a wheel with a $2,500 top prize in our room. The win is split between the players by how much each of them wagered in the room, and we take no cut. It has paid out more than $10,000 so far.',
+      },
     ],
     details: [
       { label: 'Operator', value: 'BlackSands B.V.' },

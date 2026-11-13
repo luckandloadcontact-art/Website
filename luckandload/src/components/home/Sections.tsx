@@ -180,7 +180,8 @@ export function HypeSection() {
                 <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold">
                   top 6 on the leaderboard
                 </Link>
-                {' '}plus a $20 random draw open to everyone who plays under our code.{' '}
+                {' '}plus a $20 random draw open to everyone who plays under our code. Players in our room also share a wheel
+                with a $2,500 top prize at least once a month.{' '}
                 <Link href={hypeReviewHref()} className="text-brand-400 hover:text-brand-300 underline underline-offset-2 font-semibold">
                   Read our Hype.bet review
                 </Link>
