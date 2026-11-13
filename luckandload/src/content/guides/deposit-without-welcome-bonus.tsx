@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { GuideH2, GuideList, GuideP } from '@/components/guides/GuideContent'
 
@@ -100,14 +101,28 @@ export default function DepositWithoutWelcomeBonus() {
 
       <GuideH2>No wagering bonuses</GuideH2>
       <GuideP>
-        Some bonuses have little or no wagering, and those are worth a closer look. Hype.bet&apos;s RakeBoost works
-        differently from a classic bonus: it unlocks in parts as you earn XP from betting, and each part you unlock can be
+        Some bonuses have little or no wagering, and those are worth a closer look. These days we only play on
+        Hype.bet, and its RakeBoost is the kind of bonus we like. Your own money is never locked, so you can withdraw it
+        whenever you want. The bonus unlocks in parts as you earn XP from betting, and each part you unlock can be
         withdrawn straight away, with no wagering on it.{' '}
         <Link href="/casinos/hype-bet" className={LINK}>
           See how the Hype.bet bonus works
         </Link>
         .
       </GuideP>
+      <figure className="mb-6 max-w-3xl">
+        <Image
+          src="/guides/zeus-vs-hades-max-win-room.jpg"
+          alt="A $13,500 max win on Zeus vs Hades: Gods of War, in 7 free spins at a $0.90 bet"
+          width={1200}
+          height={673}
+          className="w-full rounded-xl border border-white/10"
+        />
+        <figcaption className="mt-2 text-xs leading-5 text-slate-400">
+          A different Zeus vs Hades story: our $13,500 max win in our Hype.bet multiplayer room a few weeks ago, at a
+          $0.90 bet.
+        </figcaption>
+      </figure>
 
       <GuideH2>Should you skip the welcome bonus?</GuideH2>
       <GuideList>
