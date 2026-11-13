@@ -122,8 +122,8 @@ export const GUIDES: Guide[] = [
       'Is Hype.bet legit and safe? Who runs it, its license, what Trustpilot reviews say, whether the games are rigged, and how to avoid problems with withdrawals.',
     authorSlug: 'simon',
     published: '2026-11-04', // Shown as our first guide, at the bottom of the list
-    updated: '2026-11-12',
-    readingMinutes: 4,
+    updated: '2026-11-13',
+    readingMinutes: 5,
     ctaLead: "We've played on Hype.bet for more than a year without any significant problems.",
   },
 ]

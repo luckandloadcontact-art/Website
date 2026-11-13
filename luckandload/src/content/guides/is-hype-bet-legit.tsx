@@ -1,6 +1,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { GuideH2, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
+import {
+  GuideDetails,
+  GuideDetailsGroup,
+  GuideH2,
+  GuideInlineCta,
+  GuideList,
+  GuideP,
+  JsonLd,
+} from '@/components/guides/GuideContent'
 import { RatingBreakdown } from '@/components/guides/RatingBreakdown'
 
 // Trustpilot, November 2026: 120 reviews, TrustScore 3.3.
@@ -20,6 +28,43 @@ const FACTS = [
   { label: 'Trustpilot (November 2026)', value: '3.3 out of 5 from 120 reviews' },
 ]
 
+// Our own numbers (November 2026).
+const EXPERIENCE = [
+  { value: '1+ year', label: 'Streaming on Hype.bet' },
+  { value: '<20 min', label: 'Our usual crypto withdrawal time' },
+  { value: '$10,000+', label: 'Paid to our room players by the room wheel' },
+  { value: '$15,000+', label: 'Given away in our first year' },
+]
+
+// What people search about Hype.bet's safety. Also sent to Google as FAQPage data.
+const FAQ = [
+  {
+    question: 'Is Hype.bet legit?',
+    answer:
+      'Yes. Hype.bet is run by BlackSands B.V. and licensed in Curaçao (OGL/2024/985/0430). We have streamed and played there for more than a year without any significant problems.',
+  },
+  {
+    question: 'Is Hype.bet safe?',
+    answer:
+      'It is a licensed casino with games from trusted studios like Hacksaw Gaming, Nolimit City and Pragmatic Play. It is regulated in Curaçao rather than in the EU, so verify your account early and play within the terms.',
+  },
+  {
+    question: 'Is Hype.bet a scam?',
+    answer:
+      'No. It pays out: our own crypto withdrawals usually arrive in under 20 minutes. Most scam claims we see online are about losing streaks, ID checks or restricted accounts.',
+  },
+  {
+    question: 'How long do Hype.bet withdrawals take?',
+    answer:
+      'In our experience, crypto withdrawals in Bitcoin and Ethereum usually arrive in under 20 minutes. The minimum withdrawal is $50, and Hype.bet can ask for ID before your first withdrawal.',
+  },
+  {
+    question: 'Does Hype.bet ask for ID?',
+    answer:
+      'It can. Like most casinos, Hype.bet may ask you to verify your identity before a withdrawal, or after you change your email or payment method. Doing it early makes cashing out smoother.',
+  },
+]
+
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
 export default function IsHypeBetLegit() {
@@ -30,6 +75,23 @@ export default function IsHypeBetLegit() {
         studios, and it pays out. We&apos;ve streamed and played there for more than a year, and neither we nor the
         players under our code have run into any significant problems. It does have some angry reviews online, though,
         so here&apos;s what they&apos;re about and how to avoid the same issues.
+      </GuideP>
+
+      <GuideH2>Our experience after a year on Hype.bet</GuideH2>
+      <dl className="mb-5 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+        {EXPERIENCE.map(item => (
+          <div key={item.label} className="rounded-xl border border-white/10 bg-surface-800 p-4">
+            <dt className="sr-only">{item.label}</dt>
+            <dd className="text-xl font-bold tabular-nums text-hype">{item.value}</dd>
+            <dd className="mt-1 text-xs leading-5 text-slate-400">{item.label}</dd>
+          </div>
+        ))}
+      </dl>
+      <GuideP>
+        We stream on Hype.bet almost every week, and players join our multiplayer room on every stream. Our own
+        withdrawals in Bitcoin and Ethereum usually arrive in under 20 minutes, and players under our code tell us the
+        same. On top of our monthly leaderboard, the wheel we spin in our room has paid out more than $10,000 to our
+        players.
       </GuideP>
 
       <GuideH2>Who runs Hype.bet?</GuideH2>
@@ -55,7 +117,8 @@ export default function IsHypeBetLegit() {
       <GuideP>
         No. Slots from studios like Hacksaw Gaming, Nolimit City and Pragmatic Play run on the studios&apos; own certified
         game servers, so a casino can&apos;t change the result of a spin. What a casino can choose is which RTP version
-        of a game it runs, and Hype.bet runs the highest RTP versions available.{' '}
+        of a game it runs. Hype.bet shows the RTP right under every game, and the slots we play most run on their top
+        versions.{' '}
         <Link href="/guides/does-rtp-matter" className={LINK}>
           Here&apos;s why that matters
         </Link>
@@ -99,10 +162,7 @@ export default function IsHypeBetLegit() {
       </GuideInlineCta>
 
       <GuideH2>How to avoid problems with withdrawals</GuideH2>
-      <GuideP>
-        For us, withdrawals in Bitcoin and Ethereum usually arrive in under 20 minutes, and many of our players say the
-        same. Most complaints come down to a few things you can sort out before they become a problem:
-      </GuideP>
+      <GuideP>Most complaints come down to a few things you can sort out before they become a problem:</GuideP>
       <GuideList>
         <li>
           <strong className="text-white">Verify your account early.</strong> Like most casinos, Hype.bet can ask for ID
@@ -138,6 +198,26 @@ export default function IsHypeBetLegit() {
           The multiplayer rooms are what players praise most, and they&apos;re why we stream on Hype.bet.
         </figcaption>
       </figure>
+
+      <GuideH2>Questions about Hype.bet</GuideH2>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: FAQ.map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer },
+          })),
+        }}
+      />
+      <GuideDetailsGroup>
+        {FAQ.map(item => (
+          <GuideDetails key={item.question} summary={item.question}>
+            <GuideP>{item.answer}</GuideP>
+          </GuideDetails>
+        ))}
+      </GuideDetailsGroup>
 
       <GuideH2>Our verdict: is Hype.bet safe?</GuideH2>
       <GuideP>
