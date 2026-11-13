@@ -6,7 +6,7 @@ import { RoomSplit } from '@/components/guides/RoomSplit'
 const AT_A_GLANCE = [
   { label: 'Best for', value: 'Slots, and playing together with streamers and friends' },
   { label: 'Stand-out feature', value: 'Multiplayer rooms' },
-  { label: 'Welcome offer', value: '100% RakeBoost up to $500 + 100 free spins' },
+  { label: 'Welcome offer', value: '100% RakeBoost up to $500 + 100 free spins + 10 Rolex draw tickets' },
   { label: 'Payments', value: 'Crypto and Interac' },
   { label: 'License', value: 'Curaçao (BlackSands B.V.)' },
   { label: 'Our code', value: 'LuckAndLoad' },
@@ -72,7 +72,8 @@ export default function HypeBetReview() {
         <div className="min-w-0 flex-1">
           <GuideH3>The welcome bonus</GuideH3>
           <GuideP>
-            New players get a 100% RakeBoost up to $500 on their first deposit, plus 100 free spins. Instead of wagering,
+            New players get a 100% RakeBoost up to $500 on their first deposit, plus 100 free spins and 10 tickets for the
+            Rolex draw. Instead of wagering,
             the bonus unlocks in four parts as you earn XP, and each part can be withdrawn as soon as it unlocks. It suits
             slot players best, since slots earn XP 20 times faster than table games. The full terms are on our{' '}
             <Link href="/casinos/hype-bet" className={LINK}>
