@@ -26,6 +26,8 @@ export type Guide = {
   cover: { src: string; position?: string }
   // Always shown as the big card at the top of the guides overview, whatever its date.
   pinned?: boolean
+  // Optional 16:9 image in public/ used as the share image instead of the generated title card.
+  shareImage?: string
 }
 
 export const AUTHORS: Author[] = [
@@ -91,7 +93,8 @@ export const GUIDES: Guide[] = [
   {
     slug: 'multiplayer-casino',
     category: 'Multiplayer',
-    cover: { src: '/guides/multiplayer-room-gains.jpg', position: 'center' },
+    cover: { src: '/guides/multiplayer-casino-cover.jpg', position: 'center' },
+    shareImage: '/guides/multiplayer-casino-cover.jpg',
     title: 'Multiplayer Casino: How to Play Slots With Friends Online',
     description:
       'How multiplayer casino rooms work: play slots with friends or streamers from one shared pool, how wins are split, and what 7,000+ joins taught us.',

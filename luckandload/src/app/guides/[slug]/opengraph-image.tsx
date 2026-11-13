@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 import { GUIDES, formatGuideDate, getAuthor, getGuide } from '@/lib/guides'
 
@@ -11,10 +13,28 @@ export function generateStaticParams() {
   return GUIDES.map(guide => ({ slug: guide.slug }))
 }
 
-export default function GuideShareImage({ params }: { params: { slug: string } }) {
+export default async function GuideShareImage({ params }: { params: { slug: string } }) {
   const guide = getGuide(params.slug)
   const author = guide && getAuthor(guide.authorSlug)
   const title = guide?.title ?? 'LuckAndLoadTV Guides'
+
+  // A guide with its own designed thumbnail shares that instead of the title card.
+  // Falls back to the title card if the file can't be read.
+  const file = guide?.shareImage
+    ? await readFile(join(process.cwd(), 'public', guide.shareImage)).catch(() => null)
+    : null
+  if (file) {
+    const src = `data:image/jpeg;base64,${file.toString('base64')}`
+    return new ImageResponse(
+      (
+        <div style={{ width: '100%', height: '100%', display: 'flex', background: '#050e1c' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={src} alt="" width={size.width} height={size.height} style={{ objectFit: 'cover' }} />
+        </div>
+      ),
+      size
+    )
+  }
 
   return new ImageResponse(
     (

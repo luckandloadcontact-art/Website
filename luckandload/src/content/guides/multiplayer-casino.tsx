@@ -255,7 +255,7 @@ export default function MultiplayerCasino() {
           controls
           playsInline
           preload="none"
-          poster="/guides/multiplayer-room-gains.jpg"
+          poster="/guides/multiplayer-casino-cover.jpg"
           className="aspect-video w-full rounded-xl border border-white/10 bg-black"
         >
           <source src="/guides/zeus-max-win-room.mp4" type="video/mp4" />
