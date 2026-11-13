@@ -21,6 +21,9 @@ export type Guide = {
   readingMinutes: number
   // Optional opening sentence for the Hype.bet box at the end of the article.
   ctaLead?: string
+  // Shown on the guides overview. `position` is a CSS object-position for cropping the image.
+  category: string
+  cover: { src: string; position?: string }
 }
 
 export const AUTHORS: Author[] = [
@@ -58,6 +61,8 @@ export const AUTHORS: Author[] = [
 export const GUIDES: Guide[] = [
   {
     slug: 'hype-bet-review',
+    category: 'Hype.bet',
+    cover: { src: '/casinos/hype-rolex-draw.png', position: 'center 45%' },
     title: 'Hype.bet Review 2026: Our Honest Verdict After a Year',
     description:
       'Our Hype.bet review after a year of streaming there: multiplayer rooms, games and RTP, the welcome bonus, Hype Time, withdrawals, the downsides and our verdict.',
@@ -69,6 +74,8 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: 'what-is-a-bonus-hunt',
+    category: 'Bonus hunts',
+    cover: { src: '/guides/bonus-hunt-forbidden-fury.jpg', position: 'center 20%' },
     title: 'What Is a Bonus Hunt? How It Works, Explained by Streamers',
     description:
       'What is a bonus hunt? How streamers collect and open slot bonuses, what break-even means, an example with numbers, and the hunt formats we run on stream.',
@@ -80,6 +87,8 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: 'does-rtp-matter',
+    category: 'RTP',
+    cover: { src: '/wheel/wanted.jpg', position: 'center 35%' },
     title: 'Does Slot RTP Matter? Hacksaw and Nolimit City RTP Versions',
     description:
       'Slot RTP explained: why the same slot pays back less at some casinos, the RTP versions Hacksaw and Nolimit City use, bonus buy RTP, and how to check it.',
@@ -91,6 +100,8 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: 'deposit-without-welcome-bonus',
+    category: 'Bonuses',
+    cover: { src: '/guides/zeus-vs-hades-max-win-room.jpg', position: 'center' },
     title: 'Wagering Requirements: Is a Casino Welcome Bonus Worth It?',
     description:
       "What wagering requirements really cost, the 14,000 kr win I couldn't withdraw, no wagering bonuses, and when to skip the casino welcome bonus.",
@@ -101,6 +112,8 @@ export const GUIDES: Guide[] = [
   },
   {
     slug: 'is-hype-bet-legit',
+    category: 'Hype.bet',
+    cover: { src: '/casinos/hype-double-xp-rooms.png', position: '80% center' },
     title: 'Is Hype.bet Legit? Our Honest Answer After a Year',
     description:
       'Is Hype.bet legit and safe? Who runs it, its license, what Trustpilot reviews say, whether the games are rigged, and how to avoid problems with withdrawals.',
