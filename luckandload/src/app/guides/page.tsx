@@ -36,7 +36,11 @@ function CategoryTag({ children }: { children: React.ReactNode }) {
 }
 
 export default function GuidesPage() {
-  const [featured, ...rest] = publishedGuides()
+  // The pinned guide (our Hype.bet review) always gets the big card; "Latest" goes on the newest of the rest.
+  const guides = publishedGuides()
+  const featured = guides.find(guide => guide.pinned) ?? guides[0]
+  const rest = guides.filter(guide => guide !== featured)
+  const latestSlug = rest[0]?.slug
 
   return (
     <div className="min-h-screen px-4 py-16 sm:px-6">
@@ -67,7 +71,7 @@ export default function GuidesPage() {
             </div>
             <div className="flex flex-col gap-3 p-6 sm:p-8">
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-semibold uppercase tracking-wide text-hype">Latest</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-hype">Featured</span>
                 <CategoryTag>{featured.category}</CategoryTag>
               </div>
               <h2 className="text-2xl font-bold leading-tight text-white group-hover:text-brand-300">{featured.title}</h2>
@@ -100,7 +104,12 @@ export default function GuidesPage() {
                 />
               </div>
               <div className="flex flex-1 flex-col gap-2 p-5">
-                <CategoryTag>{guide.category}</CategoryTag>
+                <div className="flex items-center gap-2">
+                  {guide.slug === latestSlug && (
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-hype">Latest</span>
+                  )}
+                  <CategoryTag>{guide.category}</CategoryTag>
+                </div>
                 <h2 className="text-lg font-semibold leading-snug text-white group-hover:text-brand-300">{guide.title}</h2>
                 <p className="line-clamp-3 text-sm leading-relaxed text-slate-400">{guide.description}</p>
                 <div className="mt-auto pt-2">

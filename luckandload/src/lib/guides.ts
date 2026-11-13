@@ -24,6 +24,8 @@ export type Guide = {
   // Shown on the guides overview. `position` is a CSS object-position for cropping the image.
   category: string
   cover: { src: string; position?: string }
+  // Always shown as the big card at the top of the guides overview, whatever its date.
+  pinned?: boolean
 }
 
 export const AUTHORS: Author[] = [
@@ -61,6 +63,7 @@ export const AUTHORS: Author[] = [
 export const GUIDES: Guide[] = [
   {
     slug: 'hype-bet-review',
+    pinned: true,
     category: 'Hype.bet',
     cover: { src: '/casinos/hype-rolex-draw.png', position: 'center 45%' },
     title: 'Hype.bet Review 2026: Our Honest Verdict After a Year',
@@ -75,7 +78,7 @@ export const GUIDES: Guide[] = [
   {
     slug: 'what-is-a-bonus-hunt',
     category: 'Bonus hunts',
-    cover: { src: '/guides/bonus-hunt-forbidden-fury.jpg', position: 'center 20%' },
+    cover: { src: '/Team.jpg.png', position: 'center 40%' },
     title: 'What Is a Bonus Hunt? How It Works, Explained by Streamers',
     description:
       'What is a bonus hunt? How streamers collect and open slot bonuses, what break-even means, an example with numbers, and the hunt formats we run on stream.',
@@ -101,7 +104,7 @@ export const GUIDES: Guide[] = [
   {
     slug: 'deposit-without-welcome-bonus',
     category: 'Bonuses',
-    cover: { src: '/guides/zeus-vs-hades-max-win-room.jpg', position: 'center' },
+    cover: { src: '/wheel/zeusvshades.jpg', position: 'center 30%' },
     title: 'Wagering Requirements: Is a Casino Welcome Bonus Worth It?',
     description:
       "What wagering requirements really cost, the 14,000 kr win I couldn't withdraw, no wagering bonuses, and when to skip the casino welcome bonus.",
@@ -113,7 +116,7 @@ export const GUIDES: Guide[] = [
   {
     slug: 'is-hype-bet-legit',
     category: 'Hype.bet',
-    cover: { src: '/casinos/hype-double-xp-rooms.png', position: '80% center' },
+    cover: { src: '/guides/is-hype-bet-legit-cover.jpg', position: 'center' },
     title: 'Is Hype.bet Legit? Our Honest Answer After a Year',
     description:
       'Is Hype.bet legit and safe? Who runs it, its license, what Trustpilot reviews say, whether the games are rigged, and how to avoid problems with withdrawals.',
