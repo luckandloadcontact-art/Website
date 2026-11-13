@@ -1,5 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { GuideH2, GuideH3, GuideInlineCta, GuideList, GuideP } from '@/components/guides/GuideContent'
+import { RoomSplit } from '@/components/guides/RoomSplit'
 
 const AT_A_GLANCE = [
   { label: 'Best for', value: 'Slots, and playing together with streamers and friends' },
@@ -43,6 +45,7 @@ export default function HypeBetReview() {
         It&apos;s why we started streaming in the first place, and we haven&apos;t seen anything like it on other
         casinos.
       </GuideP>
+      <RoomSplit />
 
       <GuideH2>Games and RTP</GuideH2>
       <GuideP>
@@ -68,15 +71,33 @@ export default function HypeBetReview() {
         .
       </GuideP>
       <GuideH3>Hype Time and loyalty</GuideH3>
-      <GuideP>
-        Every month there&apos;s Hype Time: every 1,000 XP gives you a ticket for a Rolex draw, and the top 10 players
-        share a guaranteed $25,000. On top of that, the loyalty program lets you swap points for bonuses, weekly rakeback
-        and free withdrawals. Players under our code also compete on our{' '}
-        <Link href="/leaderboard" className={LINK}>
-          monthly leaderboard
-        </Link>
-        , with $1,000 in prizes.
-      </GuideP>
+      <div className="mb-5 flex flex-col gap-6 sm:flex-row sm:items-start">
+        <div className="min-w-0 flex-1">
+          <GuideP>
+            Every month there&apos;s Hype Time: every 1,000 XP gives you a ticket for a Rolex draw, and the top 10
+            players share a guaranteed $25,000. The more tickets players collect during the month, the more valuable the
+            Rolex gets.
+          </GuideP>
+          <GuideP>
+            On top of that, the loyalty program lets you swap points for bonuses, weekly rakeback and free withdrawals.
+            Players under our code also compete on our{' '}
+            <Link href="/leaderboard" className={LINK}>
+              monthly leaderboard
+            </Link>
+            , with $1,000 in prizes.
+          </GuideP>
+        </div>
+        <figure className="mx-auto w-full max-w-[12rem] shrink-0">
+          <Image
+            src="/casinos/hype-rolex-draw.png"
+            alt="Hype Time on Hype.bet: win a Rolex and a share of $25,000 every month"
+            width={820}
+            height={1392}
+            className="w-full rounded-xl border border-white/10"
+          />
+          <figcaption className="mt-2 text-xs leading-5 text-slate-400">Hype Time runs every month.</figcaption>
+        </figure>
+      </div>
 
       <GuideInlineCta
         title="Try Hype.bet with our code"
