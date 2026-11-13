@@ -61,7 +61,12 @@ const FAQ = [
   {
     question: 'Does Hype.bet ask for ID?',
     answer:
-      'It can. Like most casinos, Hype.bet may ask you to verify your identity before a withdrawal, or after you change your email or payment method. Doing it early makes cashing out smoother.',
+      'It can, but in our experience it is quick, and it mostly happens when something about an account looks unusual. Like most casinos, Hype.bet may also ask after you change your email or payment method.',
+  },
+  {
+    question: 'Does Hype.bet have good customer support?',
+    answer:
+      'Yes. Support is available 24/7, and in our experience it is quick and helpful. It is also one of the things players praise most in their reviews.',
   },
 ]
 
@@ -166,7 +171,8 @@ export default function IsHypeBetLegit() {
       <GuideList>
         <li>
           <strong className="text-white">Verify your account early.</strong> Like most casinos, Hype.bet can ask for ID
-          before a withdrawal. Get it done before you need your money, not after.
+          before a withdrawal. In our experience the check is quick, and it mostly happens when something about an
+          account looks unusual. Hype.bet&apos;s support is open 24/7 if you get stuck.
         </li>
         <li>
           <strong className="text-white">Stick to one account.</strong> The welcome bonus is limited to one per person,

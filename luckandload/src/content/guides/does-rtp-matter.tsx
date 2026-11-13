@@ -33,8 +33,8 @@ const NOLIMIT_ROWS = [
   { game: 'Tombstone RIP', top: '96.08%', lower: '94.08%' },
 ]
 
-// Sugar Rush 1000: sources disagree on the top version (SlotCatalog lists 97.5%), so the table
-// shows the standard 96.53% and the text mentions the 97.5% listing.
+// Sugar Rush 1000: sources disagree (Pragmatic's own page says 96.00%, most reviews 96.53%, SlotCatalog
+// 97.5%), so the table is labelled "Standard RTP" and shows the 96.53% Hype.bet runs.
 const PRAGMATIC_ROWS = [
   { game: 'Zeus vs Hades – Gods of War', top: '96.07%', lower: '95.05%, 94.05%' },
   { game: 'Sugar Rush 1000', top: '96.53%', lower: '95.50%' },
@@ -178,8 +178,8 @@ export default function DoesRtpMatter() {
 
       <GuideH3>Pragmatic Play RTP versions</GuideH3>
       <GuideP>
-        Pragmatic slots usually come in a few versions about one percentage point apart. For Sugar Rush 1000, 96.53% is
-        the standard version, and SlotCatalog also lists a 97.5% version.
+        Pragmatic slots usually come in a few versions about one percentage point apart. On Hype.bet, Zeus vs Hades runs
+        at 96.07% and Sugar Rush 1000 at 96.53%.
       </GuideP>
       <RtpVersionTable rows={PRAGMATIC_ROWS} topLabel="Standard RTP" />
 
@@ -231,7 +231,7 @@ export default function DoesRtpMatter() {
           className="w-full max-w-[440px] rounded-xl border border-white/10"
         />
         <figcaption className="mt-2 text-xs text-slate-400">
-          Screenshots from Hype.bet. Wanted and Zeus vs Hades are on their top versions.
+          Screenshots from Hype.bet, showing the RTP of each game right under its name.
         </figcaption>
       </figure>
       <GuideH3>On other casinos</GuideH3>
