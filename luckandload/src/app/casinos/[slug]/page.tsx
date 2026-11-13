@@ -137,7 +137,12 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
               <p className="text-2xl font-bold text-white">
                 {offer ? offer.headline : `See ${casino.name}'s current welcome offer`}
               </p>
-              {offer && <p className="mt-1 text-sm text-slate-400">First deposit only. New players.</p>}
+              {offer?.extra && <p className="text-lg font-bold text-hype">{offer.extra.text}</p>}
+              {offer && (
+                <p className="mt-1 text-sm text-slate-400">
+                  First deposit only. New players.{offer.extra && <> {offer.extra.condition}</>}
+                </p>
+              )}
               {casino.code && (
                 <p className="mt-2 text-sm text-slate-300">
                   Our code: <span className="font-bold text-white">{casino.code}</span>. Signing up through our link
@@ -216,7 +221,10 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
                   {offer && (
                     <tr>
                       <th scope="row" className="w-44 py-3 pr-4 font-normal text-slate-400">Welcome offer</th>
-                      <td className="py-3">{offer.headline}</td>
+                      <td className="py-3">
+                        {offer.headline}
+                        {offer.extra && <> {offer.extra.text}</>}
+                      </td>
                     </tr>
                   )}
                   {casino.details.map(detail => (

@@ -9,6 +9,7 @@ export type CasinoFaq = { question: string; answer: string }
 
 export type CasinoOffer = {
   headline: string
+  extra?: { text: string; condition: string } // Shown under the headline, kept out of the page title
   ends: string | null // YYYY-MM-DD, the last day of the offer. Hidden automatically after that day.
   banner: { src: string; width: number; height: number; alt: string } | null
 }
@@ -52,6 +53,7 @@ export const CASINOS: Casino[] = [
     ],
     welcomeOffer: {
       headline: '100% up to $500 + 100 free spins',
+      extra: { text: '+ 10 tickets for the Rolex draw', condition: 'Deposit at least $20 and claim all the welcome bonuses.' },
       ends: '2026-12-01',
       banner: {
         src: '/casinos/hype-welcome-banner.png',
