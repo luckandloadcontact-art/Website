@@ -60,19 +60,20 @@ export default function HypeBetReview() {
       </GuideP>
 
       <GuideH2>Bonuses and rewards</GuideH2>
-      <GuideH3>The welcome bonus</GuideH3>
-      <GuideP>
-        New players get a 100% RakeBoost up to $500 on their first deposit, plus 100 free spins. Instead of wagering, the
-        bonus unlocks in four parts as you earn XP, and each part can be withdrawn as soon as it unlocks. It suits slot
-        players best, since slots earn XP 20 times faster than table games. The full terms are on our{' '}
-        <Link href="/casinos/hype-bet" className={LINK}>
-          Hype.bet bonus code page
-        </Link>
-        .
-      </GuideP>
-      <GuideH3>Hype Time and loyalty</GuideH3>
+      {/* Both bonus sections sit beside the image, which shows the welcome offer and Hype Time together. */}
       <div className="mb-5 flex flex-col gap-6 sm:flex-row sm:items-start">
         <div className="min-w-0 flex-1">
+          <GuideH3>The welcome bonus</GuideH3>
+          <GuideP>
+            New players get a 100% RakeBoost up to $500 on their first deposit, plus 100 free spins. Instead of wagering,
+            the bonus unlocks in four parts as you earn XP, and each part can be withdrawn as soon as it unlocks. It suits
+            slot players best, since slots earn XP 20 times faster than table games. The full terms are on our{' '}
+            <Link href="/casinos/hype-bet" className={LINK}>
+              Hype.bet bonus code page
+            </Link>
+            .
+          </GuideP>
+          <GuideH3>Hype Time and loyalty</GuideH3>
           <GuideP>
             Every month there&apos;s Hype Time: every 1,000 XP gives you a ticket for a Rolex draw, and the top 10
             players share a guaranteed $25,000. The more tickets players collect during the month, the more valuable the
@@ -87,15 +88,15 @@ export default function HypeBetReview() {
             , with $1,000 in prizes.
           </GuideP>
         </div>
-        <figure className="mx-auto w-full max-w-[12rem] shrink-0">
+        <figure className="mx-auto w-full max-w-[12rem] shrink-0 sm:mt-8">
           <Image
             src="/casinos/hype-rolex-draw.png"
-            alt="Hype Time on Hype.bet: win a Rolex and a share of $25,000 every month"
+            alt="Hype.bet's welcome offer and Hype Time: win a Rolex and a share of $25,000 every month"
             width={820}
             height={1392}
             className="w-full rounded-xl border border-white/10"
           />
-          <figcaption className="mt-2 text-xs leading-5 text-slate-400">Hype Time runs every month.</figcaption>
+          <figcaption className="mt-2 text-xs leading-5 text-slate-400">The welcome offer and Hype Time on Hype.bet.</figcaption>
         </figure>
       </div>
 
