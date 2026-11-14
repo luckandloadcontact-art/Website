@@ -93,8 +93,8 @@ export const GUIDES: Guide[] = [
   {
     slug: 'multiplayer-casino',
     category: 'Multiplayer',
-    cover: { src: '/guides/multiplayer-casino-cover.jpg', position: 'center' },
-    shareImage: '/guides/multiplayer-casino-cover.jpg',
+    cover: { src: '/guides/multiplayer-casino-thumb.jpg', position: 'center' },
+    shareImage: '/guides/multiplayer-casino-thumb.jpg',
     title: 'Multiplayer Casino: How to Play Slots With Friends Online',
     description:
       'How multiplayer casino rooms work: play slots with friends or streamers from one shared pool, how wins are split, and what 7,000+ joins taught us.',
