@@ -13,7 +13,6 @@ import { RoomSplit } from '@/components/guides/RoomSplit'
 import { RoomFlow } from '@/components/guides/RoomFlow'
 import { CountUp } from '@/components/ui/CountUp'
 import { publishedGuideHref } from '@/lib/guides'
-import { Flame, Trophy, UserPlus, Users, type LucideIcon } from 'lucide-react'
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
@@ -23,11 +22,11 @@ const MAX_WIN_CLIP = 'https://kick.com/luckandloadtv/clips/clip_01M357FSZ7261ER4
 
 // Our room in numbers (Kristian, November 2026). Joins are not unique players.
 // `text` is shown as is; `value` counts up.
-const ROOM_STATS: { Icon: LucideIcon; value?: number; prefix?: string; suffix?: string; text?: string; label: string }[] = [
-  { Icon: UserPlus, value: 7000, suffix: '+', label: 'joins to our room so far' },
-  { Icon: Users, text: '20–40', label: 'players on a normal stream' },
-  { Icon: Flame, value: 100, prefix: '~', label: 'players on our biggest streams' },
-  { Icon: Trophy, value: 13500, prefix: '$', label: 'biggest win, split by the room' },
+const ROOM_STATS: { value?: number; prefix?: string; suffix?: string; text?: string; label: string }[] = [
+  { value: 7000, suffix: '+', label: 'joins to our room so far' },
+  { text: '20–40', label: 'players on a normal stream' },
+  { value: 100, prefix: '~', label: 'players on our biggest streams' },
+  { value: 13500, prefix: '$', label: 'biggest win, split by the room' },
 ]
 
 // Short answers to what people search about multiplayer casinos. Also sent to Google as FAQPage data.
@@ -86,23 +85,17 @@ export default function MultiplayerCasino() {
         from a lot of hours inside one.
       </GuideP>
 
-      <ul className="mb-10 grid max-w-4xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {ROOM_STATS.map(({ Icon, ...stat }) => (
-          <li
-            key={stat.label}
-            className="relative overflow-hidden rounded-2xl border border-hype/20 bg-gradient-to-b from-hype/[0.09] to-surface-800/40 p-5"
-          >
-            <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-hype/70 to-transparent" />
-            <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-hype/15 text-hype ring-1 ring-hype/30">
-              <Icon size={20} strokeWidth={2.25} />
-            </span>
-            <p className="text-3xl font-black leading-none tracking-tight text-white tabular-nums sm:text-4xl">
+      {/* A slim stat strip between two hairlines: numbers to scan, without competing with the text. */}
+      <dl className="mb-10 grid max-w-3xl grid-cols-2 gap-y-5 border-y border-white/10 py-5 sm:grid-cols-4 sm:divide-x sm:divide-white/10">
+        {ROOM_STATS.map(stat => (
+          <div key={stat.label} className="flex flex-col sm:px-5 sm:first:pl-0">
+            <dt className="order-2 mt-1 text-xs leading-5 text-slate-400">{stat.label}</dt>
+            <dd className="order-1 text-2xl font-bold tracking-tight text-white tabular-nums">
               {stat.value !== undefined ? <CountUp value={stat.value} prefix={stat.prefix} suffix={stat.suffix} /> : stat.text}
-            </p>
-            <p className="mt-2 text-sm leading-5 text-slate-400">{stat.label}</p>
-          </li>
+            </dd>
+          </div>
         ))}
-      </ul>
+      </dl>
 
       <GuideH2>What is a multiplayer casino?</GuideH2>
       <GuideP>
