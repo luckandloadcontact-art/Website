@@ -10,9 +10,10 @@ import {
   JsonLd,
 } from '@/components/guides/GuideContent'
 import { RoomSplit } from '@/components/guides/RoomSplit'
+import { PoolVsRound } from '@/components/guides/PoolVsRound'
 import { CountUp } from '@/components/ui/CountUp'
 import { publishedGuideHref } from '@/lib/guides'
-import { Flame, PieChart, Rocket, Trophy, UserPlus, Users, type LucideIcon } from 'lucide-react'
+import { Flame, Trophy, UserPlus, Users, type LucideIcon } from 'lucide-react'
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
@@ -28,32 +29,6 @@ const ROOM_STATS: { Icon: LucideIcon; value?: number; prefix?: string; suffix?: 
   { Icon: Flame, value: 100, prefix: '~', label: 'players on our biggest streams' },
   { Icon: Trophy, value: 13500, prefix: '$', label: 'biggest win, split by the room' },
 ]
-
-// The two meanings of "multiplayer casino", side by side.
-const COMPARISON = {
-  pool: {
-    Icon: PieChart,
-    title: 'Shared pool',
-    tag: 'Multiplayer room',
-    rows: [
-      { label: 'Whose money', value: 'One pool that everyone adds to' },
-      { label: 'Who decides', value: 'The host picks the slot and the bet size' },
-      { label: 'Results', value: 'Every win and loss is split by your share' },
-      { label: 'Where', value: 'Multiplayer rooms on Hype.bet' },
-    ],
-  },
-  round: {
-    Icon: Rocket,
-    title: 'Shared round',
-    tag: 'Crash-style games',
-    rows: [
-      { label: 'Whose money', value: 'Each player bets their own' },
-      { label: 'Who decides', value: 'Every player places their own bet' },
-      { label: 'Results', value: 'You win or lose on your own bet' },
-      { label: 'Where', value: 'Crash games, where everyone rides the same round' },
-    ],
-  },
-}
 
 // Short answers to what people search about multiplayer casinos. Also sent to Google as FAQPage data.
 const FAQ = [
@@ -81,6 +56,11 @@ const FAQ = [
     question: 'What happens to a bonus if the room closes?',
     answer:
       'Bonuses are paid out as soon as they are opened. If a room closes for a technical reason before that, the bonus can be opened later and the money goes straight to each player’s wallet. A bonus that is never opened is paid out automatically after 24 hours.',
+  },
+  {
+    question: 'What happens when you leave a multiplayer room?',
+    answer:
+      'You stop taking part in new spins, but you keep your share of any bonuses collected while you were in the room. In a bonus hunt, for example, your share of those bonuses is paid straight to your wallet when the room opens them, even if you have already left.',
   },
   {
     question: 'Do you need to be a streamer to host a room?',
@@ -132,51 +112,7 @@ export default function MultiplayerCasino() {
         time, but each player bets and wins on their own. Some casinos, Stake for example, group games like that in a
         multiplayer section.
       </GuideP>
-      <div className="relative mb-6 grid max-w-4xl gap-4 md:grid-cols-2">
-        {[COMPARISON.pool, COMPARISON.round].map(({ Icon, title, tag, rows }, i) => {
-          const highlight = i === 0
-          return (
-            <div
-              key={title}
-              className={`rounded-2xl border p-5 sm:p-6 ${
-                highlight
-                  ? 'border-hype/40 bg-gradient-to-br from-hype/[0.12] via-hype/[0.04] to-transparent shadow-[0_0_40px_-12px_rgba(28,228,121,0.35)]'
-                  : 'border-white/10 bg-surface-800'
-              }`}
-            >
-              <div className="mb-5 flex items-center gap-3">
-                <span
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${
-                    highlight ? 'bg-hype text-black' : 'bg-white/10 text-slate-300'
-                  }`}
-                >
-                  <Icon size={22} strokeWidth={2.25} />
-                </span>
-                <div>
-                  <p className="text-lg font-bold leading-tight text-white">{title}</p>
-                  <p className={`text-xs font-semibold uppercase tracking-wide ${highlight ? 'text-hype' : 'text-slate-500'}`}>
-                    {tag}
-                  </p>
-                </div>
-              </div>
-              <dl className="space-y-3">
-                {rows.map(row => (
-                  <div key={row.label} className="border-t border-white/10 pt-3">
-                    <dt className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{row.label}</dt>
-                    <dd className={`mt-0.5 text-sm leading-6 ${highlight ? 'text-slate-100' : 'text-slate-300'}`}>{row.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          )
-        })}
-        <span
-          aria-hidden
-          className="absolute left-1/2 top-1/2 hidden h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-surface-950 text-xs font-black text-slate-300 md:flex"
-        >
-          VS
-        </span>
-      </div>
+      <PoolVsRound />
       <GuideP>
         The rest of this guide is about rooms, because that&apos;s where playing together really changes the game: one
         big hit pays everyone in the room at once.
@@ -202,6 +138,11 @@ export default function MultiplayerCasino() {
         </li>
         <li>
           <strong className="text-white">You can leave between spins,</strong> or just watch without adding anything.
+        </li>
+        <li>
+          <strong className="text-white">Leaving doesn&apos;t cost you the bonuses you were in on.</strong> If you leave
+          during a bonus hunt, you keep your share of the bonuses collected while you were in the room, but not the ones
+          collected after. Your share is paid straight to your wallet when the room opens those bonuses.
         </li>
       </GuideList>
       <GuideP>Drag the slider to see how your share works out:</GuideP>
