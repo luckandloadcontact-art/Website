@@ -10,7 +10,7 @@ import {
   JsonLd,
 } from '@/components/guides/GuideContent'
 import { RoomSplit } from '@/components/guides/RoomSplit'
-import { PoolVsRound } from '@/components/guides/PoolVsRound'
+import { RoomFlow } from '@/components/guides/RoomFlow'
 import { CountUp } from '@/components/ui/CountUp'
 import { publishedGuideHref } from '@/lib/guides'
 import { Flame, Trophy, UserPlus, Users, type LucideIcon } from 'lucide-react'
@@ -112,7 +112,13 @@ export default function MultiplayerCasino() {
         time, but each player bets and wins on their own. Some casinos, Stake for example, group games like that in a
         multiplayer section.
       </GuideP>
-      <PoolVsRound />
+      <figure className="mb-6 max-w-3xl">
+        <RoomFlow />
+        <figcaption className="mt-2 text-xs leading-5 text-slate-400">
+          How a shared pool works: four players add to one pool, the host plays, and a $100 win is split by each
+          player&apos;s share.
+        </figcaption>
+      </figure>
       <GuideP>
         The rest of this guide is about rooms, because that&apos;s where playing together really changes the game: one
         big hit pays everyone in the room at once.
