@@ -288,6 +288,19 @@ export default function MultiplayerCasino() {
         leave whenever you want.
       </GuideInlineCta>
 
+      <GuideH2>The downside of playing together</GuideH2>
+      <GuideP>
+        Multiplayer rooms aren&apos;t only positive. When a session goes badly, you&apos;re not just losing your own
+        money, you&apos;re watching other people&apos;s money go too, and that feels a lot worse. We&apos;ve felt that
+        ourselves as hosts, more than once.
+      </GuideP>
+      <GuideP>
+        It&apos;s the reason we play with lower volatility in the room than we would on our own. A calmer session usually
+        keeps the balance alive for longer, so the people who join get more play for their money instead of one big
+        all-or-nothing swing. If you host a room for your friends, think about the same thing: how would it feel if the
+        pool was gone after ten minutes?
+      </GuideP>
+
       <GuideH2>Things to know before you join</GuideH2>
       <GuideList>
         <li>
