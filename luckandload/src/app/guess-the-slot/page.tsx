@@ -107,9 +107,11 @@ export default function GuessTheSlotPage() {
     }
   }
 
+  // The heading is part of the loading state too, so it's in the HTML the server sends.
   if (status === 'loading' || (status === 'authenticated' && !state)) {
     return (
-      <main className="min-h-[60vh] flex items-center justify-center">
+      <main className="min-h-[60vh] flex flex-col items-center justify-center gap-6">
+        <h1 className="text-3xl font-bold text-white">🎰 Guess the Slot</h1>
         <div className="h-6 w-6 rounded-full border-2 border-brand-500 border-t-transparent animate-spin" />
       </main>
     )

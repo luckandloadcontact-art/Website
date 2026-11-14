@@ -112,7 +112,16 @@ export default function CanYouGambleOnTwitch() {
       <GuideH2>Can you gamble on Twitch?</GuideH2>
       <GuideP>
         Since 18 October 2022, Twitch has banned streams of sites with &quot;slots, roulette, or dice games that
-        aren&apos;t licensed either in the U.S. or other jurisdictions that provide sufficient consumer protection.&quot;
+        aren&apos;t licensed either in the U.S. or other jurisdictions that provide sufficient consumer protection&quot;,{' '}
+        <a
+          href="https://www.npr.org/2022/09/22/1124384092/twitch-bans-some-gambling-content-after-an-outcry-from-streamers"
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+          className={LINK}
+        >
+          as NPR reported when it was announced
+        </a>
+        .
         It named Stake, Rollbit, Duelbits and Roobet when the rule started, and later added Blaze and Gamdom. Twitch also
         restricts sharing links and referral codes to sites like these.
       </GuideP>
@@ -129,7 +138,11 @@ export default function CanYouGambleOnTwitch() {
 
       <GuideH2>Gambling on Kick</GuideH2>
       <GuideP>
-        Kick allows gambling content, and its Community Guidelines spell out the rules:
+        Kick allows gambling content, and its{' '}
+        <a href="https://kick.com/community-guidelines" target="_blank" rel="nofollow noopener noreferrer" className={LINK}>
+          Community Guidelines
+        </a>{' '}
+        spell out the rules:
       </GuideP>
       <GuideList>
         <li>Follow the gambling laws where you stream from.</li>
@@ -152,7 +165,10 @@ export default function CanYouGambleOnTwitch() {
 
       <GuideH2>Gambling on YouTube</GuideH2>
       <GuideP>
-        YouTube&apos;s policy age-restricts content that &quot;facilitates access to, promotes, or depicts online
+        <a href="https://support.google.com/youtube/answer/9229611" target="_blank" rel="nofollow noopener noreferrer" className={LINK}>
+          YouTube&apos;s policy
+        </a>{' '}
+        age-restricts content that &quot;facilitates access to, promotes, or depicts online
         gambling,&quot; even from certified sites, so viewers under 18 or not logged in can&apos;t watch it. Facilitating
         access to gambling sites that aren&apos;t certified by Google isn&apos;t allowed, and neither is promising
         guaranteed returns.
