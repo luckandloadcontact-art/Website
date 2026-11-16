@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { TICKER_ITEMS, Ticker, type TickerItem } from '@/components/overlay/Ticker'
+import { Ticker } from '@/components/overlay/Ticker'
+import { TICKER_ITEMS, type TickerItem } from '@/components/overlay/tickerItems'
 
 // Wide, low info bar for the stream overlay. Add it in OBS as a Browser Source pointing to
 // https://luckandloadtv.com/overlay/ticker, sized 1120x40 (or any size with the same ratio).

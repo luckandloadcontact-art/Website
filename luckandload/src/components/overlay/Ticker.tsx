@@ -8,8 +8,7 @@ import { LeaderboardCountdown } from '@/components/leaderboard/LeaderboardCountd
 // A wide, low info bar for the stream overlay: live viewers (Kick + Twitch), Kick followers, the
 // leaderboard countdown, BTC/ETH prices and the clock in Norwegian time. Everything is fetched in
 // the browser (OBS), which Kick, decapi.me and CoinGecko all allow.
-export type TickerItem = 'viewers' | 'followers' | 'leaderboard' | 'btc' | 'eth' | 'clock'
-export const TICKER_ITEMS: TickerItem[] = ['viewers', 'followers', 'leaderboard', 'btc', 'eth', 'clock']
+import type { TickerItem } from '@/components/overlay/tickerItems'
 
 const KICK_CHANNEL = 'luckandloadtv'
 const TWITCH_CHANNEL = 'luckandloadtv'
