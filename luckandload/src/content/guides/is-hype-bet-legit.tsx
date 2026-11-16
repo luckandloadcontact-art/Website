@@ -134,7 +134,7 @@ export default function IsHypeBetLegit() {
       <GuideH2>What players say about Hype.bet</GuideH2>
       <GuideP>
         On{' '}
-        <a href="https://www.trustpilot.com/review/hype.bet" target="_blank" rel="nofollow noopener noreferrer" className={LINK}>
+        <a href="https://www.trustpilot.com/review/hype.bet" target="_blank" rel="noopener noreferrer" className={LINK}>
           Trustpilot
         </a>
         , Hype.bet scores 3.3 out of 5 from 120 reviews. Most reviews are either 5 stars or 1 star, which is normal for

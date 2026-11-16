@@ -116,7 +116,7 @@ export default function CanYouGambleOnTwitch() {
         <a
           href="https://www.npr.org/2022/09/22/1124384092/twitch-bans-some-gambling-content-after-an-outcry-from-streamers"
           target="_blank"
-          rel="nofollow noopener noreferrer"
+          rel="noopener noreferrer"
           className={LINK}
         >
           as NPR reported when it was announced
@@ -139,7 +139,7 @@ export default function CanYouGambleOnTwitch() {
       <GuideH2>Gambling on Kick</GuideH2>
       <GuideP>
         Kick allows gambling content, and its{' '}
-        <a href="https://kick.com/community-guidelines" target="_blank" rel="nofollow noopener noreferrer" className={LINK}>
+        <a href="https://kick.com/community-guidelines" target="_blank" rel="noopener noreferrer" className={LINK}>
           Community Guidelines
         </a>{' '}
         spell out the rules:
@@ -165,7 +165,7 @@ export default function CanYouGambleOnTwitch() {
 
       <GuideH2>Gambling on YouTube</GuideH2>
       <GuideP>
-        <a href="https://support.google.com/youtube/answer/9229611" target="_blank" rel="nofollow noopener noreferrer" className={LINK}>
+        <a href="https://support.google.com/youtube/answer/9229611" target="_blank" rel="noopener noreferrer" className={LINK}>
           YouTube&apos;s policy
         </a>{' '}
         age-restricts content that &quot;facilitates access to, promotes, or depicts online

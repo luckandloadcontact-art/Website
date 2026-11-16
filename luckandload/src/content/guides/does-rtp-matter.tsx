@@ -153,7 +153,7 @@ export default function DoesRtpMatter() {
         Why would a casino pick a lower version? Because it earns more on every spin. Some markets also have rules that
         limit which versions can be used. Here&apos;s what that looks like at two of the studios we play the most. The
         figures come from{' '}
-        <a href="https://slotcatalog.com/" target="_blank" rel="nofollow noopener noreferrer" className={SOURCE_LINK}>
+        <a href="https://slotcatalog.com/" target="_blank" rel="noopener noreferrer" className={SOURCE_LINK}>
           SlotCatalog
         </a>
         .
@@ -169,7 +169,7 @@ export default function DoesRtpMatter() {
       <GuideP>
         Nolimit City&apos;s top versions sit around 96%, with lower versions around 94% and 92%. Across its catalogue,
         the studio offers RTP settings{' '}
-        <a href="https://www.casinos.com/nolimit-city" target="_blank" rel="nofollow noopener noreferrer" className={SOURCE_LINK}>
+        <a href="https://www.casinos.com/nolimit-city" target="_blank" rel="noopener noreferrer" className={SOURCE_LINK}>
           anywhere between 84% and 97%
         </a>
         .
