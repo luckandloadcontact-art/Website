@@ -110,7 +110,7 @@ export function upcomingStreams(streams: ScheduledStream[] = manualStreams(), no
     .sort((a, b) => a.start.getTime() - b.start.getTime())
 }
 
-export type StreamSlot = { title: string; day: string; time: string; zone: string; localTime: string | null }
+export type StreamSlot = { title: string; day: string; time: string; zone: string; localTime: string | null; daysAway: number }
 
 /** "CET (UTC+1)" in winter, "CEST (UTC+2)" in summer, worked out from the stream date itself. */
 function zoneLabel(date: Date): string {
@@ -142,6 +142,6 @@ export function describeUpcoming(streams?: ScheduledStream[], now = new Date()):
         : stream.daysAway === 1
           ? 'Tomorrow'
           : stream.start.toLocaleDateString('en-US', { timeZone: STREAM_TIME_ZONE, weekday: 'long' })
-    return { title: stream.title, day, time, zone: zoneLabel(stream.start), localTime: localTime === time ? null : localTime }
+    return { title: stream.title, day, time, zone: zoneLabel(stream.start), localTime: localTime === time ? null : localTime, daysAway: stream.daysAway }
   })
 }

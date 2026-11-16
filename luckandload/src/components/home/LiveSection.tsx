@@ -28,8 +28,9 @@ export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
   // While live, the scheduled stream that has started is "on now"; the rest are later this week.
   const current = live && upcoming[0]?.day === 'Starting soon' ? upcoming[0] : null
   const later = current ? upcoming.slice(1) : upcoming
-  // Offline, later[0] is shown big as the next stream, so the list starts after it.
-  const laterList = live ? later.slice(0, 3) : later.slice(1, 4)
+  // Offline, later[0] is shown big as the next stream, so the list starts after it. The list shows
+  // every stream in the next 7 days (no fixed count), so a busy week isn't cut off.
+  const laterList = (live ? later : later.slice(1)).filter(slot => slot.daysAway < 7)
 
   useEffect(() => {
     setParentHost(window.location.hostname)
