@@ -3,9 +3,9 @@ import { Ticker } from '@/components/overlay/Ticker'
 import { TICKER_ITEMS, type TickerItem } from '@/components/overlay/tickerItems'
 
 // Wide, low info bar for the stream overlay. Add it in OBS as a Browser Source pointing to
-// https://luckandloadtv.com/overlay/ticker, sized 1120x40 (or any size with the same ratio).
+// https://luckandloadtv.com/overlay/ticker, sized 760x40 (or any size with the same ratio).
 // Choose what it shows and in which order with ?show=, e.g. ?show=viewers,btc,clock.
-// Items: viewers, followers, leaderboard, btc, eth, clock (all of them by default).
+// Items: viewers, btc, eth, clock (all of them by default).
 export const metadata: Metadata = {
   title: 'Ticker – LuckAndLoadTV',
   robots: { index: false, follow: false },
