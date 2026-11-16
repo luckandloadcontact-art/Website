@@ -7,18 +7,16 @@ import type { TickerItem } from '@/components/overlay/tickerItems'
 
 // A wide, low info bar for the stream overlay: live viewers (Kick + Twitch added together), BTC and
 // ETH prices, and the date and time in Norwegian time. Everything is fetched in the browser (OBS),
-// which Kick, decapi.me, Binance and CoinGecko all allow.
+// which Kick, decapi.me and CoinGecko all allow.
 //
 // How often things update:
 // - Viewers every 30 s. Kick and Twitch only refresh their own counts about once a minute.
-// - BTC and ETH live, every second, from Binance's public ticker stream. If the stream can't
-//   connect or drops, prices come from CoinGecko every 60 s until it's back.
+// - BTC and ETH every 60 s, from CoinGecko.
 // - The clock every second, so the minute changes on time.
 const KICK_CHANNEL = 'luckandloadtv'
 const TWITCH_CHANNEL = 'luckandloadtv'
 const VIEWERS_MS = 30_000
-const FALLBACK_PRICES_MS = 60_000
-const BINANCE_STREAM = 'wss://stream.binance.com:9443/stream?streams=btcusdt@miniTicker/ethusdt@miniTicker'
+const PRICES_MS = 60_000
 
 type Coin = { usd: number; change: number }
 
@@ -57,66 +55,18 @@ type Prices = { btc: Coin | null; eth: Coin | null }
 
 function useCrypto(): Prices {
   const [prices, setPrices] = useState<Prices>({ btc: null, eth: null })
-
-  useEffect(() => {
-    let socket: WebSocket | null = null
-    let live = false
-    let stopped = false
-    let retry: ReturnType<typeof setTimeout> | undefined
-
-    // Live: Binance sends each coin's last price and 24h open about once a second.
-    const connect = () => {
-      try {
-        socket = new WebSocket(BINANCE_STREAM)
-      } catch {
-        return // WebSocket not available; the CoinGecko fallback takes over
-      }
-      socket.onmessage = event => {
-        try {
-          const { data } = JSON.parse(event.data)
-          const last = Number(data.c)
-          const open = Number(data.o)
-          if (!last || !open) return
-          live = true
-          const coin = { usd: last, change: ((last - open) / open) * 100 }
-          setPrices(p => (data.s === 'BTCUSDT' ? { ...p, btc: coin } : data.s === 'ETHUSDT' ? { ...p, eth: coin } : p))
-        } catch {
-          // Ignore a malformed message; the next one arrives within a second
-        }
-      }
-      socket.onclose = () => {
-        live = false
-        if (!stopped) retry = setTimeout(connect, 10_000)
-      }
-      socket.onerror = () => socket?.close()
-    }
-
-    // Fallback: CoinGecko once a minute, used only while the live stream isn't delivering.
-    const poll = () => {
-      if (live) return
-      fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true')
-        .then(res => (res.ok ? res.json() : null))
-        .then(data => {
-          if (!data?.bitcoin || live) return
-          setPrices({
-            btc: { usd: data.bitcoin.usd, change: data.bitcoin.usd_24h_change ?? 0 },
-            eth: { usd: data.ethereum.usd, change: data.ethereum.usd_24h_change ?? 0 },
-          })
+  useEvery(() => {
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true')
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => {
+        if (!data?.bitcoin) return
+        setPrices({
+          btc: { usd: data.bitcoin.usd, change: data.bitcoin.usd_24h_change ?? 0 },
+          eth: { usd: data.ethereum.usd, change: data.ethereum.usd_24h_change ?? 0 },
         })
-        .catch(() => {})
-    }
-
-    connect()
-    poll()
-    const id = setInterval(poll, FALLBACK_PRICES_MS)
-    return () => {
-      stopped = true
-      clearInterval(id)
-      clearTimeout(retry)
-      socket?.close()
-    }
-  }, [])
-
+      })
+      .catch(() => {})
+  }, PRICES_MS)
   return prices
 }
 
