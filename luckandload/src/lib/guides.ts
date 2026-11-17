@@ -80,8 +80,8 @@ export const GUIDES: Guide[] = [
   {
     slug: 'can-you-gamble-on-twitch',
     category: 'Streaming',
-    cover: { src: '/guides/can-you-gamble-on-twitch-thumb2.jpg', position: 'center' },
-    shareImage: '/guides/can-you-gamble-on-twitch-thumb2.jpg',
+    cover: { src: '/guides/can-you-gamble-on-twitch-thumb3.jpg', position: 'center' },
+    shareImage: '/guides/can-you-gamble-on-twitch-thumb3.jpg',
     title: 'Can You Gamble on Twitch? How Gambling Streamers Work',
     description:
       'Can you gamble on Twitch? The Twitch, Kick and YouTube gambling rules from streamers who use them, which sites streamers use and how they make money.',

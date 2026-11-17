@@ -9,6 +9,7 @@ import {
   GuideP,
   JsonLd,
 } from '@/components/guides/GuideContent'
+import { SubSplit } from '@/components/guides/SubSplit'
 
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
@@ -53,6 +54,11 @@ const FAQ = [
     question: 'Can you stream gambling on Kick?',
     answer:
       'Yes. Kick allows gambling content as long as you follow the gambling laws where you are, never let minors take part, don’t gamble with funds provided by other users, label the stream 18+ and disclose affiliate links clearly. Sponsored gambling is only allowed for licensed sites.',
+  },
+  {
+    question: 'Should you multistream on Kick and Twitch?',
+    answer:
+      'When you are starting out, yes. Being on both platforms makes it much easier to build your first followers. Merge the two chats into one on screen, so the community isn’t split. Later, once you know where your viewers are, you can consider dedicating yourself to one platform.',
   },
   {
     question: 'Can you stream gambling on YouTube?',
@@ -202,8 +208,10 @@ export default function CanYouGambleOnTwitch() {
         We&apos;re a little bigger on Kick than on Twitch, though it changes from day to day. We haven&apos;t had problems
         on either platform, but you do feel safer on Kick, where gambling is clearly part of what the platform is for.
         The subscription split is the other big difference. Kick advertises a 95/5 split in the streamer&apos;s favour,
-        while Twitch&apos;s standard split is 50/50. For a smaller channel, that&apos;s an enormous difference.
+        while Twitch&apos;s standard split is 50/50. For a smaller channel, that&apos;s an enormous difference. Here&apos;s
+        what it means in money:
       </GuideP>
+      <SubSplit />
 
       <GuideH2>Gambling on YouTube</GuideH2>
       <GuideP>
@@ -272,26 +280,36 @@ export default function CanYouGambleOnTwitch() {
 
       <GuideH2>Streaming on Kick and Twitch at the same time</GuideH2>
       <GuideP>
-        Multistreaming gets you on both platforms at once, but it can split your community in two: Kick viewers talking
-        in one chat, Twitch viewers in another, and neither side seeing the whole conversation. What worked for us is
-        one big shared chat on screen that shows messages from both, so viewers on Kick and Twitch can actually talk to
-        each other. It makes the stream feel like one room instead of two.
+        When you&apos;re starting out, we always recommend multistreaming. Being on both platforms at once makes it a lot
+        easier to build a base of followers, because new viewers can find you on either one. That&apos;s what we did, and
+        still do.
+      </GuideP>
+      <GuideP>
+        The catch is that it can split your community in two: Kick viewers talking in one chat, Twitch viewers in
+        another, and neither side seeing the whole conversation. What worked for us is one big shared chat on screen
+        that shows messages from both, so viewers on Kick and Twitch can actually talk to each other. It makes the stream
+        feel like one room instead of two.
+      </GuideP>
+      <GuideP>
+        In the long run, you can consider going all in on one platform once you know where your viewers are. If you do,
+        the subscription split and the clear gambling rules are strong reasons to look at Kick.
       </GuideP>
 
       <GuideH2>What we&apos;d tell anyone starting a gambling stream</GuideH2>
       <GuideP>If we started again tomorrow, this is what we&apos;d do differently, or exactly the same:</GuideP>
       <GuideList>
         <li>
-          <strong className="text-white">Make Kick your main platform.</strong> The rules for gambling are clear, and the
-          subscription split matters a lot more when you&apos;re small.
+          <strong className="text-white">Multistream from day one.</strong> Kick and Twitch together make it much easier
+          to build your first followers. Merge the chats, so a small community isn&apos;t split in half.
+        </li>
+        <li>
+          <strong className="text-white">Pick a main platform later.</strong> Once you know where your viewers are, you
+          can consider dedicating yourself to one. For gambling, Kick&apos;s rules and subscription split make it the
+          obvious one to look at.
         </li>
         <li>
           <strong className="text-white">Don&apos;t build a slot channel on YouTube live.</strong> Use it for clips if you
           want, but expect takedowns on live slot streams while the channel is small.
-        </li>
-        <li>
-          <strong className="text-white">Multistream, but merge the chats.</strong> Two separate chats split a small
-          community in half.
         </li>
         <li>
           <strong className="text-white">Disclose your links.</strong> Kick requires it, and viewers trust you more when
