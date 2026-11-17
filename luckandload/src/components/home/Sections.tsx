@@ -37,7 +37,7 @@ export function AboutSection() {
             <p className="text-slate-400 leading-relaxed mb-4">
               We&apos;ve both been into slots for years, but what really made us want to start streaming was discovering the
               multiplayer room concept. The idea of playing alongside other people, sharing the same spins and experiencing
-              the wins and losses together was something we found genuinely exciting. So we decided to give streaming a shot.
+              the wins and losses together was what got us hooked. So we decided to give streaming a shot.
             </p>
             <p className="text-slate-400 leading-relaxed mb-4">
               Fast forward a year, and we&apos;ve both quit our jobs, moved in together, and decided to take streaming
@@ -45,19 +45,20 @@ export function AboutSection() {
             </p>
             <p className="text-slate-400 leading-relaxed mb-4">
               From the beginning, we&apos;ve wanted LuckAndLoadTV to feel more like hanging out in Discord with your mates
-              than watching a traditional gambling stream. Somewhere people can join the conversation, have a laugh and feel
-              like they&apos;re part of what&apos;s happening, whether they&apos;re playing in the room or just watching.
+              than watching a traditional gambling stream. Somewhere people can join the conversation, have a laugh and know
+              they&apos;re part of what&apos;s happening, whether they&apos;re playing in the room or just watching.
             </p>
-            <p className="text-slate-400 leading-relaxed">
+            <p className="text-slate-400 leading-relaxed mb-4">
               We&apos;re still figuring things out as we go, but building a community around something we both enjoy has
               been the best part of it all.
             </p>
+            <p className="font-semibold text-white">See you on stream, let&apos;s have fun together!</p>
           </div>
 
           <div className="rounded-2xl overflow-hidden border border-white/8 shadow-xl">
             <Image
               src="/Team.jpg.png"
-              alt="LuckAndLoadTV — Two Degens One Mission"
+              alt="Kristian and Simon from LuckAndLoadTV"
               width={700}
               height={500}
               className="w-full h-full object-cover"
