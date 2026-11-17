@@ -82,8 +82,12 @@ export default function CanYouGambleOnTwitch() {
       <GuideP>
         Yes, but not everything. Twitch bans slots, roulette and dice from casinos without a proper licence, while poker
         and sports betting are still allowed. Kick allows gambling with a few clear rules, and YouTube age-restricts it.
-        We stream slots on both Kick and Twitch, and we tried YouTube before that, so here&apos;s how the platforms
-        compare from our side of the camera.
+      </GuideP>
+      <GuideP>
+        We went live for the first time in September 2025, tried YouTube first, and now stream slots on Kick and Twitch
+        at the same time, most evenings from 18:00 Norwegian time. A year in, we left our regular jobs to do it full-time.
+        So this isn&apos;t a summary of the rules from the outside: it&apos;s how the three platforms actually work for a
+        small casino channel, with the rules checked against each platform&apos;s own guidelines.
       </GuideP>
 
       <div className="mb-6 max-w-3xl overflow-x-auto">
@@ -108,6 +112,44 @@ export default function CanYouGambleOnTwitch() {
           </tbody>
         </table>
       </div>
+
+      <GuideH2>What a gambling stream looks like from our side</GuideH2>
+      <GuideP>
+        Most people picture a streamer clicking spin for hours. A good gambling stream is closer to a show the chat helps
+        run. This is what a normal evening looks like for us:
+      </GuideP>
+      <GuideList>
+        <li>
+          <strong className="text-white">It starts with a bonus hunt.</strong> We collect bonuses on a list of slots and
+          open them all at the end, usually with $2,000 to $3,000 to start with. We rotate formats like Classic and No Ante
+          so it doesn&apos;t get repetitive.{' '}
+          <Link href="/guides/what-is-a-bonus-hunt" className={LINK}>
+            How a bonus hunt works
+          </Link>
+          .
+        </li>
+        <li>
+          <strong className="text-white">Chat picks a lot of the slots.</strong> Viewers type <code className="rounded bg-white/10 px-1.5 py-0.5 text-[0.9em] text-white">!call</code> and a slot
+          name, and the requests show up on screen. When we can&apos;t decide, our{' '}
+          <Link href="/slot-wheel" className={LINK}>
+            slot wheel
+          </Link>{' '}
+          picks for us.
+        </li>
+        <li>
+          <strong className="text-white">Viewers play along.</strong> We play inside a Hype.bet multiplayer room, and the
+          room&apos;s player list is on screen. On a normal evening there are 20 to 40 people in it.
+        </li>
+        <li>
+          <strong className="text-white">Kick and Twitch share one chat.</strong> Messages from both platforms show up in
+          the same chat box on stream, with a bot on each side answering commands.
+        </li>
+      </GuideList>
+      <GuideP>
+        The moments people remember are the shared ones: a $13,500 max win on Zeus vs Hades that the slot wheel picked,
+        and a 15.5k win on Wanted Dead or a Wild, both with the room&apos;s balances jumping live. The evenings people
+        don&apos;t clip are the ones where the hunt pays back a quarter of what it cost. Those happen too.
+      </GuideP>
 
       <GuideH2>Can you gamble on Twitch?</GuideH2>
       <GuideP>
@@ -235,6 +277,38 @@ export default function CanYouGambleOnTwitch() {
         one big shared chat on screen that shows messages from both, so viewers on Kick and Twitch can actually talk to
         each other. It makes the stream feel like one room instead of two.
       </GuideP>
+
+      <GuideH2>What we&apos;d tell anyone starting a gambling stream</GuideH2>
+      <GuideP>If we started again tomorrow, this is what we&apos;d do differently, or exactly the same:</GuideP>
+      <GuideList>
+        <li>
+          <strong className="text-white">Make Kick your main platform.</strong> The rules for gambling are clear, and the
+          subscription split matters a lot more when you&apos;re small.
+        </li>
+        <li>
+          <strong className="text-white">Don&apos;t build a slot channel on YouTube live.</strong> Use it for clips if you
+          want, but expect takedowns on live slot streams while the channel is small.
+        </li>
+        <li>
+          <strong className="text-white">Multistream, but merge the chats.</strong> Two separate chats split a small
+          community in half.
+        </li>
+        <li>
+          <strong className="text-white">Disclose your links.</strong> Kick requires it, and viewers trust you more when
+          you&apos;re upfront about how you earn money.
+        </li>
+        <li>
+          <strong className="text-white">Give viewers something to do.</strong> Slot calls, a room they can join, a monthly{' '}
+          <Link href="/leaderboard" className={LINK}>
+            leaderboard
+          </Link>
+          , small daily games. People stay for being part of it, not for watching someone else&apos;s balance.
+        </li>
+        <li>
+          <strong className="text-white">Set a budget for every stream.</strong> Losing streams are part of it. Decide what
+          a stream can cost before you go live, not halfway through a bad hunt.
+        </li>
+      </GuideList>
 
       <GuideH2>Questions about gambling streams</GuideH2>
       <JsonLd
