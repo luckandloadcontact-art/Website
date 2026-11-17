@@ -78,8 +78,8 @@ export default function IsHypeBetLegit() {
       <GuideP>
         Yes, Hype.bet is a legit online casino. It&apos;s licensed in Curaçao, it runs games from the big, well-known
         studios, and it pays out. We&apos;ve streamed and played there for more than a year, and neither we nor the
-        players under our code have run into any significant problems. It does have some angry reviews online, though,
-        so here&apos;s what they&apos;re about and how to avoid the same issues.
+        players under our code have run into any significant problems. It does have some angry reviews online, and
+        below is what they&apos;re about and how to avoid the same problems.
       </GuideP>
 
       <GuideH2>Our experience after a year on Hype.bet</GuideH2>
@@ -93,10 +93,8 @@ export default function IsHypeBetLegit() {
         ))}
       </dl>
       <GuideP>
-        We stream on Hype.bet almost every week, and players join our multiplayer room on every stream. Our own
-        withdrawals in Bitcoin and Ethereum usually arrive in under 20 minutes, and players under our code tell us the
-        same. On top of our monthly leaderboard, the wheel we spin in our room has paid out more than $10,000 to our
-        players.
+        We stream on Hype.bet almost every week, and players join our multiplayer room on every stream. We withdraw in
+        Bitcoin and Ethereum, and players under our code report the same withdrawal times as we get.
       </GuideP>
 
       <GuideH2>Who runs Hype.bet?</GuideH2>
@@ -125,7 +123,7 @@ export default function IsHypeBetLegit() {
         of a game it runs. Hype.bet shows the RTP right under every game, and the slots we play most run on their top
         versions.{' '}
         <Link href="/guides/does-rtp-matter" className={LINK}>
-          Here&apos;s why that matters
+          Why that matters
         </Link>
         . Losing streaks happen on every casino, and they&apos;re behind most &quot;rigged&quot; reviews you&apos;ll
         find.
@@ -167,7 +165,7 @@ export default function IsHypeBetLegit() {
       </GuideInlineCta>
 
       <GuideH2>How to avoid problems with withdrawals</GuideH2>
-      <GuideP>Most complaints come down to a few things you can sort out before they become a problem:</GuideP>
+      <GuideP>Most complaints come down to a few things you can sort out in advance:</GuideP>
       <GuideList>
         <li>
           <strong className="text-white">Verify your account early.</strong> Like most casinos, Hype.bet can ask for ID
@@ -228,8 +226,8 @@ export default function IsHypeBetLegit() {
       <GuideH2>Our verdict: is Hype.bet safe?</GuideH2>
       <GuideP>
         Hype.bet is a real, licensed casino with games from trusted studios, and after more than a year there, we
-        haven&apos;t had any significant problems. It&apos;s a Curaçao casino, not an EU-regulated one, so verify your
-        account early and play within the terms. Do that, and it&apos;s as safe as any casino of its kind.
+        haven&apos;t had any significant problems. It&apos;s licensed in Curaçao, not in the EU, so verify your account
+        early and play within the terms.
       </GuideP>
       <GuideP>
         Whatever you decide, only play with money you can afford to lose. If gambling stops being fun,{' '}

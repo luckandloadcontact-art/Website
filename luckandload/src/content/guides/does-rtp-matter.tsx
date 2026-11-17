@@ -116,9 +116,8 @@ export default function DoesRtpMatter() {
   return (
     <>
       <GuideP>
-        Yes, and a lot more than most players think. The same slot can pay back 96% at one casino and 88% at another,
-        and you won&apos;t see the difference on the screen. Over a few hundred spins, that gap can cost you three times as
-        much.
+        Yes. The same slot can pay back 96% at one casino and 88% at another, and nothing on the screen tells you which
+        version you&apos;re playing. Over a few hundred spins, the lower version can cost you three times as much.
       </GuideP>
 
       <GuideH2>We didn&apos;t care about RTP. We should have.</GuideH2>
@@ -145,14 +144,12 @@ export default function DoesRtpMatter() {
 
       <GuideH2>The same slot, different RTP</GuideH2>
       <GuideP>
-        Here&apos;s what most players don&apos;t know: game providers make several versions of the same slot, each with
-        its own RTP. The casino picks which version it runs. The game looks and plays exactly the same, but the lower
-        versions pay back less.
+        Game providers make several versions of the same slot, each with its own RTP, and the casino picks which version
+        it runs. The game looks and plays exactly the same, but the lower versions pay back less.
       </GuideP>
       <GuideP>
-        Why would a casino pick a lower version? Because it earns more on every spin. Some markets also have rules that
-        limit which versions can be used. Here&apos;s what that looks like at two of the studios we play the most. The
-        figures come from{' '}
+        A casino picks a lower version because it earns more on every spin. Some markets also have rules that limit which
+        versions can be used. These are the versions at three of the studios we play the most. The figures come from{' '}
         <a href="https://slotcatalog.com/" target="_blank" rel="noopener noreferrer" className={SOURCE_LINK}>
           SlotCatalog
         </a>
@@ -191,7 +188,7 @@ export default function DoesRtpMatter() {
         caption="RTP versions from SlotCatalog. These are long-run averages, and any single session can go much better or worse."
       />
       <GuideP>
-        Same game, same bets, same spins. On the lowest version you lose more than three times as much on average. If
+        Only the RTP version changes, and on the lowest one you lose more than three times as much on average. If
         you&apos;re clearing a bonus, the gap grows with every dollar you have to wager.
       </GuideP>
 
@@ -207,14 +204,11 @@ export default function DoesRtpMatter() {
         the cost is hidden in every spin.
       </GuideP>
       <GuideP>
-        Here&apos;s a rough example. On the 88.42% version of Wanted, you lose about $11.58 per $100 bet on average. Get
-        20% of that back as lossback and you&apos;re still down about $9.26. On the 96.38% version, you lose about $3.62
-        with no lossback at all. A big reward can&apos;t make up for a much worse game.
+        A rough example: on the 88.42% version of Wanted, you lose about $11.58 per $100 bet on average. Get 20% of that
+        back as lossback and you&apos;re still down about $9.26. On the 96.38% version, you lose about $3.62 with no
+        lossback at all. A big reward can&apos;t make up for a much worse game.
       </GuideP>
-      <GuideP>
-        That doesn&apos;t mean every casino with good rewards runs low RTP. It means you should check, rather than
-        assume.
-      </GuideP>
+      <GuideP>Not every casino with good rewards runs low RTP, but it&apos;s worth checking.</GuideP>
 
       <GuideH2>How to check the RTP</GuideH2>
       <GuideH3>On Hype.bet</GuideH3>
@@ -294,9 +288,9 @@ export default function DoesRtpMatter() {
         ))}
       </GuideDetailsGroup>
 
-      <GuideH2>The short version</GuideH2>
+      <GuideH2>Our take</GuideH2>
       <GuideP>
-        RTP doesn&apos;t decide whether you win today, but it decides how much you lose over time. Treat it like odds:
+        RTP doesn&apos;t decide whether you win today, but it decides how much you lose over time. Treat it like odds and
         pick the casino that gives you the best ones. Rewards are a nice extra, but the RTP comes first.
       </GuideP>
       <GuideP>

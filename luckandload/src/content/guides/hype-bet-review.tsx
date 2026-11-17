@@ -63,10 +63,9 @@ export default function HypeBetReview() {
   return (
     <>
       <GuideP>
-        We&apos;ve streamed on Hype.bet for more than a year, almost every week, so this Hype.bet review comes from a lot
-        of hours on the site. The short version: it&apos;s the best casino we&apos;ve found for playing slots together
-        with other people, the games run on the highest RTP versions, and the rewards are generous. It&apos;s not
-        perfect, and we&apos;ll get to the downsides too.
+        We&apos;ve streamed on Hype.bet almost every week for more than a year, and this Hype.bet review is based on
+        those hours. For playing slots with other people, it&apos;s the best casino we&apos;ve found. The games run on
+        the highest RTP versions and the rewards are generous. It isn&apos;t perfect, and the downsides are further down.
       </GuideP>
 
       <div className="mb-5 max-w-3xl overflow-x-auto">
@@ -84,20 +83,17 @@ export default function HypeBetReview() {
 
       <GuideH2>Multiplayer rooms: why we picked Hype.bet</GuideH2>
       <GuideP>
-        This is what sets Hype.bet apart. A host opens a room and plays the slots, and anyone can join by adding money
-        to a shared pool. Every win and loss is split by each player&apos;s share of the pool, and you can join or leave
-        between spins.
+        A host opens a room and plays the slots, and anyone can join by adding money to a shared pool. Every win and
+        loss is split by each player&apos;s share of the pool, and you can join or leave between spins.
       </GuideP>
       <GuideP>
-        The multiplayer room is the reason we started streaming so much. It turns a stream into something completely
-        different: you&apos;re not just watching the streamer&apos;s session, you&apos;re part of it, whether it goes well
-        or badly. We haven&apos;t seen anything like it on other casinos. At least once a month we also spin a wheel
-        with a $2,500 top prize for the players in our room, and the wheels have paid out more than $10,000 so far.
+        The room is the reason we started streaming so much. Viewers are part of our session instead of watching it,
+        when it goes well and when it doesn&apos;t. We haven&apos;t found anything like it on other casinos.
         {multiplayerHref && (
           <>
             {' '}
             <Link href={multiplayerHref} className={LINK}>
-              Here&apos;s how multiplayer rooms work, step by step
+              How multiplayer rooms work, step by step
             </Link>
             .
           </>
@@ -116,7 +112,7 @@ export default function HypeBetReview() {
         several versions, and the casino picks which one to run. Hype.bet runs the highest versions available, which on
         a slot like Wanted Dead or a Wild means 96.38% instead of as low as 88.42%.{' '}
         <Link href="/guides/does-rtp-matter" className={LINK}>
-          Here&apos;s what that difference costs you
+          What that difference costs you
         </Link>
         .
       </GuideP>
@@ -173,9 +169,9 @@ export default function HypeBetReview() {
       </GuideP>
       <GuideP>
         Whatever the wheel lands on is split between the players who have wagered in the room, based on how much each of
-        them wagered. The more you&apos;ve wagered, the bigger your share. We don&apos;t take a cut. The prizes vary, and
-        we&apos;ve hit the $2,500 top prize more than three times. In our first year, the wheels have paid out more than
-        $10,000 to our players. Here&apos;s one of those top prizes:
+        them wagered. We don&apos;t take a cut. The prizes vary, and we&apos;ve hit the $2,500 top prize more than three
+        times. In our first year, the wheels paid out more than $10,000 to our players. This clip is one of the top
+        prizes:
       </GuideP>
       <figure className="mb-6 max-w-3xl">
         <div className="aspect-video overflow-hidden rounded-xl border border-white/10 bg-black">
@@ -245,10 +241,9 @@ export default function HypeBetReview() {
 
       <GuideH2>Our verdict</GuideH2>
       <GuideP>
-        If you like slots and want to play them with other people, Hype.bet is the casino we&apos;d pick, and it&apos;s
-        the one we use every stream. The multiplayer rooms are genuinely new, the RTP is as high as it gets, and the
-        rewards add up if you play regularly. Just verify your account early and read the bonus terms before you
-        deposit.
+        If you like slots and want to play them with other people, Hype.bet is the casino we&apos;d pick. It&apos;s the
+        one we use every stream. The rooms are what make it different, the RTP is as high as it goes, and the rewards
+        add up if you play regularly. Verify your account early and read the bonus terms before you deposit.
       </GuideP>
       <GuideP>
         Set a budget before you play and stop when you reach it. If gambling stops being fun,{' '}

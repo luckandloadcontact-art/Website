@@ -25,14 +25,14 @@ export default function WageringRequirements() {
     <>
       <GuideP>
         A casino welcome bonus gives you more to play with, but the wagering requirements decide whether you can ever
-        withdraw what you win. Here&apos;s what they cost you, and what happened when I took a 300% bonus.
+        withdraw what you win. Below is what they cost you, and what happened when I took a 300% bonus.
       </GuideP>
 
       <GuideH2>The 14,000 kr win I couldn&apos;t withdraw</GuideH2>
       <GuideP>
         I signed up at a new casino and got a huge welcome bonus: 300%. I deposited just 200 kr (about $20) and had 800
-        kr to play with. The very first bonus, on Zeus vs Hades, paid almost 14,000 kr. I was ecstatic. There was just
-        one problem: I couldn&apos;t withdraw any of it. The bonus had 35x wagering, so I had to bet 21,000 kr first.
+        kr to play with. The very first bonus, on Zeus vs Hades, paid almost 14,000 kr. I was ecstatic, but I
+        couldn&apos;t withdraw any of it. The bonus had 35x wagering, so I had to bet 21,000 kr first.
       </GuideP>
       <figure className="mb-5 max-w-3xl">
         <ol className="grid gap-2 sm:grid-cols-5">
@@ -102,7 +102,7 @@ export default function WageringRequirements() {
         extra playing time rather than free money. At 10x, you&apos;d only need to bet $1,000, which costs about $40 on
         average. On a lowered RTP version of the same slot, the wagering costs you even more.{' '}
         <Link href="/guides/does-rtp-matter" className={LINK}>
-          Here&apos;s how RTP versions work
+          How RTP versions work
         </Link>
         .
       </GuideP>
@@ -131,8 +131,8 @@ export default function WageringRequirements() {
           className="w-full rounded-xl border border-white/10"
         />
         <figcaption className="mt-2 text-xs leading-5 text-slate-400">
-          A different Zeus vs Hades story: our $13,500 max win in our Hype.bet multiplayer room a few weeks ago, at a
-          $0.90 bet.
+          A different Zeus vs Hades story: our $13,500 max win in our Hype.bet multiplayer room in September, at a $0.90
+          bet.
         </figcaption>
       </figure>
 

@@ -79,10 +79,9 @@ export default function MultiplayerCasino() {
   return (
     <>
       <GuideP>
-        A multiplayer casino lets several people play the same slot session together, with real money. Instead of
-        watching someone else spin, you put money in, share the session and share the result. We host a multiplayer room
-        on Hype.bet almost every time we stream, and players have joined it more than 7,000 times, so this guide comes
-        from a lot of hours inside one.
+        A multiplayer casino lets several people play the same slot session together with real money. You add money to
+        the session and get your share of the result. We host a multiplayer room on Hype.bet almost every time we
+        stream, and players have joined it more than 7,000 times.
       </GuideP>
 
       {/* A slim stat strip between two hairlines: numbers to scan, without competing with the text. */}
@@ -99,7 +98,7 @@ export default function MultiplayerCasino() {
 
       <GuideH2>What is a multiplayer casino?</GuideH2>
       <GuideP>
-        &quot;Multiplayer casino&quot; is used for two quite different things. In a <strong className="text-white">multiplayer
+        &quot;Multiplayer casino&quot; can mean two different things. In a <strong className="text-white">multiplayer
         room</strong>, everyone&apos;s money goes into one shared pool and the results are split. In a{' '}
         <strong className="text-white">shared round</strong>, like a crash game, everyone is in the same game at the same
         time, but each player bets and wins on their own. Some casinos, Stake for example, group games like that in a
@@ -113,8 +112,7 @@ export default function MultiplayerCasino() {
         </figcaption>
       </figure>
       <GuideP>
-        The rest of this guide is about rooms, because that&apos;s where playing together really changes the game: one
-        big hit pays everyone in the room at once.
+        The rest of this guide is about rooms. In a room, one big hit pays everyone at once.
       </GuideP>
 
       <GuideH2>How a multiplayer room works</GuideH2>
@@ -150,7 +148,7 @@ export default function MultiplayerCasino() {
       <GuideH3>What happens to bonuses</GuideH3>
       <GuideP>
         A bonus is paid out to everyone the moment it&apos;s opened. If a room closes for a technical reason before a
-        bonus is opened, it isn&apos;t lost: it can be opened later and the money goes straight to each player&apos;s
+        bonus is opened, it isn&apos;t lost. It can be opened later, and the money goes straight to each player&apos;s
         wallet. A bonus that is never opened is paid out automatically after 24 hours.
       </GuideP>
 
@@ -164,7 +162,7 @@ export default function MultiplayerCasino() {
 
       <GuideH2>Playing slots with streamers</GuideH2>
       <GuideP>
-        This is how most people find rooms: through a streamer. On a normal stream we have 20 to 40 players in our room,
+        Most people find rooms through a streamer. On a normal stream we have 20 to 40 players in our room,
         and on special streams it has been close to 100. Most of our streams start with a{' '}
         <Link href="/guides/what-is-a-bonus-hunt" className={LINK}>
           bonus hunt
@@ -175,14 +173,14 @@ export default function MultiplayerCasino() {
             {' '}
             We stream on both Kick and Twitch;{' '}
             <Link href={streamerHref} className={LINK}>
-              here&apos;s how gambling streams work on each platform
+              how gambling streams work on each platform
             </Link>
             .
           </>
         )}
       </GuideP>
       <GuideP>
-        The best moments are the ones everyone shares. In September, a spin of our{' '}
+        In September, a spin of our{' '}
         <Link href="/slot-wheel" className={LINK}>
           slot wheel
         </Link>{' '}
@@ -230,15 +228,13 @@ export default function MultiplayerCasino() {
 
       <GuideH2>The downside of playing together</GuideH2>
       <GuideP>
-        Multiplayer rooms aren&apos;t only positive. When a session goes badly, you&apos;re not just losing your own
-        money, you&apos;re watching other people&apos;s money go too, and that feels a lot worse. We&apos;ve felt that
-        ourselves as hosts, more than once.
+        Rooms have a downside. When a session goes badly, it&apos;s other people&apos;s money going too, and that feels a
+        lot worse than losing your own. We&apos;ve felt that as hosts, more than once.
       </GuideP>
       <GuideP>
         It&apos;s the reason we play with lower volatility in the room than we would on our own. A calmer session usually
-        keeps the balance alive for longer, so the people who join get more play for their money instead of one big
-        all-or-nothing swing. If you host a room for your friends, think about the same thing: how would it feel if the
-        pool was gone after ten minutes?
+        keeps the balance alive for longer, so the people who join get more play for their money. If you host a room for
+        your friends, think about how it would feel if the pool was gone after ten minutes.
       </GuideP>
 
       <GuideH2>Things to know before you join</GuideH2>
@@ -260,8 +256,8 @@ export default function MultiplayerCasino() {
       <GuideH2>Free multiplayer casino games and Steam games</GuideH2>
       <GuideP>
         Searching for multiplayer casino games also turns up video games, like Gamble With Your Friends on Steam, and
-        social casinos where you play with free coins. Those are played for fun, not real money. Everything in this guide
-        is about real-money rooms, where the wins and losses are real.
+        social casinos where you play with free coins. Those are played for fun, not real money. This guide is about
+        real-money rooms.
       </GuideP>
 
       <GuideH2>Questions about multiplayer casinos</GuideH2>
@@ -285,7 +281,7 @@ export default function MultiplayerCasino() {
       </GuideDetailsGroup>
 
       <GuideP>
-        Gambling should be fun, in a room or on your own. If it stops being fun,{' '}
+        Set a budget before you join a room. If gambling stops being fun,{' '}
         <Link href="/responsible-gambling" className={LINK}>
           there&apos;s free help available
         </Link>

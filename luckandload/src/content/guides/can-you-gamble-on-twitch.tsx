@@ -92,8 +92,8 @@ export default function CanYouGambleOnTwitch() {
       <GuideP>
         We went live for the first time in September 2025, tried YouTube first, and now stream slots on Kick and Twitch
         at the same time, most evenings from 18:00 Norwegian time. A year in, we left our regular jobs to do it full-time.
-        So this isn&apos;t a summary of the rules from the outside: it&apos;s how the three platforms actually work for a
-        small casino channel, with the rules checked against each platform&apos;s own guidelines.
+        Below is how the three platforms work for a small casino channel, with the rules checked against each
+        platform&apos;s own guidelines.
       </GuideP>
 
       <div className="mb-6 max-w-3xl overflow-x-auto">
@@ -121,8 +121,7 @@ export default function CanYouGambleOnTwitch() {
 
       <GuideH2>What a gambling stream looks like from our side</GuideH2>
       <GuideP>
-        Most people picture a streamer clicking spin for hours. A good gambling stream is closer to a show the chat helps
-        run. This is what a normal evening looks like for us:
+        A lot of our stream is run by the chat. This is a normal evening for us:
       </GuideP>
       <GuideList>
         <li>
@@ -152,9 +151,9 @@ export default function CanYouGambleOnTwitch() {
         </li>
       </GuideList>
       <GuideP>
-        The moments people remember are the shared ones: a $13,500 max win on Zeus vs Hades that the slot wheel picked,
-        and a 15.5k win on Wanted Dead or a Wild, both with the room&apos;s balances jumping live. The evenings people
-        don&apos;t clip are the ones where the hunt pays back a quarter of what it cost. Those happen too.
+        Our biggest moments so far are a $13,500 max win on Zeus vs Hades that the slot wheel picked, and a 15.5k win on
+        Wanted Dead or a Wild, both with the room&apos;s balances jumping live. Then there are the evenings where the hunt
+        pays back a quarter of what it cost. Nobody clips those, but they happen too.
       </GuideP>
 
       <GuideH2>Can you gamble on Twitch?</GuideH2>
@@ -181,7 +180,7 @@ export default function CanYouGambleOnTwitch() {
       <GuideH3>Can you gamble channel points on Twitch?</GuideH3>
       <GuideP>
         Not for real money. Twitch predictions let viewers bet channel points on what happens in a stream, like whether a
-        bonus pays more than 100x. Channel points can&apos;t be bought or cashed out, so it&apos;s a game, not gambling.
+        bonus pays more than 100x. Channel points can&apos;t be bought or cashed out, so it isn&apos;t real-money gambling.
       </GuideP>
 
       <GuideH2>Gambling on Kick</GuideH2>
@@ -208,8 +207,8 @@ export default function CanYouGambleOnTwitch() {
         We&apos;re a little bigger on Kick than on Twitch, though it changes from day to day. We haven&apos;t had problems
         on either platform, but you do feel safer on Kick, where gambling is clearly part of what the platform is for.
         The subscription split is the other big difference. Kick advertises a 95/5 split in the streamer&apos;s favour,
-        while Twitch&apos;s standard split is 50/50. For a smaller channel, that&apos;s an enormous difference. Here&apos;s
-        what it means in money:
+        while Twitch&apos;s standard split is 50/50. For a small channel the difference is huge. In money, it looks like
+        this:
       </GuideP>
       <SubSplit />
 
@@ -233,11 +232,10 @@ export default function CanYouGambleOnTwitch() {
       <GuideH2>What gambling sites do streamers use?</GuideH2>
       <GuideP>
         Most casino streamers play on crypto casinos that allow streaming and run affiliate programmes. Which one a
-        streamer picks usually comes down to their deal with the casino and the features it offers. We use Hype.bet,
-        and the reason is the multiplayer rooms: our viewers can join our session with their own money and share the
-        result, instead of just watching.{' '}
+        streamer picks usually comes down to their deal with the casino and the features it offers. We use Hype.bet
+        because of the multiplayer rooms. Our viewers can join our session with their own money and share the result.{' '}
         <Link href="/guides/multiplayer-casino" className={LINK}>
-          Here&apos;s how multiplayer rooms work
+          How multiplayer rooms work
         </Link>
         . We earn commission when people sign up through our link, and we say so wherever we link to it.
       </GuideP>
@@ -285,10 +283,9 @@ export default function CanYouGambleOnTwitch() {
         still do.
       </GuideP>
       <GuideP>
-        The catch is that it can split your community in two: Kick viewers talking in one chat, Twitch viewers in
-        another, and neither side seeing the whole conversation. What worked for us is one big shared chat on screen
-        that shows messages from both, so viewers on Kick and Twitch can actually talk to each other. It makes the stream
-        feel like one room instead of two.
+        It can also split your community in two, with Kick viewers in one chat, Twitch viewers in another, and neither
+        side seeing the whole conversation. What worked for us is one big shared chat on screen that shows messages from
+        both, so viewers on Kick and Twitch can talk to each other.
       </GuideP>
       <GuideP>
         In the long run, you can consider going all in on one platform once you know where your viewers are. If you do,
@@ -296,16 +293,10 @@ export default function CanYouGambleOnTwitch() {
       </GuideP>
 
       <GuideH2>What we&apos;d tell anyone starting a gambling stream</GuideH2>
-      <GuideP>If we started again tomorrow, this is what we&apos;d do differently, or exactly the same:</GuideP>
       <GuideList>
         <li>
-          <strong className="text-white">Multistream from day one.</strong> Kick and Twitch together make it much easier
-          to build your first followers. Merge the chats, so a small community isn&apos;t split in half.
-        </li>
-        <li>
-          <strong className="text-white">Pick a main platform later.</strong> Once you know where your viewers are, you
-          can consider dedicating yourself to one. For gambling, Kick&apos;s rules and subscription split make it the
-          obvious one to look at.
+          <strong className="text-white">Multistream first, pick a main platform later.</strong> Kick and Twitch
+          together make it easier to build your first followers. Merge the chats.
         </li>
         <li>
           <strong className="text-white">Don&apos;t build a slot channel on YouTube live.</strong> Use it for clips if you
@@ -320,7 +311,7 @@ export default function CanYouGambleOnTwitch() {
           <Link href="/leaderboard" className={LINK}>
             leaderboard
           </Link>
-          , small daily games. People stay for being part of it, not for watching someone else&apos;s balance.
+          , small daily games. People stay when they&apos;re part of it.
         </li>
         <li>
           <strong className="text-white">Set a budget for every stream.</strong> Losing streams are part of it. Decide what

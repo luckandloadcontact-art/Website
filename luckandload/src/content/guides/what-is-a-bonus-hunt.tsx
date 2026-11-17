@@ -66,8 +66,8 @@ export default function WhatIsABonusHunt() {
     <>
       <GuideP>
         A bonus hunt is when you collect bonus rounds on a bunch of different slots, leave them all unopened, and then
-        open them one after another at the end. The goal is simple: win back more than the hunt cost you. We run one on
-        almost every stream, so here&apos;s how it works, and what we&apos;ve learned from doing a lot of them.
+        open them one after another at the end. The goal is to win back more than the hunt cost you. We run one on
+        almost every stream, and this is how it works and what we&apos;ve learned from running a lot of them.
       </GuideP>
 
       <GuideH2>How a bonus hunt works</GuideH2>
@@ -92,11 +92,7 @@ export default function WhatIsABonusHunt() {
         <li>
           <strong className="text-white">You collect bonuses.</strong> You spin or buy your way into the bonus round on
           one slot, then leave the bonus unopened and move on to the next game. Slots save the bonus, so it&apos;s
-          waiting for you when you come back. Can&apos;t decide which slot to collect next? Our{' '}
-          <Link href="/slot-wheel" className={LINK}>
-            random slot picker
-          </Link>{' '}
-          can choose for you.
+          waiting for you when you come back.
         </li>
         <li>
           <strong className="text-white">You open them all.</strong> Once the list is full or the balance runs low, you
@@ -130,7 +126,7 @@ export default function WhatIsABonusHunt() {
       <GuideP>
         The hunt cost $700, and the bet sizes add up to $20. $700 divided by $20 is 35, so each bonus has to pay 35 times
         its bet size on average just to get back to $1,000. One 300x hit can carry a whole hunt, and a row of 10x bonuses
-        can sink it. Here&apos;s what that looks like during an opening:
+        can sink it. This is what that looks like during an opening:
       </GuideP>
       <HuntOpening />
 
@@ -182,12 +178,11 @@ export default function WhatIsABonusHunt() {
       <GuideP>
         Most of our hunts are built on Hacksaw Gaming, Nolimit City, Pragmatic Play, Just Slots and BGaming. Their
         bonuses trigger often enough to collect a full list, and they can pay big. Older slots from Relax Gaming and Push
-        Gaming can be harder work and usually aren&apos;t the best picks for a hunt. To fill a list without overthinking
-        it, let our{' '}
+        Gaming can be harder work and usually aren&apos;t the best picks for a hunt. When we can&apos;t decide, our{' '}
         <Link href="/slot-wheel" className={LINK}>
-          slot wheel
+          random slot picker
         </Link>{' '}
-        pick the next game, and filter it by provider.
+        picks the next game, and you can filter it by provider.
       </GuideP>
 
       <GuideH2>Open the wildest bonuses last</GuideH2>
