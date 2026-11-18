@@ -75,7 +75,7 @@ export function GuideInlineCta({
           {secondary.label}
         </Link>
       </div>
-      <p className="mt-3 text-xs text-slate-500">18+. Affiliate link: we earn commission if you sign up and play through it.</p>
+      <p className="mt-3 text-xs text-slate-500">18+. Affiliate link. We may earn a commission at no extra cost to you.</p>
     </aside>
   )
 }
@@ -107,7 +107,7 @@ export function GuideCta({ lead }: { lead?: string }) {
         </a>
       </div>
       <GamblingNotice className="mt-5" />
-      <p className="mt-1 text-xs text-slate-500">Affiliate link: we earn commission if you sign up and play through it.</p>
+      <p className="mt-1 text-xs text-slate-500">Affiliate link. We may earn a commission at no extra cost to you.</p>
     </aside>
   )
 }

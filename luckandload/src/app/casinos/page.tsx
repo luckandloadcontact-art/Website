@@ -131,7 +131,7 @@ export default function CasinosPage() {
             parts in every review.
           </p>
           <p className="mb-5 leading-7 text-slate-200">
-            We earn a commission when you sign up and play through our links. It doesn&apos;t change what you pay, and it
+            Some links are affiliate links. We may earn a commission at no extra cost to you, and it
             doesn&apos;t decide what we write. Check that online gambling is legal where you live before you sign up.
           </p>
           <GamblingNotice />

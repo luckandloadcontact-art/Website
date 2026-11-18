@@ -47,8 +47,8 @@ export function Footer() {
           <div className="max-w-xl space-y-1 text-center">
             <p className="text-xs font-semibold text-slate-400">18+ · Gamble responsibly</p>
             <p className="text-xs leading-relaxed text-slate-500">
-              Gambling can be addictive. Only play with money you can afford to lose. This site contains affiliate
-              links, and we earn commission when you sign up and play through them.
+              Gambling can be addictive. Only play with money you can afford to lose. Some links are affiliate links. We
+              may earn a commission at no extra cost to you.
             </p>
           </div>
 

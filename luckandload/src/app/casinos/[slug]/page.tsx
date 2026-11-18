@@ -160,7 +160,7 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
             </div>
           </div>
           <p className="mt-5 text-xs text-slate-500">
-            18+ · T&amp;Cs apply · Affiliate link: we earn commission if you sign up and play through it.
+            18+ · T&amp;Cs apply · Affiliate link. We may earn a commission at no extra cost to you.
           </p>
           <GamblingNotice className="mt-1" />
         </aside>
