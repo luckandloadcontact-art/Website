@@ -1,0 +1,32 @@
+name: Submit URLs to IndexNow
+
+# Melder alle URL-ene i sitemapen til IndexNow (Bing, Yandex, Seznam m.fl.) etter hver vellykket
+# produksjonsdeploy på Vercel, og hver natt kl. 00:30 norsk vintertid, så guider som publiseres ved
+# midnatt (uten ny deploy) også blir meldt. Nøkkelen er offentlig med vilje: IndexNow sjekker at
+# filen luckandload/public/<nøkkel>.txt ligger på nettsiden.
+on:
+  deployment_status:
+  schedule:
+    - cron: '30 23 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  submit:
+    if: github.event_name != 'deployment_status' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    env:
+      KEY: 382e9b27c24a49fcb9360e3ae508f056
+      SITE: https://luckandloadtv.com
+    steps:
+      - name: Submit sitemap URLs
+        run: |
+          # Gir Vercel litt tid til å peke domenet på den nye deployen.
+          if [ "${{ github.event_name }}" = "deployment_status" ]; then sleep 30; fi
+          urls=$(curl -s "$SITE/sitemap.xml" | grep -o '<loc>[^<]*</loc>' | sed -e 's#<loc>##' -e 's#</loc>##')
+          count=$(printf '%s\n' "$urls" | grep -c .)
+          if [ "$count" -eq 0 ]; then echo "Fant ingen URL-er i sitemapen"; exit 1; fi
+          body=$(printf '%s\n' "$urls" | jq -R . | jq -s --arg key "$KEY" --arg site "$SITE"             '{host: "luckandloadtv.com", key: $key, keyLocation: ($site + "/" + $key + ".txt"), urlList: .}')
+          status=$(curl -s -o response.txt -w "%{http_code}"             -H "Content-Type: application/json; charset=utf-8" -d "$body" https://api.indexnow.org/indexnow)
+          echo "IndexNow svarte HTTP $status for $count URL-er"
+          cat response.txt || true
+          [ "$status" = "200" ] || [ "$status" = "202" ]

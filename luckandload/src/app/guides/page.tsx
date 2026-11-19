@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { SITE_URL, formatGuideDate, getAuthor, publishedGuides, type Guide } from '@/lib/guides'
+import { JsonLd } from '@/components/guides/GuideContent'
 
 // Hourly, so guides scheduled for a later date appear on their publish day.
 export const revalidate = 3600
@@ -45,6 +46,20 @@ export default function GuidesPage() {
   return (
     <div className="min-h-screen px-4 py-16 sm:px-6">
       <div className="mx-auto max-w-6xl">
+        {/* The list of guides for search engines and AI tools, in the order they're shown. */}
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'LuckAndLoadTV guides',
+            itemListElement: [featured, ...rest].filter((guide): guide is Guide => Boolean(guide)).map((guide, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              url: `${SITE_URL}/guides/${guide.slug}`,
+              name: guide.title,
+            })),
+          }}
+        />
         <header className="mb-10 max-w-2xl">
           <h1 className="mb-2 text-3xl font-bold text-white sm:text-4xl">Guides</h1>
           <p className="text-slate-400">
