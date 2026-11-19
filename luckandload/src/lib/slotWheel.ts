@@ -140,6 +140,7 @@ export const WHEEL_GAMES: WheelGame[] = [
   { id: 'megajail', name: 'Mega Jail', provider: 'Shady Lady', image: '/wheel/megajail.webp' },
   { id: 'buriedbynight', name: 'Buried by Night', provider: 'Hacksaw Gaming', image: '/wheel/buriedbynight.webp' },
   { id: 'fireinthehole4', name: 'Fire in the Hole 4', provider: 'Nolimit City', image: '/wheel/fireinthehole4.webp' },
+  { id: 'gatesofolympus2500', name: 'Gates of Olympus 2500', provider: 'Pragmatic Play', image: '/wheel/gatesofolympus2500.png' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
