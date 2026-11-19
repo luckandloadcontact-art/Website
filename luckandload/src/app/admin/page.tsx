@@ -21,9 +21,10 @@ import type { LeaderboardSnapshot } from '@/lib/affilka'
 import type { GrowthData } from '@/lib/growth'
 import type { AdminSlotSuggestion } from '@/lib/slotSuggestions'
 import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
+import { ChatVsAdmin } from '@/components/admin/ChatVsAdmin'
 import toast from 'react-hot-toast'
 
-type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard' | 'growth' | 'suggestions'
+type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard' | 'growth' | 'suggestions' | 'chatvs'
 
 function formatUsd(amount: number) {
   return `$${Math.round(amount).toLocaleString('en-US')}`
@@ -338,6 +339,7 @@ function AdminPageInner() {
       label: `Suggestions${pendingSuggestions ? ` (${pendingSuggestions})` : ''}`,
       icon: <Lightbulb size={15} />,
     },
+    { key: 'chatvs', label: 'Chat vs L&L', icon: <Swords size={15} /> },
   ]
 
   const currentMonth = growth?.months[0]
@@ -969,6 +971,9 @@ function AdminPageInner() {
             </Card>
           </div>
         )}
+
+        {/* Chat vs LuckAndLoad (Half & Half Thursday) */}
+        {tab === 'chatvs' && <ChatVsAdmin />}
 
         {/* Slot Wheel suggestions */}
         {tab === 'suggestions' && !suggestions && (
