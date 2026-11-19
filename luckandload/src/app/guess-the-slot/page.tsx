@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession, signIn } from 'next-auth/react'
-import { ChevronLeft, ChevronRight, Search, Sparkles } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Search, Share2, Sparkles } from 'lucide-react'
 import { WHEEL_GAMES } from '@/lib/slotWheel'
 import { formatDate } from '@/lib/utils'
 
@@ -10,6 +10,7 @@ interface PuzzleState {
   isToday: boolean
   canGoPrevious: boolean
   canGoNext: boolean
+  puzzleNumber: number
   imageUrl: string
   attemptsUsed: number
   maxAttempts: number
@@ -227,6 +228,7 @@ export default function GuessTheSlotPage() {
             {state.solved && state.isToday && state.pointsAwarded > 0 && (
               <p className="mt-1 text-xs font-semibold text-brand-400">+{state.pointsAwarded} loads</p>
             )}
+            <ShareButton text={shareText(state)} />
           </div>
         )}
 
@@ -298,6 +300,52 @@ export default function GuessTheSlotPage() {
         )}
       </div>
     </div>
+  )
+}
+
+// The result without the answer, so it can be posted anywhere without spoiling the puzzle:
+// "Guess the Slot #24 🎰 3/5", one square per guess, then the link.
+function shareText(state: PuzzleState): string {
+  const used = state.attemptsUsed
+  const squares = Array.from({ length: state.maxAttempts }, (_, i) =>
+    i >= used ? '⬛' : state.solved && i === used - 1 ? '🟩' : '🟥'
+  ).join('')
+  const score = state.solved ? `${used}/${state.maxAttempts}` : `X/${state.maxAttempts}`
+  return `Guess the Slot #${state.puzzleNumber} 🎰 ${score}\n${squares}\nluckandloadtv.com/guess-the-slot`
+}
+
+// Phones open the share sheet (Discord, Messages and so on); elsewhere the text is copied.
+function ShareButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false)
+
+  async function share() {
+    const isPhone = /Android|iPhone|iPad|Mobi/i.test(navigator.userAgent)
+    if (isPhone && navigator.share) {
+      try {
+        await navigator.share({ text })
+        return
+      } catch {
+        // Closed the share sheet, or sharing isn't allowed: copy instead.
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      window.prompt('Copy your result:', text)
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={share}
+      className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+    >
+      {copied ? <Check size={15} /> : <Share2 size={15} />}
+      {copied ? 'Copied, paste it anywhere' : 'Share result'}
+    </button>
   )
 }
 

@@ -74,6 +74,8 @@ export async function GET(req: NextRequest) {
     isToday: date === today,
     canGoPrevious: date > FIRST_PUZZLE_DATE,
     canGoNext: date < today,
+    // Shown in the share text, like "Guess the Slot #24". Puzzle #1 is FIRST_PUZZLE_DATE.
+    puzzleNumber: Math.round((Date.parse(date) - Date.parse(FIRST_PUZZLE_DATE)) / 86_400_000) + 1,
     // Peker til et endepunkt som selv regner ut og rendrer riktig utsnitt server-side -- vi
     // sender aldri den ekte bilde-stien (eller originalbildet) til klienten før spillet er
     // over, ellers kan "Lagre bilde"/Live Text på mobil avsløre svaret (se app/api/puzzle/image).

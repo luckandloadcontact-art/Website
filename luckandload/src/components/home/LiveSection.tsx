@@ -13,7 +13,7 @@ const KICK_CHANNEL = 'luckandloadtv'
 const DISCORD_URL = 'https://discord.gg/yagZVjqqbr'
 
 export function LiveSection({ streams, initialUpcoming = [] }: { streams: ScheduledStream[]; initialUpcoming?: StreamSlot[] }) {
-  const [platform, setPlatform] = useState<'twitch' | 'kick'>('twitch')
+  const [platform, setPlatform] = useState<'twitch' | 'kick'>('kick')
   // Twitch sin embed krever et parent-domene som matcher siden den vises på (feiler ellers med
   // "cannot be embedded"). Hentes fra window i stedet for å hardkodes, slik at embeden også
   // virker på Vercel sine preview-URL-er og lokalt under utvikling, ikke bare på luckandloadtv.com.
@@ -57,16 +57,6 @@ export function LiveSection({ streams, initialUpcoming = [] }: { streams: Schedu
           <div className="flex rounded-full border border-white/10 bg-surface-800 p-1 text-sm font-semibold">
             <button
               type="button"
-              onClick={() => setPlatform('twitch')}
-              className={cn(
-                'rounded-full px-4 py-1.5 transition-colors',
-                platform === 'twitch' ? 'bg-purple-500/20 text-purple-300' : 'text-slate-400 hover:text-white'
-              )}
-            >
-              Twitch
-            </button>
-            <button
-              type="button"
               onClick={() => setPlatform('kick')}
               className={cn(
                 'rounded-full px-4 py-1.5 transition-colors',
@@ -74,6 +64,16 @@ export function LiveSection({ streams, initialUpcoming = [] }: { streams: Schedu
               )}
             >
               Kick
+            </button>
+            <button
+              type="button"
+              onClick={() => setPlatform('twitch')}
+              className={cn(
+                'rounded-full px-4 py-1.5 transition-colors',
+                platform === 'twitch' ? 'bg-purple-500/20 text-purple-300' : 'text-slate-400 hover:text-white'
+              )}
+            >
+              Twitch
             </button>
           </div>
           )}
