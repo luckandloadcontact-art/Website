@@ -74,7 +74,7 @@ export function ChatVsWidget() {
             VS
           </span>
           <ScoreBox value={chat} leading={leader === 'chat'} tone="gold" />
-          <Portrait src="/overlay/chatvs-chat-v2.jpg" label="Chat" width={96} tone="gold" />
+          <Portrait src="/overlay/chatvs-chat-v3.jpg" label="Chat" width={96} tone="gold" />
         </div>
       </div>
 
