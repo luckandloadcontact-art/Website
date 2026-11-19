@@ -138,6 +138,8 @@ export const WHEEL_GAMES: WheelGame[] = [
   // Viewer suggestions approved in the admin panel (November 2026).
   { id: 'ratroyale', name: 'Rat Royale', provider: 'Pragmatic Play', image: '/wheel/ratroyale.png' },
   { id: 'megajail', name: 'Mega Jail', provider: 'Shady Lady', image: '/wheel/megajail.webp' },
+  { id: 'buriedbynight', name: 'Buried by Night', provider: 'Hacksaw Gaming', image: '/wheel/buriedbynight.webp' },
+  { id: 'fireinthehole4', name: 'Fire in the Hole 4', provider: 'Nolimit City', image: '/wheel/fireinthehole4.webp' },
 ]
 
 /** Alle spill spilles under vårt Hype.bet-partnerlink -- ingen per-spill dyplenke tilgjengelig. */
