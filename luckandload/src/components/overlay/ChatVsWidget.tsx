@@ -80,12 +80,13 @@ export function ChatVsWidget() {
 
       {/* Ribbon on top */}
       <div className="absolute left-1/2 top-0 -translate-x-1/2 rounded-md bg-gradient-to-b from-[#f1e2a4] to-[#a8852a] p-[1.5px] shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-        <div className="flex items-center gap-1.5 whitespace-nowrap rounded-[5px] bg-gradient-to-b from-[#127373] to-[#073a3f] px-3.5 py-[3px]">
-          <Crown size={11} className="text-[#e9cf6e]" />
-          <span className={`text-[12px] font-black uppercase italic tracking-[0.12em] ${GOLD_TEXT}`}>
+        <div className="flex items-center gap-1.5 whitespace-nowrap rounded-[5px] bg-gradient-to-b from-[#0e5a5c] to-[#03242a] px-4 py-[2px]">
+          <Crown size={13} strokeWidth={2.5} className="text-[#fbe7a1]" />
+          {/* Solid light gold with a dark outline, so it stays readable when the widget is small on stream. */}
+          <span className="text-[15px] font-black uppercase tracking-[0.08em] text-[#fbe7a1] [text-shadow:0_1px_0_#000,1px_0_0_#000,-1px_0_0_#000,0_-1px_0_#000,0_0_8px_rgba(0,0,0,0.9)]">
             Throwdown Thursday
           </span>
-          <Crown size={11} className="text-[#e9cf6e]" />
+          <Crown size={13} strokeWidth={2.5} className="text-[#fbe7a1]" />
         </div>
       </div>
     </ScaledFrame>
