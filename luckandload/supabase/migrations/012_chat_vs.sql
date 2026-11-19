@@ -2,7 +2,7 @@
 -- LuckAndLoadTV – Chat vs LuckAndLoad results
 -- ================================================
 
--- One row per Half & Half Thursday (Chat vs LuckAndLoad bonus hunt): who won. Admins and mods add
+-- One row per Throwdown Thursday (Chat vs LuckAndLoad bonus hunt): who won. Admins and mods add
 -- results in the admin panel, and the stream overlay /overlay/chat-vs shows the running score.
 create table if not exists public.chat_vs_results (
   id          uuid primary key default uuid_generate_v4(),

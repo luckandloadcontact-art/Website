@@ -1,4 +1,4 @@
-// Chat vs LuckAndLoad (Half & Half Thursday): the running score shown on stream and in admin.
+// Chat vs LuckAndLoad (Throwdown Thursday): the running score shown on stream and in admin.
 // Types and the score summary only, so client components can import it.
 
 export type ChatVsWinner = 'luckandload' | 'chat'

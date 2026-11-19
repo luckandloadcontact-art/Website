@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import { formatDate } from '@/lib/utils'
 import type { ChatVsScore, ChatVsWinner } from '@/lib/chatVs'
 
-// Admin tab for Half & Half Thursday: one click adds the winner, and the stream overlay
+// Admin tab for Throwdown Thursday: one click adds the winner, and the stream overlay
 // (/overlay/chat-vs) picks it up within 15 seconds.
 export function ChatVsAdmin() {
   const [score, setScore] = useState<ChatVsScore | null>(null)
@@ -79,7 +79,7 @@ export function ChatVsAdmin() {
           Chat vs LuckAndLoad
         </h2>
         <p className="pt-1 text-xs text-slate-500">
-          Half &amp; Half Thursday. Add the winner when the hunt is over, and the score on stream updates within 15
+          Throwdown Thursday. Add the winner when the hunt is over, and the score on stream updates within 15
           seconds. OBS browser source: <code>luckandloadtv.com/overlay/chat-vs</code>, 460×132.
         </p>
       </CardHeader>

@@ -972,7 +972,7 @@ function AdminPageInner() {
           </div>
         )}
 
-        {/* Chat vs LuckAndLoad (Half & Half Thursday) */}
+        {/* Chat vs LuckAndLoad (Throwdown Thursday) */}
         {tab === 'chatvs' && <ChatVsAdmin />}
 
         {/* Slot Wheel suggestions */}

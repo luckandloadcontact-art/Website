@@ -33,7 +33,7 @@ const TONES: Record<Tone, { border: string; label: string; crown: string; box: s
   },
 }
 
-// Running score for Half & Half Thursday (Chat vs LuckAndLoad), styled like a versus banner: the
+// Running score for Throwdown Thursday (Chat vs LuckAndLoad), styled like a versus banner: the
 // two of us on the left, "Chat" on the right (characters from the Chat vs LuckAndLoad thumbnail).
 // Results are added in the admin panel under "Chat vs L&L".
 export function ChatVsWidget() {
@@ -83,7 +83,7 @@ export function ChatVsWidget() {
         <div className="flex items-center gap-1.5 whitespace-nowrap rounded-[5px] bg-gradient-to-b from-[#127373] to-[#073a3f] px-3.5 py-[3px]">
           <Crown size={11} className="text-[#e9cf6e]" />
           <span className={`text-[12px] font-black uppercase italic tracking-[0.12em] ${GOLD_TEXT}`}>
-            Half &amp; Half Thursday
+            Throwdown Thursday
           </span>
           <Crown size={11} className="text-[#e9cf6e]" />
         </div>
