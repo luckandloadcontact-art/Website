@@ -8,7 +8,7 @@ import { NewsSection } from '@/components/home/NewsSection'
 import { createAdminClient } from '@/lib/supabase'
 import { JsonLd } from '@/components/guides/GuideContent'
 import { getDiscordStreams } from '@/lib/discordEvents'
-import { manualStreams } from '@/lib/stream'
+import { describeUpcomingOnServer, manualStreams } from '@/lib/stream'
 import type { Announcement } from '@/types'
 
 // Who we are, for search engines: links the site to our channels so Google can connect the brand.
@@ -91,16 +91,18 @@ export default async function HomePage() {
   const announcements = buildUpdates(updates)
   // Events from our Discord, or the manual list in lib/stream.ts if Discord isn't available.
   const streams = discordStreams ?? manualStreams()
+  // Worked out here too, so the schedule is in the HTML and not only after the browser has run.
+  const upcoming = describeUpcomingOnServer(streams)
 
   return (
     <div>
       <JsonLd data={ORGANIZATION_DATA} />
       <JsonLd data={WEBSITE_DATA} />
-      <Hero streams={streams} />
+      <Hero streams={streams} initialUpcoming={upcoming} />
       <HypeSection />
       <AboutSection />
       <CommunitySection />
-      <LiveSection streams={streams} />
+      <LiveSection streams={streams} initialUpcoming={upcoming} />
       <SlotWheel />
       <NewsSection />
       {announcements.length > 0 && <AnnouncementsSection announcements={announcements} />}

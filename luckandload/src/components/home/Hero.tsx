@@ -140,9 +140,9 @@ function ShortClip({ videoId, thumb, embeddable }: { videoId: string; thumb: str
 }
 
 // Pulses red only when we're actually live. Otherwise it shows when the next stream starts.
-function StreamBadge({ streams }: { streams: ScheduledStream[] }) {
+function StreamBadge({ streams, initial }: { streams: ScheduledStream[]; initial: StreamSlot | null }) {
   const status = useKickLive()
-  const [next, setNext] = useState<StreamSlot | null>(null)
+  const [next, setNext] = useState<StreamSlot | null>(initial)
   useEffect(() => {
     setNext(describeUpcoming(streams)[0] ?? null)
   }, [streams])
@@ -175,7 +175,7 @@ function StreamBadge({ streams }: { streams: ScheduledStream[] }) {
   )
 }
 
-export function Hero({ streams }: { streams: ScheduledStream[] }) {
+export function Hero({ streams, initialUpcoming = [] }: { streams: ScheduledStream[]; initialUpcoming?: StreamSlot[] }) {
   const { data: session } = useSession()
 
   return (
@@ -196,7 +196,7 @@ export function Hero({ streams }: { streams: ScheduledStream[] }) {
 
           {/* Hero content */}
           <div className="flex flex-col items-center text-center gap-6 flex-1 max-w-2xl">
-            <StreamBadge streams={streams} />
+            <StreamBadge streams={streams} initial={initialUpcoming[0] ?? null} />
 
             {/* Sized so each sentence stays on one line from tablet width up (two lines in total). */}
             <h1 className="text-4xl sm:text-[2.75rem] lg:text-[2.5rem] xl:text-5xl font-bold leading-tight tracking-tight text-white">

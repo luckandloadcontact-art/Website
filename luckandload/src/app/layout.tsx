@@ -5,6 +5,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { HypeClickTracker } from '@/components/layout/HypeClickTracker'
 import { HideOnOverlay } from '@/components/layout/HideOnOverlay'
+import Script from 'next/script'
 import { SITE_URL } from '@/lib/guides'
 
 export const metadata: Metadata = {
@@ -48,6 +49,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </HideOnOverlay>
         </Providers>
         <HypeClickTracker />
+        {/* Vercel Web Analytics: counts visits without cookies. Left out on /overlay pages, which OBS keeps
+            open all stream and would count as visits. Turned on under Analytics in the Vercel project. */}
+        <HideOnOverlay>
+          <Script id="vercel-analytics-queue" strategy="afterInteractive">
+            {`window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };`}
+          </Script>
+          <Script src="/_vercel/insights/script.js" strategy="afterInteractive" />
+        </HideOnOverlay>
       </body>
     </html>
   )

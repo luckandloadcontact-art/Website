@@ -15,7 +15,7 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       intro="What we collect when you use luckandloadtv.com, why we collect it, and what you can do about it."
-      updated="November 11, 2026"
+      updated="November 19, 2026"
     >
       <LegalSection title="Who is responsible">
         <p>
@@ -70,7 +70,8 @@ export default function PrivacyPage() {
       <LegalSection title="Cookies">
         <p>
           We use cookies to keep you signed in, for up to 30 days. They are needed for sign-in to work. We don&apos;t
-          use analytics or advertising cookies of our own.
+          use analytics or advertising cookies. We count visits with Vercel Web Analytics, which works without cookies
+          and doesn&apos;t identify individual visitors.
         </p>
       </LegalSection>
 

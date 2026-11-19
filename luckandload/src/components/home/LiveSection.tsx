@@ -12,7 +12,7 @@ const TWITCH_CHANNEL = 'luckandloadtv'
 const KICK_CHANNEL = 'luckandloadtv'
 const DISCORD_URL = 'https://discord.gg/yagZVjqqbr'
 
-export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
+export function LiveSection({ streams, initialUpcoming = [] }: { streams: ScheduledStream[]; initialUpcoming?: StreamSlot[] }) {
   const [platform, setPlatform] = useState<'twitch' | 'kick'>('twitch')
   // Twitch sin embed krever et parent-domene som matcher siden den vises på (feiler ellers med
   // "cannot be embedded"). Hentes fra window i stedet for å hardkodes, slik at embeden også
@@ -22,7 +22,7 @@ export function LiveSection({ streams }: { streams: ScheduledStream[] }) {
   // live stream is never hidden by a failed check.
   // Offline: next stream and clips instead of the player. Live: the player.
   const status = useKickLive()
-  const [upcoming, setUpcoming] = useState<StreamSlot[]>([])
+  const [upcoming, setUpcoming] = useState<StreamSlot[]>(initialUpcoming)
   const showPlayer = status === 'live' || status === 'unknown'
   const live = status === 'live'
   // While live, the scheduled stream that has started is "on now"; the rest are later this week.

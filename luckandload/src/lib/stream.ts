@@ -145,3 +145,11 @@ export function describeUpcoming(streams?: ScheduledStream[], now = new Date()):
     return { title: stream.title, day, time, zone: zoneLabel(stream.start), localTime: localTime === time ? null : localTime, daysAway: stream.daysAway }
   })
 }
+
+/**
+ * The same schedule worked out on the server, so it is in the HTML for visitors without JavaScript and
+ * for crawlers. Times are Norwegian; the visitor's own local time is added by the browser afterwards.
+ */
+export function describeUpcomingOnServer(streams?: ScheduledStream[], now = new Date()): StreamSlot[] {
+  return describeUpcoming(streams, now).map(slot => ({ ...slot, localTime: null }))
+}
