@@ -80,7 +80,7 @@ export function ChatVsAdmin() {
         </h2>
         <p className="pt-1 text-xs text-slate-500">
           Half &amp; Half Thursday. Add the winner when the hunt is over, and the score on stream updates within 15
-          seconds. OBS browser source: <code>luckandloadtv.com/overlay/chat-vs</code>, 260×300.
+          seconds. OBS browser source: <code>luckandloadtv.com/overlay/chat-vs</code>, 460×132.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
