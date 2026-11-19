@@ -68,7 +68,7 @@ export function ChatVsWidget() {
       {/* The bar, with a gold edge like the logo */}
       <div className="absolute inset-x-0 bottom-0 top-[14px] rounded-[20px] bg-gradient-to-b from-[#f1e2a4] via-[#c9a53c] to-[#7a5f17] p-[2px] shadow-[0_0_22px_rgba(45,212,212,0.25)]">
         <div className="flex h-full w-full items-center justify-between rounded-[18px] bg-gradient-to-b from-[#0b2a30] via-[#071a24] to-[#050e1c] px-2.5 pt-2">
-          <Portrait src="/overlay/chatvs-luckandload-v2.jpg" label="LuckAndLoad" width={130} tone="teal" />
+          <Portrait src="/overlay/chatvs-luckandload-v3.jpg" label="LuckAndLoad" width={130} tone="teal" />
           <ScoreBox value={us} leading={leader === 'luckandload'} tone="teal" />
           <span className={`text-[38px] font-black italic leading-none ${GOLD_TEXT} [filter:drop-shadow(0_2px_0_rgba(0,0,0,0.8))_drop-shadow(0_0_10px_rgba(45,212,212,0.45))]`}>
             VS
