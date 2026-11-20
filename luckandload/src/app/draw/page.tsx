@@ -33,7 +33,7 @@ const TERMS = [
   'Your first deposit must be your own money. Deposits funded by someone else to qualify for the draw don’t count.',
   'Accounts that Hype.bet has closed, restricted or flagged for bonus abuse can’t win.',
   `The ${PRIZE} prize is paid to the winner’s Hype.bet account. The winner has 7 days to claim it in our Discord or on Kick, or we draw again.`,
-  `Finder’s fee: if the winner was referred by another player, that player gets ${FINDERS_FEE} on top. When we contact the winner, they confirm who referred them. One referrer per new player, and no self-referrals.`,
+  `Finder’s fee: if the winner was referred by another player, that player gets ${FINDERS_FEE} on top. When we contact the winner, they confirm who referred them. You can refer as many friends as you like. No self-referrals.`,
   'Entries and referrals close at the monthly leaderboard cutoff at the end of the month.',
   'Winning the draw doesn’t stop you from winning on our monthly leaderboard.',
   'The LuckAndLoadTV team and our families can’t enter.',
@@ -149,7 +149,7 @@ export default function DrawPage() {
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-6 text-slate-400">
             <li>Your friend must be a new Hype.bet player who signs up through our link.</li>
             <li>When we contact the winner, they confirm that you referred them.</li>
-            <li>One referrer per new player. No self-referrals.</li>
+            <li>Invite as many friends as you like: the more you bring, the better your chances. No self-referrals.</li>
           </ul>
         </section>
 
