@@ -26,14 +26,14 @@ export const metadata: Metadata = {
 }
 
 const TERMS = [
-  'Open to new Hype.bet players only: you must create your first Hype.bet account through hype.bet/LuckAndLoad (or with code LuckAndLoad) and make your first ever deposit on Hype.bet in the same calendar month. Players who already had an account can’t enter, even if they move to our code.',
+  'Open to new Hype.bet players only: you must create your first Hype.bet account through our link, hype.bet/LuckAndLoad, and make your first ever deposit on Hype.bet in the same calendar month. Players who already had an account can’t enter, even if they move to our code.',
   'You must earn at least 100 XP in the month you sign up. That’s about $100 in bets on slots.',
   'You must be 18 or older, or the legal gambling age where you live if that’s higher. Online gambling must be legal where you live, and Hype.bet’s own terms and country restrictions apply.',
   'One entry per person, household, IP address and payment method. Several accounts mean all of them are left out.',
   'Your first deposit must be your own money. Deposits funded by someone else to qualify for the draw don’t count.',
   'Accounts that Hype.bet has closed, restricted or flagged for bonus abuse can’t win.',
   `The ${PRIZE} prize is paid to the winner’s Hype.bet account. The winner has 7 days to claim it in our Discord or on Kick, or we draw again.`,
-  `Finder’s fee: if the winner was referred by another player, that player gets ${FINDERS_FEE} on top. The winner must have posted both Hype.bet usernames in our Discord referral channel before the monthly cutoff. One referrer per new player, and no self-referrals.`,
+  `Finder’s fee: if the winner was referred by another player, that player gets ${FINDERS_FEE} on top. When we contact the winner, they confirm who referred them. One referrer per new player, and no self-referrals.`,
   'Entries and referrals close at the monthly leaderboard cutoff at the end of the month.',
   'Winning the draw doesn’t stop you from winning on our monthly leaderboard.',
   'The LuckAndLoadTV team and our families can’t enter.',
@@ -90,8 +90,16 @@ export default function DrawPage() {
               <a href={HYPE_PLAY_URL} target="_blank" rel="sponsored noopener noreferrer" className="font-semibold text-white underline underline-offset-2">
                 hype.bet/LuckAndLoad
               </a>{' '}
-              or with code <strong className="text-white">LuckAndLoad</strong> are entered. If you sign up any other way, we
-              can&apos;t see your account and you won&apos;t be in the draw. This can&apos;t be changed afterwards.
+              are entered. There&apos;s no code to type in at Hype.bet: the link is what connects your account to us. If you
+              sign up any other way, we can&apos;t see your account and you won&apos;t be in the draw.
+            </p>
+            <p className="mt-2 text-sm leading-6 text-slate-400">
+              Already signed up without the link? Message us in{' '}
+              <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className={LINK}>
+                our Discord
+              </a>{' '}
+              and we&apos;ll ask Hype.bet&apos;s affiliate team if your account can be added. That isn&apos;t guaranteed, so
+              use the link from the start.
             </p>
           </div>
         </div>
@@ -140,13 +148,7 @@ export default function DrawPage() {
           </p>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm leading-6 text-slate-400">
             <li>Your friend must be a new Hype.bet player who signs up through our link.</li>
-            <li>
-              They post both your Hype.bet username and their own in the referral channel in{' '}
-              <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className={LINK}>
-                our Discord
-              </a>{' '}
-              before the monthly cutoff.
-            </li>
+            <li>When we contact the winner, they confirm that you referred them.</li>
             <li>One referrer per new player. No self-referrals.</li>
           </ul>
         </section>

@@ -1,4 +1,5 @@
-import { Trophy, Shuffle, Clock, Gift, Zap, CalendarDays } from 'lucide-react'
+import Link from 'next/link'
+import { Trophy, Shuffle, Clock, Gift, Zap, CalendarDays, Ticket, ArrowRight } from 'lucide-react'
 import {
   getLeaderboardData,
   formatXP,
@@ -136,6 +137,23 @@ export default async function LeaderboardPage() {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10 space-y-4">
+
+        {/* The monthly draw for new players (see /draw). Players already here are the ones who can refer friends. */}
+        <Link
+          href="/draw"
+          className="group flex items-center gap-4 rounded-2xl border border-hype/40 bg-hype/5 p-4 transition-colors hover:bg-hype/10"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-hype/15 text-hype">
+            <Ticket size={18} />
+          </span>
+          <span className="flex-1">
+            <span className="block text-sm font-bold text-white">New: $100 monthly draw for new Hype.bet players</span>
+            <span className="block text-xs leading-5 text-slate-400">
+              Bring a friend who signs up through our link. If they win, you get $25 on top.
+            </span>
+          </span>
+          <ArrowRight size={16} className="shrink-0 text-hype transition-transform group-hover:translate-x-0.5" />
+        </Link>
 
         {!data && (
           <div className="rounded-2xl border border-white/8 bg-surface-800 p-6 text-center text-sm text-slate-400">
