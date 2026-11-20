@@ -3,6 +3,7 @@ import { AboutSection, CommunitySection, AnnouncementsSection, HypeSection, type
 import type { Metadata } from 'next'
 import { SITE_URL, publishedGuides } from '@/lib/guides'
 import { LiveSection } from '@/components/home/LiveSection'
+import { DrawPopup } from '@/components/home/DrawPopup'
 import { SlotWheel } from '@/components/home/SlotWheel'
 import { NewsSection } from '@/components/home/NewsSection'
 import { createAdminClient } from '@/lib/supabase'
@@ -105,6 +106,8 @@ export default async function HomePage() {
       <LiveSection streams={streams} initialUpcoming={upcoming} />
       <SlotWheel />
       <NewsSection />
+      {/* Bottom right card about the monthly 100 dollar draw for new players (see /draw). */}
+      <DrawPopup />
       {announcements.length > 0 && <AnnouncementsSection announcements={announcements} />}
     </div>
   )
