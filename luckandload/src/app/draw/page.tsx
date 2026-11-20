@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
-import { AlertTriangle, CalendarDays, ExternalLink, Ticket, Users } from 'lucide-react'
+import { AlertTriangle, CalendarDays, ExternalLink, Users } from 'lucide-react'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import { HYPE_PLAY_URL } from '@/lib/slotWheel'
 import { SITE_URL } from '@/lib/guides'
@@ -45,17 +46,23 @@ const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
 export default function DrawPage() {
   return (
-    <div className="min-h-screen px-4 py-16 sm:px-6">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_80%_40%_at_50%_0%,rgba(20,184,184,0.14),transparent_70%)] px-4 py-12 sm:px-6 sm:py-16">
       <div className="mx-auto max-w-4xl">
-        {/* Hero */}
+        {/* Hero: the draw graphic. The heading is for screen readers and search engines, since the image says it. */}
         <header className="mb-10">
-          <p className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-hype/30 bg-hype/10 px-3 py-1 text-xs font-bold uppercase tracking-wide text-hype">
-            <Ticket size={13} /> New Hype.bet players only
-          </p>
-          <h1 className="text-4xl font-black uppercase leading-none text-white sm:text-6xl">
-            Monthly <span className="text-brand-400">{PRIZE}</span> Draw
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+          <h1 className="sr-only">Monthly {PRIZE} Draw for new Hype.bet players</h1>
+          <div className="overflow-hidden rounded-2xl border border-white/10 shadow-2xl shadow-brand-500/10">
+            <Image
+              src="/draw/monthly-draw.jpg"
+              alt={`LuckAndLoad monthly ${PRIZE} draw, exclusive to new Hype.bet players. Refer a friend: ${FINDERS_FEE} finder's fee if your friend wins. Sign up at hype.bet/LuckAndLoad, then make your first deposit and earn 100 XP in your sign-up month.`}
+              width={1672}
+              height={941}
+              priority
+              sizes="(min-width: 896px) 896px, 100vw"
+              className="h-auto w-full"
+            />
+          </div>
+          <p className="mt-6 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
             Every month, one new Hype.bet player who joined under LuckAndLoad wins {PRIZE}. Sign up through our link, make
             your first deposit and earn 100 XP, and you&apos;re in. We draw the winner live on stream.
           </p>
