@@ -22,9 +22,10 @@ import type { GrowthData } from '@/lib/growth'
 import type { AdminSlotSuggestion } from '@/lib/slotSuggestions'
 import { PlayerAvatar } from '@/components/leaderboard/PlayerAvatar'
 import { ChatVsAdmin } from '@/components/admin/ChatVsAdmin'
+import { WordBanAdmin } from '@/components/admin/WordBanAdmin'
 import toast from 'react-hot-toast'
 
-type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard' | 'growth' | 'suggestions' | 'chatvs'
+type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard' | 'growth' | 'suggestions' | 'chatvs' | 'wordban'
 
 function formatUsd(amount: number) {
   return `$${Math.round(amount).toLocaleString('en-US')}`
@@ -340,6 +341,7 @@ function AdminPageInner() {
       icon: <Lightbulb size={15} />,
     },
     { key: 'chatvs', label: 'Chat vs L&L', icon: <Swords size={15} /> },
+    { key: 'wordban', label: 'Word ban', icon: <X size={15} /> },
   ]
 
   const currentMonth = growth?.months[0]
@@ -974,6 +976,7 @@ function AdminPageInner() {
 
         {/* Chat vs LuckAndLoad (Throwdown Thursday) */}
         {tab === 'chatvs' && <ChatVsAdmin />}
+        {tab === 'wordban' && <WordBanAdmin />}
 
         {/* Slot Wheel suggestions */}
         {tab === 'suggestions' && !suggestions && (
