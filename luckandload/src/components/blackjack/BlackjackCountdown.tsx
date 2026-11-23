@@ -15,7 +15,7 @@ function formatCountdown(ms: number): string {
 
 /** Live nedtelling til nye hender kl. 18:00 norsk tid -- samme tidspunkt for alle spillere,
  * uansett hvor de selv befinner seg. Tikker hvert sekund på klienten. */
-export function BlackjackCountdown() {
+export function BlackjackCountdown({ label = 'New hands in' }: { label?: string }) {
   const [now, setNow] = useState<Date | null>(null)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function BlackjackCountdown() {
     return () => clearInterval(id)
   }, [])
 
-  if (!now) return <>⏰ New hands in --:--:--</>
+  if (!now) return <>⏰ {label} --:--:--</>
 
-  return <>⏰ New hands in {formatCountdown(nextBlackjackResetUTC(now).getTime() - now.getTime())}</>
+  return <>⏰ {label} {formatCountdown(nextBlackjackResetUTC(now).getTime() - now.getTime())}</>
 }

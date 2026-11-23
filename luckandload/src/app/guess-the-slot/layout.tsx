@@ -18,7 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <section className="mx-auto max-w-3xl px-4 pb-16 sm:px-6">
         <GuideH2>How Guess the Slot works</GuideH2>
         <GuideP>
-          Every day there&apos;s a new zoomed-in screenshot from a slot. Your job is to name the game. It&apos;s free,
+          Every day at 18:00 Norwegian time there&apos;s a new zoomed-in screenshot from a slot, the same time as the new Daily Blackjack hands. Your job is to name the game. It&apos;s free,
           and you play for loads, our community points.
         </GuideP>
         <GuideList>

@@ -1,14 +1,20 @@
 import { WHEEL_GAMES, type WheelGame } from '@/lib/slotWheel'
 
-/** Dagens kalenderdato i Oslo (vanlig midnatt-til-midnatt, IKKE blackjackens 18:00-reset --
- *  det førte til at "i dag" viste gårsdagens dato store deler av dagen, som var forvirrende for
- *  et puslespill folk sjekker når som helst). Intl håndterer sommer-/vintertid automatisk. */
+/** A new puzzle comes out at 18:00 Norwegian time, the same time as the new Daily Blackjack hands
+ *  and when we usually go live. */
+export const PUZZLE_RESET_HOUR_OSLO = 18
+
+/** The current puzzle's key. The puzzle that starts at 18:00 is keyed by the NEXT day's date, so
+ *  the switch from a midnight reset (23 Nov 2026) didn't repeat or skip a puzzle, and the puzzle
+ *  number still goes up by one a day. The page shows the number, not this date. Intl handles
+ *  summer and winter time. */
 export function getPuzzleDay(now = new Date()): string {
   const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Oslo', year: 'numeric', month: '2-digit', day: '2-digit',
+    timeZone: 'Europe/Oslo', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hourCycle: 'h23',
   }).formatToParts(now)
-  const get = (type: string) => parts.find(p => p.type === type)?.value ?? '01'
-  return `${get('year')}-${get('month')}-${get('day')}`
+  const get = (type: string) => Number(parts.find(p => p.type === type)?.value ?? '1')
+  const nextDay = get('hour') >= PUZZLE_RESET_HOUR_OSLO ? 1 : 0
+  return new Date(Date.UTC(get('year'), get('month') - 1, get('day') + nextDay)).toISOString().split('T')[0]
 }
 
 /** Første dag puslespillet noensinne eksisterte -- ingenting å navigere til før dette. */

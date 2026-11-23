@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession, signIn } from 'next-auth/react'
 import { Check, ChevronLeft, ChevronRight, Search, Share2, Sparkles } from 'lucide-react'
 import { WHEEL_GAMES } from '@/lib/slotWheel'
-import { formatDate } from '@/lib/utils'
+import { BlackjackCountdown } from '@/components/blackjack/BlackjackCountdown'
 
 interface PuzzleState {
   date: string
@@ -149,6 +149,9 @@ export default function GuessTheSlotPage() {
           <p className="mt-2 text-sm text-slate-400 sm:text-base">
             Each wrong guess zooms the cover art out a little more.
           </p>
+          <p className="mt-3 text-xs font-semibold text-slate-500">
+            New puzzle every day at 18:00 Norwegian time · <BlackjackCountdown label="next in" />
+          </p>
         </div>
       </div>
 
@@ -164,7 +167,7 @@ export default function GuessTheSlotPage() {
             <ChevronLeft size={18} />
           </button>
           <div className="text-sm font-semibold text-white">
-            {formatDate(state.date)}
+            Puzzle #{state.puzzleNumber}
             {state.isToday && (
               <span className="ml-2 rounded-full bg-brand-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-brand-400">
                 Today
