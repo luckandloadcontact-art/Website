@@ -26,6 +26,8 @@ import { WordBanAdmin } from '@/components/admin/WordBanAdmin'
 import toast from 'react-hot-toast'
 
 type AdminTab = 'overview' | 'users' | 'announcements' | 'events' | 'leaderboard' | 'growth' | 'suggestions' | 'chatvs' | 'wordban'
+// The only tabs mods see.
+const MOD_TABS: AdminTab[] = ['events', 'chatvs', 'wordban']
 
 function formatUsd(amount: number) {
   return `$${Math.round(amount).toLocaleString('en-US')}`
@@ -67,6 +69,9 @@ function AdminPageInner() {
   const [reviewingId, setReviewingId] = useState<string | null>(null)
   // On every time the panel opens, so numbers are never shown on stream by accident.
   const [streamerMode, setStreamerMode] = useState(true)
+  // Mods only get the stream tools: events, Chat vs L&L and Word ban. Everything else is admin only
+  // (the APIs check this too).
+  const isAdmin = session?.user?.role === 'admin'
 
   // New announcement form
   const [newAnn, setNewAnn] = useState({ title: '', body: '', type: 'info', pinned: false })
@@ -111,7 +116,20 @@ function AdminPageInner() {
   }, [searchParams, router])
 
   const fetchData = useCallback(async () => {
+    if (status !== 'authenticated') return
     setLoading(true)
+    if (!isAdmin) {
+      // Mods: only the events bracket is loaded here; Chat vs and Word ban load their own data.
+      try {
+        const tourneyRes = await fetch('/api/admin/tournament')
+        if (tourneyRes.ok) setTournamentResults(await tourneyRes.json())
+      } catch {
+        toast.error('Failed to load data')
+      } finally {
+        setLoading(false)
+      }
+      return
+    }
     try {
       const [usersRes, annRes, tourneyRes, snapshotsRes, igRes, growthRes, suggestionsRes] = await Promise.all([
         fetch('/api/admin/users'),
@@ -134,9 +152,30 @@ function AdminPageInner() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [status, isAdmin])
 
   useEffect(() => { fetchData() }, [fetchData])
+
+  // A mod lands on a tab they can use.
+  useEffect(() => {
+    if (status === 'authenticated' && !isAdmin && !MOD_TABS.includes(tab)) setTab('chatvs')
+  }, [status, isAdmin, tab])
+
+  async function changeRole(user: User, role: User['role']) {
+    if (role === user.role) return
+    if (!confirm(`Make ${user.display_name || user.username} ${role === 'user' ? 'a regular user' : `a ${role}`}?`)) return
+    const res = await fetch('/api/admin/users', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: user.id, role }),
+    })
+    if (res.ok) {
+      toast.success('Role updated')
+      setUsers(list => list.map(u => (u.id === user.id ? { ...u, role } : u)))
+    } else {
+      toast.error((await res.json().catch(() => ({}))).error ?? 'Could not change the role')
+    }
+  }
 
   async function reviewSuggestion(id: string, status: 'approved' | 'declined') {
     setReviewingId(id)
@@ -357,7 +396,7 @@ function AdminPageInner() {
               <Shield size={20} className="text-brand-500" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
+              <h1 className="text-xl font-bold text-white">{isAdmin ? 'Admin Dashboard' : 'Mod Panel'}</h1>
               <p className="text-xs text-slate-500">Logged in as {session?.user?.displayName}</p>
             </div>
             <button
@@ -383,7 +422,7 @@ function AdminPageInner() {
 
           {/* Tab bar */}
           <div className="flex flex-wrap gap-1 p-1 rounded-xl bg-surface-800 border border-white/5 w-fit">
-            {TABS.map(t => (
+            {TABS.filter(t => isAdmin || MOD_TABS.includes(t.key)).map(t => (
               <button
                 key={t.key}
                 onClick={() => setTab(t.key)}
@@ -601,9 +640,30 @@ function AdminPageInner() {
                         </div>
                       </td>
                       <td className="px-5 py-3">
-                        <Badge variant={u.role === 'admin' ? 'danger' : u.role === 'mod' ? 'warning' : 'default'}>
-                          {u.role}
-                        </Badge>
+                        {/* Your own role can't be changed here, so the panel can't lock you out. */}
+                        {u.id === session?.user?.dbId ? (
+                          <Badge variant={u.role === 'admin' ? 'danger' : u.role === 'mod' ? 'warning' : 'default'}>
+                            {u.role}
+                          </Badge>
+                        ) : (
+                          <select
+                            value={u.role}
+                            onChange={e => changeRole(u, e.target.value as User['role'])}
+                            aria-label={`Role for ${u.display_name || u.username}`}
+                            className={cn(
+                              'rounded-lg border bg-surface-800 px-2 py-1 text-xs font-semibold focus:outline-none',
+                              u.role === 'admin'
+                                ? 'border-red-500/40 text-red-300'
+                                : u.role === 'mod'
+                                  ? 'border-amber-500/40 text-amber-300'
+                                  : 'border-white/10 text-slate-300'
+                            )}
+                          >
+                            <option value="user">user</option>
+                            <option value="mod">mod</option>
+                            <option value="admin">admin</option>
+                          </select>
+                        )}
                       </td>
                       <td data-sensitive className="px-5 py-3 text-right font-medium text-brand-400 text-xs">
                         {formatPoints(u.points)}

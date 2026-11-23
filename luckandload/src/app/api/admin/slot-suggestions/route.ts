@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 async function requireStaff() {
   const session = await getServerSession(authOptions)
   const role = session?.user?.role
-  if (!session || (role !== 'admin' && role !== 'mod')) return null
+  if (!session || (role !== 'admin')) return null
   return session
 }
 

@@ -6,7 +6,7 @@ import { saveInstagramToken } from '@/lib/socialFeed'
 
 async function requireAdmin() {
   const session = await getServerSession(authOptions)
-  if (!session || (session.user.role !== 'admin' && session.user.role !== 'mod')) return null
+  if (!session || (session.user.role !== 'admin')) return null
   return session
 }
 
