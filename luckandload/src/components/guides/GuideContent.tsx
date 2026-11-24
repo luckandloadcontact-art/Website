@@ -105,7 +105,7 @@ function HypeButton({ size = 'md' }: { size?: 'md' | 'lg' }) {
   )
 }
 
-function CtaFooter() {
+function CtaFooter({ note }: { note?: string }) {
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-white/[0.07] px-5 py-3 text-[11px] text-slate-500 sm:px-7">
       <span className="rounded border border-slate-600 px-1.5 py-px font-bold text-slate-400">18+</span>
@@ -117,14 +117,24 @@ function CtaFooter() {
       </span>
       <span className="hidden text-slate-700 sm:inline">|</span>
       <span>Affiliate link. We may earn a commission at no extra cost to you.</span>
+      {note && (
+        <>
+          <span className="hidden text-slate-700 sm:inline">|</span>
+          <span>{note}</span>
+        </>
+      )}
     </div>
   )
 }
 
-function BenefitTile({ icon: Icon }: { icon: (typeof BENEFITS)[number]['icon'] }) {
+function BenefitTile({ icon: Icon, large }: { icon: (typeof BENEFITS)[number]['icon']; large?: boolean }) {
   return (
-    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-hype">
-      <Icon size={18} />
+    <span
+      className={`flex shrink-0 items-center justify-center border border-hype/25 bg-hype/10 text-hype ${
+        large ? 'h-14 w-14 rounded-2xl' : 'h-11 w-11 rounded-xl'
+      }`}
+    >
+      <Icon size={large ? 24 : 20} strokeWidth={2} />
     </span>
   )
 }
@@ -143,22 +153,22 @@ export function GuideInlineCta({
 }) {
   return (
     <CtaShell className="my-10 max-w-3xl">
-      <div className="p-5 sm:p-7">
-        <HypeMark size={30} />
-        <p className="mt-4 text-xl font-black leading-tight text-white sm:text-2xl">{title}</p>
-        <p className="mt-2 leading-7 text-slate-300">{children}</p>
-        <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+      <div className="p-6 sm:p-8">
+        <HypeMark size={32} />
+        <p className="mt-5 text-2xl font-black leading-tight tracking-tight text-white sm:text-[28px]">{title}</p>
+        <p className="mt-2 text-[15px] leading-7 text-slate-300">{children}</p>
+        <ul className="mt-6 grid gap-4 sm:grid-cols-3">
           {BENEFITS.slice(0, 3).map(b => (
             <li key={b.title} className="flex items-center gap-3">
               <BenefitTile icon={b.icon} />
-              <span className="text-sm leading-tight">
-                <span className="block font-semibold text-white">{b.title}</span>
+              <span className="leading-tight">
+                <span className="block text-sm font-bold text-white">{b.title}</span>
                 <span className="text-xs text-slate-400">{b.text}</span>
               </span>
             </li>
           ))}
         </ul>
-        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-3">
           <HypeButton />
           <Link href={secondary.href} className="text-sm font-medium text-brand-400 underline underline-offset-4 hover:text-brand-300">
             {secondary.label}
@@ -180,31 +190,31 @@ export function GuideCta({
   secondary?: { href: string; label: string }
 }) {
   return (
-    <CtaShell className="mt-14">
-      <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-[1.1fr_1fr] md:gap-10">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-hype">Play with us on</p>
-          <div className="mt-2">
-            <HypeMark size={40} />
+    <CtaShell className="mt-14 max-w-4xl">
+      <div className="grid items-center gap-8 p-7 sm:p-9 md:grid-cols-[1.15fr_1fr] md:gap-0">
+        <div className="md:pr-9">
+          <p className="text-xs font-bold uppercase tracking-[0.22em] text-hype">Play with us on</p>
+          <div className="mt-3">
+            <HypeMark size={46} />
           </div>
-          <p className="mt-4 leading-7 text-slate-300">
+          <p className="mt-5 text-[17px] leading-7 text-slate-200">
             {lead && <>{lead} </>}
             Play under our code, join our room when we&apos;re live and compete for $1,000 in prizes every month.
           </p>
-          <div className="mt-6 flex flex-col items-start gap-3">
+          <div className="mt-7 flex w-fit flex-col items-stretch gap-3 text-center">
             <HypeButton size="lg" />
             <Link href={secondary.href} className="text-sm font-medium text-brand-400 underline underline-offset-4 hover:text-brand-300">
               {secondary.label}
             </Link>
           </div>
         </div>
-        <ul className="space-y-4 border-white/[0.07] md:border-l md:pl-10">
+        <ul className="flex flex-col gap-5 border-white/[0.08] md:self-stretch md:justify-center md:border-l md:pl-9">
           {BENEFITS.map(b => {
             const body = (
               <>
-                <BenefitTile icon={b.icon} />
-                <span className="leading-tight">
-                  <span className="block font-semibold text-white">{b.title}</span>
+                <BenefitTile icon={b.icon} large />
+                <span className="leading-snug">
+                  <span className="block text-[17px] font-bold text-white">{b.title}</span>
                   <span className="text-sm text-slate-400">{b.text}</span>
                 </span>
               </>
@@ -212,21 +222,18 @@ export function GuideCta({
             return (
               <li key={b.title}>
                 {b.href ? (
-                  <Link href={b.href} className="flex items-center gap-3.5 rounded-xl transition-colors hover:bg-white/[0.03]">
+                  <Link href={b.href} className="group flex items-center gap-4">
                     {body}
                   </Link>
                 ) : (
-                  <span className="flex items-center gap-3.5">{body}</span>
+                  <span className="flex items-center gap-4">{body}</span>
                 )}
               </li>
             )
           })}
         </ul>
       </div>
-      <div className="px-6 pb-1 text-[11px] text-slate-500 sm:px-8">
-        Check Hype.bet&apos;s current terms, including whether it&apos;s available where you live.
-      </div>
-      <CtaFooter />
+      <CtaFooter note="Check that Hype.bet is available where you live." />
     </CtaShell>
   )
 }
