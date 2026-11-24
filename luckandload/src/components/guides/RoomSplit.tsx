@@ -2,32 +2,35 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-// Interactive explainer for Hype.bet multiplayer rooms: choose how much you add to the shared pool
-// and see your share, how the pool is split, and what a spin would mean for your balance. Every
-// result is split by each player's share of the pool, which is how the rooms work.
-const HOST = 200 // What the host has in the pool
-const PLAYERS = 250 // What the other players have in the pool
-const OTHERS = HOST + PLAYERS
+// Interactive explainer for Hype.bet multiplayer rooms, built on a real moment: our $13,500 Zeus vs
+// Hades max win (September 2026). Choose what you would have added to the room before we bought the
+// bonus, and see your share of the buy, the win and your balance afterwards. Every result in a room
+// is split by each player's share of the pool, which is how the rooms work.
+//
+// From the clip: the room balance was $1,989.01 right after the $270 bonus buy ($0.90 bet), so the
+// rest of the room had about $2,259 in it before the buy. The bonus paid $13,500 (15,000x).
+const ROOM_BEFORE_BUY = 2259
+const BUY_COST = 270
+const MAX_WIN = 13500
 const MIN = 10
-const MAX = 250
-const PRESETS = [10, 25, 50, 100, 250]
+const MAX = 500
+const PRESETS = [10, 25, 50, 100, 250, 500]
 
-const SCENARIOS = [
-  // Our real $13,500 Zeus vs Hades max win (September 2026, $0.90 bet), and a losing spin so the
-  // downside stays in view.
-  { key: 'zeus', label: 'Zeus vs Hades max win: $13,500', delta: 13500 },
-  { key: 'loss', label: 'A spin that loses $100', delta: -100 },
+const OUTCOMES = [
+  { key: 'won', label: 'What happened: $13,500', win: MAX_WIN },
+  { key: 'nothing', label: 'If the bonus had paid nothing', win: 0 },
 ] as const
 
-type ScenarioKey = (typeof SCENARIOS)[number]['key']
+type OutcomeKey = (typeof OUTCOMES)[number]['key']
 
 const HYPE = '#1ce479'
-const TEAL = '#2dd4d4'
 
 function money(value: number) {
   const abs = Math.abs(value)
   return `$${abs.toLocaleString('en-US', { minimumFractionDigits: abs % 1 ? 2 : 0, maximumFractionDigits: 2 })}`
 }
+
+const round2 = (value: number) => Math.round(value * 100) / 100
 
 /** Eases a number towards its new value, so the figures glide instead of jumping. */
 function useTween(target: number, duration = 450) {
@@ -53,21 +56,24 @@ function useTween(target: number, duration = 450) {
 
 export function RoomSplit() {
   const [yours, setYours] = useState(50)
-  const [scenarioKey, setScenarioKey] = useState<ScenarioKey>('zeus')
-  const scenario = SCENARIOS.find(s => s.key === scenarioKey)!
+  const [outcomeKey, setOutcomeKey] = useState<OutcomeKey>('won')
+  const outcome = OUTCOMES.find(o => o.key === outcomeKey)!
 
-  const pool = yours + OTHERS
+  const pool = yours + ROOM_BEFORE_BUY
   const share = yours / pool
-  const yourResult = Math.round(scenario.delta * share * 100) / 100
+  const yourBuy = round2(BUY_COST * share)
+  const yourWin = round2(outcome.win * share)
+  const yourBalance = round2(yours - yourBuy + yourWin)
 
   const sharePct = useTween(share * 100)
-  const resultShown = useTween(yourResult)
-  const balanceShown = useTween(yours + yourResult)
+  const buyShown = useTween(yourBuy)
+  const winShown = useTween(yourWin)
+  const balanceShown = useTween(yourBalance)
 
   const fill = ((yours - MIN) / (MAX - MIN)) * 100
   const RADIUS = 50
   const CIRCUMFERENCE = 2 * Math.PI * RADIUS
-  const positive = scenario.delta > 0
+  const up = yourBalance >= yours
 
   return (
     <figure className="mb-6 max-w-3xl overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-surface-800 to-surface-900 p-5 sm:p-6">
@@ -83,9 +89,10 @@ export function RoomSplit() {
           '.room-range:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(28,228,121,.35)}'}
       </style>
 
-      <p className="text-base font-bold text-white">Try it: your share of a room</p>
-      <p className="mt-0.5 text-xs text-slate-400">
-        The host and other players have {money(OTHERS)} in the pool. Choose what you add.
+      <p className="text-base font-bold text-white">Try it: your cut of our Zeus vs Hades max win</p>
+      <p className="mt-0.5 text-xs leading-5 text-slate-400">
+        The room had {money(ROOM_BEFORE_BUY)} in it when we bought the bonus for {money(BUY_COST)}. It paid{' '}
+        {money(MAX_WIN)}. Choose what you would have added before the buy.
       </p>
 
       {/* Your share ring + amount */}
@@ -147,66 +154,66 @@ export function RoomSplit() {
         </div>
       </div>
 
-      {/* The pool, split between you, the host and the other players */}
+      {/* The room right before the buy: you and everyone else */}
       <div className="mt-6">
         <div className="mb-2 flex items-baseline justify-between text-xs">
-          <span className="font-semibold uppercase tracking-wider text-slate-400">The pool</span>
+          <span className="font-semibold uppercase tracking-wider text-slate-400">The room before the buy</span>
           <span className="font-bold tabular-nums text-white">{money(pool)}</span>
         </div>
-        <div className="flex h-3 overflow-hidden rounded-full bg-white/5">
-          <div className="transition-[width] duration-500 ease-out" style={{ width: `${(yours / pool) * 100}%`, background: HYPE }} />
-          <div className="transition-[width] duration-500 ease-out" style={{ width: `${(HOST / pool) * 100}%`, background: TEAL }} />
-          <div className="flex-1 bg-slate-600" />
+        <div className="flex h-3 overflow-hidden rounded-full bg-slate-600">
+          <div className="transition-[width] duration-500 ease-out" style={{ width: `${share * 100}%`, background: HYPE }} />
         </div>
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
           <Legend color={HYPE} label="You" value={money(yours)} />
-          <Legend color={TEAL} label="Host" value={money(HOST)} />
-          <Legend color="#475569" label="Other players" value={money(PLAYERS)} />
+          <Legend color="#475569" label="Everyone else in the room" value={money(ROOM_BEFORE_BUY)} />
         </div>
       </div>
 
-      {/* What a spin means for you */}
+      {/* What the bonus meant for you */}
       <div className="mt-6 rounded-xl border border-white/10 bg-surface-950/50 p-4">
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Example spin">
-          {SCENARIOS.map(s => (
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Outcome">
+          {OUTCOMES.map(o => (
             <button
-              key={s.key}
+              key={o.key}
               type="button"
-              onClick={() => setScenarioKey(s.key)}
-              aria-pressed={scenarioKey === s.key}
+              onClick={() => setOutcomeKey(o.key)}
+              aria-pressed={outcomeKey === o.key}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
-                scenarioKey === s.key
-                  ? s.delta > 0
+                outcomeKey === o.key
+                  ? o.win > 0
                     ? 'bg-hype text-black'
                     : 'bg-red-500 text-white'
                   : 'bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white'
               }`}
             >
-              {s.label}
+              {o.label}
             </button>
           ))}
         </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <dl className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
-            <p className="text-xs text-slate-400">Your share of that spin</p>
-            <p className={`text-3xl font-black tabular-nums ${positive ? 'text-hype' : 'text-red-400'}`}>
-              {positive ? '+' : '−'}
-              {money(Math.round(Math.abs(resultShown) * 100) / 100)}
-            </p>
+            <dt className="text-xs text-slate-400">Your share of the {money(BUY_COST)} buy</dt>
+            <dd className="text-2xl font-black tabular-nums text-red-400">−{money(round2(buyShown))}</dd>
           </div>
           <div>
-            <p className="text-xs text-slate-400">Your balance in the room</p>
-            <p className="text-3xl font-black tabular-nums text-white">
-              <span className="text-lg font-bold text-slate-500">{money(yours)} → </span>
-              {money(Math.round(balanceShown * 100) / 100)}
-            </p>
+            <dt className="text-xs text-slate-400">Your share of the win</dt>
+            <dd className={`text-2xl font-black tabular-nums ${outcome.win > 0 ? 'text-hype' : 'text-slate-500'}`}>
+              +{money(round2(winShown))}
+            </dd>
           </div>
-        </div>
+          <div>
+            <dt className="text-xs text-slate-400">Your balance in the room</dt>
+            <dd className={`text-2xl font-black tabular-nums ${up ? 'text-white' : 'text-red-300'}`}>
+              <span className="text-sm font-bold text-slate-500">{money(yours)} → </span>
+              {money(round2(balanceShown))}
+            </dd>
+          </div>
+        </dl>
       </div>
 
       <figcaption className="mt-4 text-xs leading-5 text-slate-400">
-        The $13,500 Zeus vs Hades max win really happened in our room. The pool amounts are made up. In a real room,
-        your balance moves with your share of every spin, and you can leave between spins.
+        Based on the real numbers from our room: about {money(ROOM_BEFORE_BUY)} before the {money(BUY_COST)} buy at a
+        $0.90 bet, and a {money(MAX_WIN)} payout. Most bonuses pay far less than this, and some pay almost nothing.
       </figcaption>
     </figure>
   )
