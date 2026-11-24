@@ -103,9 +103,9 @@ export const CASINOS: Casino[] = [
     ],
     faq: [
       {
-        question: 'Is there a Hype.bet bonus code?',
+        question: 'Is there a Hype.bet bonus code or promo code?',
         answer:
-          'Our referral code is LuckAndLoad. Signing up through our link connects your account to it, which puts you on our monthly leaderboard. New players can also claim Hype.bet’s first-deposit welcome offer, shown at the top of this page.',
+          'There’s no promo code to type in at Hype.bet. Our referral code, LuckAndLoad, is added when you sign up through our link, hype.bet/LuckAndLoad. That puts you on our monthly leaderboard and, as a new player, in our monthly $100 draw. New players can also claim Hype.bet’s first-deposit welcome offer, shown at the top of this page.',
       },
       {
         question: 'How does the Hype.bet RakeBoost bonus work?',
@@ -144,7 +144,7 @@ export const CASINOS: Casino[] = [
     reviewTitle: 'Hype.bet Bonus Code and Welcome Offer 2026',
     authorSlug: 'kristian',
     guideSlugs: ['hype-bet-review', 'is-hype-bet-legit', 'does-rtp-matter', 'what-is-a-bonus-hunt'],
-    updated: '2026-11-12',
+    updated: '2026-11-24',
   },
 ]
 

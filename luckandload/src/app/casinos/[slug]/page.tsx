@@ -10,6 +10,7 @@ import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import HypeBetReview from '@/content/casinos/hype-bet'
 import { CASINOS, activeOffer, formatOfferEnd, getCasino } from '@/lib/casinos'
 import { SITE_URL, formatGuideDate, getAuthor, getGuide, isPublished, seoTitle, type Guide } from '@/lib/guides'
+import { DrawNote } from '@/components/ui/DrawNote'
 
 const BODIES: Record<string, ComponentType<{ playUrl: string }>> = {
   'hype-bet': HypeBetReview,
@@ -149,6 +150,7 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
                   connects your account to it.
                 </p>
               )}
+              {casino.slug === 'hype-bet' && <DrawNote className="mt-2" />}
               <a
                 href={casino.playUrl}
                 target="_blank"

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
+import { DrawNote } from '@/components/ui/DrawNote'
 import { hypeReviewHref } from '@/lib/guides'
 
 // Fold-out sections for terms and other details. Built on <details>, so it works without
@@ -75,6 +76,7 @@ export function GuideInlineCta({
           {secondary.label}
         </Link>
       </div>
+      <DrawNote className="mt-4" />
       <p className="mt-3 text-xs text-slate-500">18+. Affiliate link. We may earn a commission at no extra cost to you.</p>
     </aside>
   )
@@ -96,6 +98,7 @@ export function GuideCta({ lead }: { lead?: string }) {
             , and we pay out $1,000 in prizes every month. Check Hype.bet&apos;s current terms, including whether it is
             available where you live.
           </p>
+          <DrawNote className="mt-3" />
         </div>
         <a
           href="https://hype.bet/LuckAndLoad"
