@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, Check, Info } from 'lucide-react'
-import { GuideDetails, GuideDetailsGroup, GuideH2, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
+import { GuideCta, GuideDetails, GuideDetailsGroup, GuideH2, GuideList, GuideP, JsonLd } from '@/components/guides/GuideContent'
 import { StickyClaimBar } from '@/components/casinos/StickyClaimBar'
 import { GamblingNotice } from '@/components/ui/GamblingNotice'
 import HypeBetReview from '@/content/casinos/hype-bet'
@@ -268,6 +268,15 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
             .
           </GuideP>
         </div>
+
+        {/* Closing call to action, like at the end of every guide. Its text link goes to the review,
+            since this page is the welcome offer page. */}
+        {casino.slug === 'hype-bet' && (
+          <GuideCta
+            lead="Hype.bet is where we stream every week, and where our multiplayer room is."
+            secondary={{ href: '/guides/hype-bet-review', label: 'Read our Hype.bet review' }}
+          />
+        )}
 
         <footer className="mt-12 flex max-w-3xl items-start gap-4 border-t border-white/10 pt-6">
           <Image
