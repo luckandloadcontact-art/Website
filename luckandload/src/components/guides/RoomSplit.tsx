@@ -13,9 +13,10 @@ const MAX = 250
 const PRESETS = [10, 25, 50, 100, 250]
 
 const SCENARIOS = [
-  { key: 'bonus', label: 'Bonus pays $1,000', delta: 1000 },
-  { key: 'win', label: 'Spin wins $300', delta: 300 },
-  { key: 'loss', label: 'Spin loses $100', delta: -100 },
+  // Our real $13,500 Zeus vs Hades max win (September 2026, $0.90 bet), and a losing spin so the
+  // downside stays in view.
+  { key: 'zeus', label: 'Zeus vs Hades max win: $13,500', delta: 13500 },
+  { key: 'loss', label: 'A spin that loses $100', delta: -100 },
 ] as const
 
 type ScenarioKey = (typeof SCENARIOS)[number]['key']
@@ -52,7 +53,7 @@ function useTween(target: number, duration = 450) {
 
 export function RoomSplit() {
   const [yours, setYours] = useState(50)
-  const [scenarioKey, setScenarioKey] = useState<ScenarioKey>('win')
+  const [scenarioKey, setScenarioKey] = useState<ScenarioKey>('zeus')
   const scenario = SCENARIOS.find(s => s.key === scenarioKey)!
 
   const pool = yours + OTHERS
@@ -64,7 +65,7 @@ export function RoomSplit() {
   const balanceShown = useTween(yours + yourResult)
 
   const fill = ((yours - MIN) / (MAX - MIN)) * 100
-  const RADIUS = 46
+  const RADIUS = 50
   const CIRCUMFERENCE = 2 * Math.PI * RADIUS
   const positive = scenario.delta > 0
 
@@ -89,24 +90,24 @@ export function RoomSplit() {
 
       {/* Your share ring + amount */}
       <div className="mt-5 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
-        <div className="relative h-[120px] w-[120px] shrink-0">
+        <div className="relative h-[140px] w-[140px] shrink-0">
           <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
-            <circle cx="60" cy="60" r={RADIUS} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="12" />
+            <circle cx="60" cy="60" r={RADIUS} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="8" />
             <circle
               cx="60"
               cy="60"
               r={RADIUS}
               fill="none"
               stroke={HYPE}
-              strokeWidth="12"
+              strokeWidth="8"
               strokeLinecap="round"
               strokeDasharray={CIRCUMFERENCE}
               strokeDashoffset={CIRCUMFERENCE * (1 - sharePct / 100)}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-2xl font-black tabular-nums text-white">{sharePct.toFixed(1)}%</span>
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">your share</span>
+            <span className="text-[22px] font-black leading-none tabular-nums text-white">{sharePct.toFixed(1)}%</span>
+            <span className="mt-1 text-[9px] font-semibold uppercase tracking-wider text-slate-400">your share</span>
           </div>
         </div>
 
@@ -204,8 +205,8 @@ export function RoomSplit() {
       </div>
 
       <figcaption className="mt-4 text-xs leading-5 text-slate-400">
-        An example with made-up amounts. In a real room, your balance moves with your share of every spin, and you can
-        leave between spins.
+        The $13,500 Zeus vs Hades max win really happened in our room. The pool amounts are made up. In a real room,
+        your balance moves with your share of every spin, and you can leave between spins.
       </figcaption>
     </figure>
   )
