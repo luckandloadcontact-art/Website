@@ -30,6 +30,7 @@ const ORGANIZATION_DATA = {
     'https://twitch.tv/luckandloadtv',
     'https://youtube.com/@LuckAndLoad',
     'https://tiktok.com/@luckandloadtv',
+    'https://instagram.com/luckandloadtv',
     'https://discord.gg/yagZVjqqbr',
   ],
 }

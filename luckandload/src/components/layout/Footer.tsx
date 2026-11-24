@@ -6,6 +6,7 @@ const SOCIAL_LINKS = [
   { label: 'Kick', href: 'https://kick.com/luckandloadtv', color: 'hover:text-green-400' },
   { label: 'Discord', href: 'https://discord.gg/yagZVjqqbr', color: 'hover:text-indigo-400' },
   { label: 'TikTok', href: 'https://tiktok.com/@luckandloadtv', color: 'hover:text-pink-400' },
+  { label: 'Instagram', href: 'https://instagram.com/luckandloadtv', color: 'hover:text-fuchsia-400' },
   { label: 'YouTube', href: 'https://youtube.com/@LuckAndLoad', color: 'hover:text-red-400' },
 ]
 
