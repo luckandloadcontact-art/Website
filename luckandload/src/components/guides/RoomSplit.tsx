@@ -213,7 +213,7 @@ export function RoomSplit() {
 
       <figcaption className="mt-4 text-xs leading-5 text-slate-400">
         Based on the real numbers from our room: about {money(ROOM_BEFORE_BUY)} before the {money(BUY_COST)} buy at a
-        $0.90 bet, and a {money(MAX_WIN)} payout. Most bonuses pay far less than this, and some pay almost nothing.
+        $0.90 bet, and a {money(MAX_WIN)} payout.
       </figcaption>
     </figure>
   )
