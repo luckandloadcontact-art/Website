@@ -244,7 +244,18 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
               </GuideDetails>
             ))}
           </GuideDetailsGroup>
+        </div>
 
+        {/* Call to action after the questions, like at the end of every guide. Its text link goes to
+            the review, since this page is the welcome offer page. */}
+        {casino.slug === 'hype-bet' && (
+          <GuideCta
+            lead="Hype.bet is where we stream every week, and where our multiplayer room is."
+            secondary={{ href: '/guides/hype-bet-review', label: 'Read our Hype.bet review' }}
+          />
+        )}
+
+        <div className="max-w-3xl">
           {relatedGuides.length > 0 && (
             <>
               <GuideH2>More about {casino.name}</GuideH2>
@@ -268,15 +279,6 @@ export default function CasinoReviewPage({ params }: { params: { slug: string } 
             .
           </GuideP>
         </div>
-
-        {/* Closing call to action, like at the end of every guide. Its text link goes to the review,
-            since this page is the welcome offer page. */}
-        {casino.slug === 'hype-bet' && (
-          <GuideCta
-            lead="Hype.bet is where we stream every week, and where our multiplayer room is."
-            secondary={{ href: '/guides/hype-bet-review', label: 'Read our Hype.bet review' }}
-          />
-        )}
 
         <footer className="mt-12 flex max-w-3xl items-start gap-4 border-t border-white/10 pt-6">
           <Image
