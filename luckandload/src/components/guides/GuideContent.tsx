@@ -1,7 +1,6 @@
 import Link from 'next/link'
-import { ChevronDown } from 'lucide-react'
-import { GamblingNotice } from '@/components/ui/GamblingNotice'
-import { DrawNote } from '@/components/ui/DrawNote'
+import Image from 'next/image'
+import { ArrowRight, ChevronDown, Ticket, Trophy, Users, Zap } from 'lucide-react'
 import { hypeReviewHref } from '@/lib/guides'
 
 // Fold-out sections for terms and other details. Built on <details>, so it works without
@@ -52,9 +51,87 @@ export function JsonLd({ data }: { data: Record<string, unknown> }) {
   )
 }
 
-// Short call to action placed inside an article body, between sections.
-// The text link next to the button goes to our Hype.bet review by default; pass `secondary` to
-// change it (the review guide itself links to the bonus code page instead).
+// ---- Hype.bet call-to-action cards -----------------------------------------------------------
+// Dark card with a thin green-to-teal edge and a soft glow, one big green button, the benefits as
+// icon tiles, and the 18+ and affiliate notes in a quiet footer row.
+
+const HYPE_URL = 'https://hype.bet/LuckAndLoad'
+
+const BENEFITS = [
+  { icon: Users, title: 'Multiplayer room', text: 'Play the same slots with us, live', href: null },
+  { icon: Trophy, title: '$1,000 monthly leaderboard', text: 'Cash prizes for players under our code', href: '/leaderboard' },
+  { icon: Ticket, title: 'Monthly $100 draw', text: 'For new players who use our link', href: '/draw' },
+  { icon: Zap, title: 'Welcome offer', text: 'Hype.bet’s first-deposit bonus', href: '/casinos/hype-bet' },
+] as const
+
+function CtaShell({ className, children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <aside
+      className={`relative rounded-2xl bg-gradient-to-br from-hype/60 via-brand-400/20 to-white/5 p-px shadow-[0_0_40px_rgba(28,228,121,0.08)] ${className ?? ''}`}
+    >
+      <div className="relative overflow-hidden rounded-[15px] bg-gradient-to-br from-[#0a1f26] via-surface-900 to-[#06140f]">
+        <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-hype/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-brand-500/10 blur-3xl" />
+        <div className="relative">{children}</div>
+      </div>
+    </aside>
+  )
+}
+
+function HypeMark({ size = 36 }: { size?: number }) {
+  return (
+    <span className="inline-flex items-center gap-2.5">
+      <Image src="/casinos/hype-bet.png" alt="" width={size} height={size} className="rounded-lg" />
+      <span className="font-black tracking-tight text-white" style={{ fontSize: size * 0.8 }}>
+        Hype.bet
+      </span>
+    </span>
+  )
+}
+
+function HypeButton({ size = 'md' }: { size?: 'md' | 'lg' }) {
+  return (
+    <a
+      href={HYPE_URL}
+      target="_blank"
+      rel="sponsored noopener noreferrer"
+      className={`group inline-flex items-center justify-center gap-2 rounded-xl bg-hype font-black uppercase tracking-wide text-black shadow-[0_8px_28px_rgba(28,228,121,0.28)] transition-all hover:-translate-y-0.5 hover:bg-[#3df08f] hover:shadow-[0_10px_34px_rgba(28,228,121,0.4)] ${
+        size === 'lg' ? 'px-8 py-4 text-base' : 'px-6 py-3 text-sm'
+      }`}
+    >
+      Play on Hype.bet
+      <ArrowRight size={size === 'lg' ? 20 : 17} className="transition-transform group-hover:translate-x-0.5" />
+    </a>
+  )
+}
+
+function CtaFooter() {
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-white/[0.07] px-5 py-3 text-[11px] text-slate-500 sm:px-7">
+      <span className="rounded border border-slate-600 px-1.5 py-px font-bold text-slate-400">18+</span>
+      <span>
+        Gamble responsibly ·{' '}
+        <Link href="/responsible-gambling" className="underline underline-offset-2 hover:text-slate-300">
+          Get help
+        </Link>
+      </span>
+      <span className="hidden text-slate-700 sm:inline">|</span>
+      <span>Affiliate link. We may earn a commission at no extra cost to you.</span>
+    </div>
+  )
+}
+
+function BenefitTile({ icon: Icon }: { icon: (typeof BENEFITS)[number]['icon'] }) {
+  return (
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-hype">
+      <Icon size={18} />
+    </span>
+  )
+}
+
+// Short call to action placed inside an article body, between sections: title, the article's own
+// line, three benefits in a row and the button. The text link next to the button goes to our
+// Hype.bet review by default; pass `secondary` to change it (the review links to the bonus page).
 export function GuideInlineCta({
   title,
   children,
@@ -65,57 +142,91 @@ export function GuideInlineCta({
   secondary?: { href: string; label: string }
 }) {
   return (
-    <aside className="my-8 max-w-3xl rounded-xl border border-hype/40 bg-hype/5 p-5">
-      <p className="mb-1.5 text-lg font-bold text-white">{title}</p>
-      <p className="mb-4 leading-7 text-slate-200">{children}</p>
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-        <a
-          href="https://hype.bet/LuckAndLoad"
-          target="_blank"
-          rel="sponsored noopener noreferrer"
-          className="inline-flex items-center justify-center rounded-lg bg-hype px-6 py-2.5 text-sm font-black uppercase tracking-wide text-black transition-colors hover:bg-hype/90"
-        >
-          Play on Hype.bet
-        </a>
-        <Link href={secondary.href} className="text-sm text-brand-400 underline underline-offset-2 hover:text-brand-300">
-          {secondary.label}
-        </Link>
+    <CtaShell className="my-10 max-w-3xl">
+      <div className="p-5 sm:p-7">
+        <HypeMark size={30} />
+        <p className="mt-4 text-xl font-black leading-tight text-white sm:text-2xl">{title}</p>
+        <p className="mt-2 leading-7 text-slate-300">{children}</p>
+        <ul className="mt-5 grid gap-3 sm:grid-cols-3">
+          {BENEFITS.slice(0, 3).map(b => (
+            <li key={b.title} className="flex items-center gap-3">
+              <BenefitTile icon={b.icon} />
+              <span className="text-sm leading-tight">
+                <span className="block font-semibold text-white">{b.title}</span>
+                <span className="text-xs text-slate-400">{b.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <HypeButton />
+          <Link href={secondary.href} className="text-sm font-medium text-brand-400 underline underline-offset-4 hover:text-brand-300">
+            {secondary.label}
+          </Link>
+        </div>
       </div>
-      <DrawNote className="mt-4" />
-      <p className="mt-3 text-xs text-slate-500">18+. Affiliate link. We may earn a commission at no extra cost to you.</p>
-    </aside>
+      <CtaFooter />
+    </CtaShell>
   )
 }
 
-// `lead` is an optional first sentence, so an article can tie the closing box to its own topic.
-export function GuideCta({ lead }: { lead?: string }) {
+// The closing card at the end of every guide: the pitch and button on the left, what you get on
+// the right. `lead` is an optional first sentence, so an article can tie the card to its topic.
+export function GuideCta({
+  lead,
+  secondary = { href: '/casinos/hype-bet', label: 'See the bonus details' },
+}: {
+  lead?: string
+  secondary?: { href: string; label: string }
+}) {
   return (
-    <aside className="mt-12 rounded-2xl border border-hype/40 bg-hype/5 p-6 sm:p-8">
-      <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div className="max-w-2xl">
-          <h2 className="mb-2 text-2xl font-bold text-white">Play with us on Hype.bet</h2>
-          <p className="leading-7 text-slate-200">
+    <CtaShell className="mt-14">
+      <div className="grid gap-8 p-6 sm:p-8 md:grid-cols-[1.1fr_1fr] md:gap-10">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-hype">Play with us on</p>
+          <div className="mt-2">
+            <HypeMark size={40} />
+          </div>
+          <p className="mt-4 leading-7 text-slate-300">
             {lead && <>{lead} </>}
-            Players under our code compete on our{' '}
-            <Link href="/leaderboard" className="text-brand-400 hover:text-brand-300 underline underline-offset-2">
-              monthly leaderboard
-            </Link>
-            , and we pay out $1,000 in prizes every month. Check Hype.bet&apos;s current terms, including whether it is
-            available where you live.
+            Play under our code, join our room when we&apos;re live and compete for $1,000 in prizes every month.
           </p>
-          <DrawNote className="mt-3" />
+          <div className="mt-6 flex flex-col items-start gap-3">
+            <HypeButton size="lg" />
+            <Link href={secondary.href} className="text-sm font-medium text-brand-400 underline underline-offset-4 hover:text-brand-300">
+              {secondary.label}
+            </Link>
+          </div>
         </div>
-        <a
-          href="https://hype.bet/LuckAndLoad"
-          target="_blank"
-          rel="sponsored noopener noreferrer"
-          className="inline-flex shrink-0 items-center justify-center rounded-lg bg-hype px-10 py-4 text-base font-black uppercase tracking-wide text-black transition-colors hover:bg-hype/90"
-        >
-          Play on Hype.bet
-        </a>
+        <ul className="space-y-4 border-white/[0.07] md:border-l md:pl-10">
+          {BENEFITS.map(b => {
+            const body = (
+              <>
+                <BenefitTile icon={b.icon} />
+                <span className="leading-tight">
+                  <span className="block font-semibold text-white">{b.title}</span>
+                  <span className="text-sm text-slate-400">{b.text}</span>
+                </span>
+              </>
+            )
+            return (
+              <li key={b.title}>
+                {b.href ? (
+                  <Link href={b.href} className="flex items-center gap-3.5 rounded-xl transition-colors hover:bg-white/[0.03]">
+                    {body}
+                  </Link>
+                ) : (
+                  <span className="flex items-center gap-3.5">{body}</span>
+                )}
+              </li>
+            )
+          })}
+        </ul>
       </div>
-      <GamblingNotice className="mt-5" />
-      <p className="mt-1 text-xs text-slate-500">Affiliate link. We may earn a commission at no extra cost to you.</p>
-    </aside>
+      <div className="px-6 pb-1 text-[11px] text-slate-500 sm:px-8">
+        Check Hype.bet&apos;s current terms, including whether it&apos;s available where you live.
+      </div>
+      <CtaFooter />
+    </CtaShell>
   )
 }
