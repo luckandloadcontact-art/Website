@@ -22,6 +22,16 @@ const AT_A_GLANCE = [
   { label: 'Our code', value: 'LuckAndLoad' },
 ]
 
+// Withdrawals on Hype.bet, from our own experience (November 2026).
+const WITHDRAWAL_FACTS = [
+  { label: 'Crypto withdrawal time', value: 'Usually under 20 minutes for us (Bitcoin and Ethereum)' },
+  { label: 'Interac', value: 'Available for Canadian players. One player on Trustpilot got paid in under an hour' },
+  { label: 'Minimum withdrawal', value: '$50' },
+  { label: 'Before you can withdraw winnings', value: 'At least 1,000 XP (about $1,000 in bets on slots)' },
+  { label: 'ID check', value: 'Can be asked for before a withdrawal; quick in our experience' },
+  { label: 'Withdrawal fees', value: 'Free withdrawals are one of the loyalty program rewards' },
+]
+
 const LINK = 'text-brand-400 hover:text-brand-300 underline underline-offset-2'
 
 // Short answers to what people ask about Hype.bet. Also sent to Google as FAQPage data. The bonus
@@ -199,13 +209,42 @@ export default function HypeBetReview() {
         the next time we&apos;re live.
       </GuideInlineCta>
 
-      <GuideH2>Deposits and withdrawals</GuideH2>
+      <GuideH2 id="withdrawals">Deposits and withdrawal times</GuideH2>
       <GuideP>
         You can pay with crypto or Interac. We use crypto, mostly Bitcoin and Ethereum, and our withdrawals usually
         arrive in under 20 minutes. Players under our code tell us the same. Crypto deposits are converted to USD at the
-        live rate, and the minimum withdrawal is $50. Like most casinos, Hype.bet can ask for ID before you withdraw, so
-        verify your account early.
-        Most complaints we see online are about exactly that.{' '}
+        live rate.
+      </GuideP>
+      <div className="mb-5 max-w-3xl overflow-x-auto">
+        <table className="w-full min-w-[22rem] text-left text-sm">
+          <tbody className="divide-y divide-white/10 text-slate-200">
+            {WITHDRAWAL_FACTS.map(row => (
+              <tr key={row.label}>
+                <th scope="row" className="w-52 py-3 pr-4 align-top font-normal text-slate-400">{row.label}</th>
+                <td className="py-3">{row.value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <GuideP>To get paid without delays, this is what we do and what we tell players under our code:</GuideP>
+      <GuideList>
+        <li>
+          <strong className="text-white">Verify your account early.</strong> Hype.bet can ask for ID before a
+          withdrawal. In our experience it&apos;s quick, and it mostly happens when something about an account looks
+          unusual.
+        </li>
+        <li>
+          <strong className="text-white">Withdraw the way you deposited.</strong> Sticking to one payment method, and
+          not changing your email right before a withdrawal, avoids extra checks.
+        </li>
+        <li>
+          <strong className="text-white">Check the bonus terms first.</strong> If you took the welcome bonus, only the
+          parts you&apos;ve unlocked with XP can be withdrawn.
+        </li>
+      </GuideList>
+      <GuideP>
+        Most complaints we see online are about ID checks and closed accounts.{' '}
         <Link href="/guides/is-hype-bet-legit" className={LINK}>
           Read more in our guide to whether Hype.bet is legit
         </Link>

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   GuideDetails,
@@ -236,6 +237,40 @@ export default function MultiplayerCasino() {
         keeps the balance alive for longer, so the people who join get more play for their money. If you host a room for
         your friends, think about how it would feel if the pool was gone after ten minutes.
       </GuideP>
+
+      <GuideH2 id="how-to-join">How to join a multiplayer room on Hype.bet</GuideH2>
+      <figure className="mb-5 max-w-3xl">
+        <Image
+          src="/guides/hype-multiplayer-rooms-lobby.jpg"
+          alt="The Multiplayer Rooms page on Hype.bet: the Multiplayer Rooms link in the left menu (1) and the rooms that are live right now (2)"
+          width={1600}
+          height={875}
+          className="w-full rounded-xl border border-white/10"
+        />
+        <figcaption className="mt-2 text-xs leading-5 text-slate-400">
+          The Multiplayer Rooms page on Hype.bet. Live rooms are at the top, offline rooms below. Other streamers&apos;
+          cameras are blurred.
+        </figcaption>
+      </figure>
+      <ol className="mb-5 max-w-3xl list-decimal space-y-2 pl-5 leading-7 text-slate-200">
+        <li>
+          <strong className="text-white">Sign up and deposit.</strong> Create your Hype.bet account and add money to
+          your balance.
+        </li>
+        <li>
+          <strong className="text-white">Open Multiplayer Rooms (1).</strong> It&apos;s in the menu on the left, and it
+          shows how many rooms are live.
+        </li>
+        <li>
+          <strong className="text-white">Pick a live room (2).</strong> Each card shows the host, the slot, the room
+          balance and how many players are in. Ours is LuckAndLoad, live most days from 18:00 Norwegian time. Follow a
+          host and they show up under Followed Hosts.
+        </li>
+        <li>
+          <strong className="text-white">Join with any amount.</strong> There&apos;s no minimum or maximum. You&apos;re
+          in from the next spin, and you can leave between spins.
+        </li>
+      </ol>
 
       <GuideH2>Things to know before you join</GuideH2>
       <GuideList>

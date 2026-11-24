@@ -22,8 +22,13 @@ export function GuideDetails({ summary, children }: { summary: string; children:
   )
 }
 
-export function GuideH2({ children }: { children: React.ReactNode }) {
-  return <h2 className="mt-12 mb-4 text-2xl font-bold text-white">{children}</h2>
+// `id` lets other pages link straight to a section, like /guides/hype-bet-review#withdrawals.
+export function GuideH2({ children, id }: { children: React.ReactNode; id?: string }) {
+  return (
+    <h2 id={id} className="mt-12 mb-4 scroll-mt-24 text-2xl font-bold text-white">
+      {children}
+    </h2>
+  )
 }
 
 export function GuideH3({ children }: { children: React.ReactNode }) {
