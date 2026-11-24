@@ -215,6 +215,18 @@ export default function HypeBetReview() {
         arrive in under 20 minutes. Players under our code tell us the same. Crypto deposits are converted to USD at the
         live rate.
       </GuideP>
+      <figure className="mb-5 max-w-3xl">
+        <Image
+          src="/guides/hype-withdrawals.png"
+          alt="Two completed Bitcoin withdrawals from Hype.bet on October 21, 2026, of $1,082.88 and $1,083.70"
+          width={1514}
+          height={254}
+          className="w-full rounded-xl border border-white/10"
+        />
+        <figcaption className="mt-2 text-xs leading-5 text-slate-400">
+          Two of our own Bitcoin withdrawals from October, one each. Transaction IDs are hidden.
+        </figcaption>
+      </figure>
       <div className="mb-5 max-w-3xl overflow-x-auto">
         <table className="w-full min-w-[22rem] text-left text-sm">
           <tbody className="divide-y divide-white/10 text-slate-200">
