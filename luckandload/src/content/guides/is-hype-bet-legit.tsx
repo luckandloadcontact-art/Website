@@ -186,7 +186,7 @@ export default function IsHypeBetLegit() {
           <strong className="text-white">Read the bonus terms.</strong> The minimum withdrawal is $50, and you need at
           least 1,000 XP before winnings can be withdrawn. Our{' '}
           <Link href="/casinos/hype-bet" className={LINK}>
-            Hype.bet bonus code page
+            Hype.bet welcome offer page
           </Link>{' '}
           explains the rest.
         </li>

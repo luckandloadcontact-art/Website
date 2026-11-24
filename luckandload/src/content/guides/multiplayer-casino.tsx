@@ -221,7 +221,7 @@ export default function MultiplayerCasino() {
 
       <GuideInlineCta
         title="Join our room on the next stream"
-        secondary={{ href: '/casinos/hype-bet', label: 'See the Hype.bet bonus code' }}
+        secondary={{ href: '/casinos/hype-bet', label: 'See the welcome offer' }}
       >
         Sign up through our link, then join our multiplayer room the next time we&apos;re live. Add what you want, and
         leave whenever you want.

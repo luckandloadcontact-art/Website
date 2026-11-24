@@ -184,7 +184,7 @@ export function GuideInlineCta({
 // the right. `lead` is an optional first sentence, so an article can tie the card to its topic.
 export function GuideCta({
   lead,
-  secondary = { href: '/casinos/hype-bet', label: 'See the bonus details' },
+  secondary = { href: '/casinos/hype-bet', label: 'See the welcome offer' },
 }: {
   lead?: string
   secondary?: { href: string; label: string }

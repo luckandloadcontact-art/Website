@@ -141,7 +141,7 @@ export default function HypeBetReview() {
             , the bonus unlocks in four parts as you earn XP, and each part can be withdrawn as soon as it unlocks. It suits
             slot players best, since slots earn XP 20 times faster than table games. The full terms are on our{' '}
             <Link href="/casinos/hype-bet" className={LINK}>
-              Hype.bet bonus code page
+              Hype.bet welcome offer page
             </Link>
             .
           </GuideP>
@@ -202,8 +202,8 @@ export default function HypeBetReview() {
       </figure>
 
       <GuideInlineCta
-        title="Try Hype.bet with our code"
-        secondary={{ href: '/casinos/hype-bet', label: 'See the Hype.bet bonus code' }}
+        title="Try Hype.bet through our link"
+        secondary={{ href: '/casinos/hype-bet', label: 'See the welcome offer' }}
       >
         Sign up through our link to get the welcome offer and a spot on our leaderboard, then join our multiplayer room
         the next time we&apos;re live.
