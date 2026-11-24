@@ -7,6 +7,7 @@ import { WHEEL_GAMES } from '@/lib/slotWheel'
 import {
   getPuzzleDay, PUZZLE_ATTEMPTS, pickGameForDate, isDateInRange, FIRST_PUZZLE_DATE,
 } from '@/lib/slotPuzzle'
+import { decodeGuestToken } from '@/lib/puzzleGuest'
 
 const RECENT_AVOID_COUNT = 14
 
@@ -39,7 +40,9 @@ async function ensurePuzzleDay(supabase: ReturnType<typeof createAdminClient>, d
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions)
   const today = getPuzzleDay()
-  const date = req.nextUrl.searchParams.get('date') || today
+  // Guests (not signed in) can only play today's puzzle; past puzzles need Discord sign-in.
+  const guest = !session?.user?.dbId
+  const date = guest ? today : req.nextUrl.searchParams.get('date') || today
 
   if (!isDateInRange(date, today)) {
     return NextResponse.json({ error: 'Invalid date' }, { status: 400 })
@@ -65,6 +68,18 @@ export async function GET(req: NextRequest) {
     }
   }
 
+  // A guest's guesses come from their signed token (see lib/puzzleGuest).
+  let guestToken: string | null = null
+  if (guest) {
+    const token = req.nextUrl.searchParams.get('g')
+    const state = decodeGuestToken(token, date)
+    if (state) {
+      guesses = state.guesses
+      solved = state.solved
+      guestToken = token
+    }
+  }
+
   const attemptsUsed = guesses.length
   const gameOver = solved || attemptsUsed >= PUZZLE_ATTEMPTS
   const zoomLevel = Math.min(attemptsUsed, PUZZLE_ATTEMPTS - 1)
@@ -72,20 +87,25 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     date,
     isToday: date === today,
-    canGoPrevious: date > FIRST_PUZZLE_DATE,
+    canGoPrevious: !guest && date > FIRST_PUZZLE_DATE,
+    guest,
     canGoNext: date < today,
     // Shown in the share text, like "Guess the Slot #24". Puzzle #1 is FIRST_PUZZLE_DATE.
     puzzleNumber: Math.round((Date.parse(date) - Date.parse(FIRST_PUZZLE_DATE)) / 86_400_000) + 1,
     // Peker til et endepunkt som selv regner ut og rendrer riktig utsnitt server-side -- vi
     // sender aldri den ekte bilde-stien (eller originalbildet) til klienten før spillet er
     // over, ellers kan "Lagre bilde"/Live Text på mobil avsløre svaret (se app/api/puzzle/image).
-    imageUrl: `/api/puzzle/image?date=${date}&v=${attemptsUsed}-${gameOver ? 1 : 0}`,
+    imageUrl: `/api/puzzle/image?date=${date}&v=${attemptsUsed}-${gameOver ? 1 : 0}${
+      guestToken ? `&g=${encodeURIComponent(guestToken)}` : ''
+    }`,
     attemptsUsed,
     maxAttempts: PUZZLE_ATTEMPTS,
     guesses,
     solved,
     pointsAwarded,
     zoomLevel,
-    answer: gameOver ? { name: game.name, provider: game.provider } : null,
+    // Guests only see the answer if they solved it, so nobody can use guest play to find the
+    // answer and then sign in for the loads.
+    answer: gameOver && (!guest || solved) ? { name: game.name, provider: game.provider } : null,
   })
 }

@@ -19,6 +19,27 @@ interface PuzzleState {
   pointsAwarded: number
   zoomLevel: number
   answer: { name: string; provider: string } | null
+  // Not signed in: today's puzzle only, no loads. Guesses are kept in a signed token.
+  guest?: boolean
+}
+
+// Where a guest's progress on today's puzzle is kept (a signed token from the server).
+const GUEST_TOKEN_KEY = 'guess-the-slot-guest-token'
+
+function readGuestToken() {
+  try {
+    return localStorage.getItem(GUEST_TOKEN_KEY)
+  } catch {
+    return null
+  }
+}
+
+function saveGuestToken(token: string) {
+  try {
+    localStorage.setItem(GUEST_TOKEN_KEY, token)
+  } catch {
+    // Private mode or blocked storage: progress just isn't remembered after a reload.
+  }
 }
 
 export default function GuessTheSlotPage() {
@@ -32,10 +53,17 @@ export default function GuessTheSlotPage() {
   const blurTimeout = useRef<ReturnType<typeof setTimeout>>()
 
   const fetchState = useCallback(async (date?: string) => {
-    const res = await fetch(date ? `/api/puzzle?date=${date}` : '/api/puzzle')
+    const params = new URLSearchParams()
+    if (date) params.set('date', date)
+    if (status === 'unauthenticated') {
+      const token = readGuestToken()
+      if (token) params.set('g', token)
+    }
+    const query = params.toString()
+    const res = await fetch(query ? `/api/puzzle?${query}` : '/api/puzzle')
     if (!res.ok) return
     setState(await res.json())
-  }, [])
+  }, [status])
 
   useEffect(() => {
     if (status === 'authenticated' || status === 'unauthenticated') fetchState()
@@ -55,13 +83,20 @@ export default function GuessTheSlotPage() {
     setSubmitting(true)
     setShowDropdown(false)
     try {
-      const res = await fetch('/api/puzzle/guess', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date: state.date, guess: name }),
-      })
+      const res = state.guest
+        ? await fetch('/api/puzzle/guest-guess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ guess: name, token: readGuestToken() }),
+          })
+        : await fetch('/api/puzzle/guess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date: state.date, guess: name }),
+          })
       if (!res.ok) return
       const data = await res.json()
+      if (state.guest && data.token) saveGuestToken(data.token)
       setState(prev => prev ? { ...prev, ...data } : prev)
       setQuery('')
       if (!data.correct) {
@@ -109,7 +144,8 @@ export default function GuessTheSlotPage() {
   }
 
   // The heading is part of the loading state too, so it's in the HTML the server sends.
-  if (status === 'loading' || (status === 'authenticated' && !state)) {
+  // Everyone can play today's puzzle; signing in adds loads and past puzzles.
+  if (status === 'loading' || !state) {
     return (
       <main className="min-h-[60vh] flex flex-col items-center justify-center gap-6">
         <h1 className="text-3xl font-bold text-white">🎰 Guess the Slot</h1>
@@ -117,23 +153,6 @@ export default function GuessTheSlotPage() {
       </main>
     )
   }
-
-  if (status === 'unauthenticated') {
-    return (
-      <main className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <h1 className="text-3xl font-bold text-white">🎰 Guess the Slot</h1>
-          <p className="text-surface-300">Sign in with Discord to play</p>
-          <button onClick={() => signIn('discord')}
-            className="px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-semibold transition-colors">
-            Sign in with Discord
-          </button>
-        </div>
-      </main>
-    )
-  }
-
-  if (!state) return null
 
   const hasExactMatch = !!highlighted || !!exactMatch()
 
@@ -156,6 +175,23 @@ export default function GuessTheSlotPage() {
       </div>
 
       <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 py-10 space-y-5">
+
+        {/* Guests: what signing in adds */}
+        {state.guest && (
+          <div className="flex flex-col items-center gap-3 rounded-xl border border-brand-500/30 bg-brand-500/5 px-4 py-3 text-center sm:flex-row sm:text-left">
+            <p className="flex-1 text-sm leading-5 text-slate-300">
+              <span className="font-semibold text-white">Playing as a guest.</span> Sign in with Discord to earn loads
+              and play past puzzles.
+            </p>
+            <button
+              type="button"
+              onClick={() => signIn('discord')}
+              className="shrink-0 rounded-lg bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-600"
+            >
+              Sign in with Discord
+            </button>
+          </div>
+        )}
 
         {/* Date nav */}
         <div className="flex items-center justify-between rounded-xl border border-white/8 bg-surface-800 px-3 py-2.5">
@@ -218,18 +254,31 @@ export default function GuessTheSlotPage() {
         </div>
 
         {/* Result banner */}
-        {gameOver && state.answer && (
+        {gameOver && (
           <div className={`rounded-xl border p-4 text-center ${
             state.solved ? 'border-green-500/30 bg-green-500/10' : 'border-red-500/30 bg-red-500/10'
           }`}>
             <p className={`font-bold ${state.solved ? 'text-green-300' : 'text-red-300'}`}>
               {state.solved ? '🎉 Solved!' : '😔 Out of guesses'}
             </p>
-            <p className="mt-1 text-sm text-white">
-              {state.answer.name} <span className="text-slate-400">— {state.answer.provider}</span>
-            </p>
+            {state.answer ? (
+              <p className="mt-1 text-sm text-white">
+                {state.answer.name} <span className="text-slate-400">· {state.answer.provider}</span>
+              </p>
+            ) : (
+              // Guests who run out don't see the answer, so guest play can't be used to farm loads.
+              <p className="mt-1 text-sm text-slate-300">Sign in with Discord to see the answer.</p>
+            )}
             {state.solved && state.isToday && state.pointsAwarded > 0 && (
               <p className="mt-1 text-xs font-semibold text-brand-400">+{state.pointsAwarded} loads</p>
+            )}
+            {state.guest && (
+              <p className="mt-1 text-xs text-slate-400">
+                Signed-in players earn up to 25 loads a day.{' '}
+                <button type="button" onClick={() => signIn('discord')} className="font-semibold text-brand-400 underline underline-offset-2">
+                  Sign in with Discord
+                </button>
+              </p>
             )}
             <ShareButton text={shareText(state)} />
           </div>

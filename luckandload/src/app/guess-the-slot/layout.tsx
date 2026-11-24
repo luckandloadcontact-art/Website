@@ -26,7 +26,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <li>The fewer guesses you need, the more loads you get: 25 on the first try, down to 5 on the last.</li>
           <li>Start typing and pick the game from the list, so the spelling is always right.</li>
         </GuideList>
-        <GuideP>Sign in with Discord to play.</GuideP>
+        <GuideP>
+          Anyone can play today&apos;s puzzle without an account. Sign in with Discord to earn loads and play past
+          puzzles. It&apos;s free and uses no real money, and slot content on this site is meant for adults (18+).
+        </GuideP>
       </section>
     </>
   )

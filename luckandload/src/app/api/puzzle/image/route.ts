@@ -11,6 +11,7 @@ import {
   getPuzzleDay, PUZZLE_ATTEMPTS, isDateInRange, getPuzzleCropConfig,
   PUZZLE_SAFE_HEIGHT_FRACTION, PUZZLE_OUTPUT_SIZE,
 } from '@/lib/slotPuzzle'
+import { decodeGuestToken } from '@/lib/puzzleGuest'
 
 // sharp er en native binding -- må kjøre i Node.js-runtimen, ikke Edge.
 export const runtime = 'nodejs'
@@ -42,6 +43,13 @@ export async function GET(req: NextRequest) {
       .eq('user_id', session.user.dbId).eq('puzzle_date', date).maybeSingle()
     if (attempt) { guesses = attempt.guesses ?? []; solved = attempt.solved }
   }
+  // Guests: today's puzzle only, with their guesses from the signed token (lib/puzzleGuest).
+  const guest = !session?.user?.dbId
+  if (guest) {
+    if (date !== today) return NextResponse.json({ error: 'Sign in to play past puzzles' }, { status: 401 })
+    const state = decodeGuestToken(req.nextUrl.searchParams.get('g'), date)
+    if (state) { guesses = state.guesses; solved = state.solved }
+  }
   const attemptsUsed = guesses.length
   const gameOver = solved || attemptsUsed >= PUZZLE_ATTEMPTS
   const zoomLevel = Math.min(attemptsUsed, PUZZLE_ATTEMPTS - 1)
@@ -54,7 +62,9 @@ export async function GET(req: NextRequest) {
   // hvis admin "reroller" dagens spill kan et gammelt cachet svar fra FØR rerollet ellers havne
   // sammen med riktig svar/navn fra ETTER rerollet (dette var en reell bug: banneren viste
   // riktig navn, men et cachet cover-bilde fra det forrige spillet).
-  if (gameOver) {
+  // A guest who ran out of guesses doesn't get the full cover (it shows the name); they keep the
+  // last, clearest crop below.
+  if (gameOver && (!guest || solved)) {
     return new NextResponse(new Uint8Array(original), {
       headers: { 'Content-Type': contentTypeFor(game.image), 'Cache-Control': 'private, no-store' },
     })
